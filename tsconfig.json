@@ -13,7 +13,8 @@
 
     "strict": true,
 
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "typeRoots": ["types"]
   },
   "exclude": ["node_modules"]
 }
