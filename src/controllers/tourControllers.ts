@@ -1,34 +1,40 @@
 import { NextFunction, Request, Response } from 'express';
 import { Tour, TourModel } from '../models/tourModel';
 
+export const getAllTours = async (req: Request, res: Response) => {
+    try {
+        const tours = await TourModel.find();
 
-
-export const getAllTours = (req: Request, res: Response) => {
-
-    console.log(req.requestTime);
-
-    res.status(200).json({
-        status: 'success',
-        requestedAt: req.requestTime,
-
-    });
+        res.status(200).json({
+            status: 'success',
+            result: tours.length,
+            data: {
+                tours
+            }
+        });
+    } catch (error) {
+        res.status(404).json({ status: 'fail', message: error });
+    }
 };
 
-export const getTour = (req: Request, res: Response) => {
-    console.log(req.params);
-    const id: number = parseInt(req.params["id"]);
+export const getTour = async (req: Request, res: Response) => {
+    try {
+        const tour = await TourModel.findById(req.params.id);
 
-    // const tour = tours.find(el => el.id === id);
-
-    res.status(200).json({
-        status: 'success',
-
-    });
+        res.status(200).json({
+            status: 'success',
+            data: { tour }
+        });
+    } catch (error) {
+        res.status(404).json({
+            status: 'fail',
+            message: error
+        });
+    }
 };
 
 export const createTour = async (req: Request, res: Response) => {
     try {
-
         const newTour = await TourModel.create(req.body);
         res.status(201).json({
             status: 'success',
@@ -40,7 +46,7 @@ export const createTour = async (req: Request, res: Response) => {
         res.status(400).json({
             status: 'fail',
             message: error
-        })
+        });
     }
 };
 
