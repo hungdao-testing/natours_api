@@ -1,10 +1,25 @@
-import { NextFunction, Request, Response } from 'express';
-import { Tour, TourModel } from '../models/tourModel';
+import { Request, Response } from 'express';
+import { TourModel } from '../models/tourModel';
 
 export const getAllTours = async (req: Request, res: Response) => {
     try {
-        const tours = await TourModel.find();
 
+        // //BUILD QUERY
+        // No need to exclude query params which are not in the schema in latest Mongoose version
+        // Udemy source: https://mongoosejs.com/docs/tutorials/query_casting.html#the-strictquery-option
+        //
+
+
+        // const queryObj = { ...req.query };
+        // const excludeFields = ['page', 'sort', 'limit', 'fields'];
+
+        // excludeFields.forEach(field => delete queryObj[field]);
+        
+        //EXECUTE QUERY
+        const query =  TourModel.find(req.query);
+        const tours = await query;
+
+        //SEND REQ
         res.status(200).json({
             status: 'success',
             result: tours.length,
