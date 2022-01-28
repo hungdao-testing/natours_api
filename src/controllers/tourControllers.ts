@@ -4,6 +4,8 @@ import { TourModel } from '../models/tourModel';
 export const getAllTours = async (req: Request, res: Response) => {
     try {
 
+        console.log(req.query);
+
         // //BUILD QUERY
         // No need to exclude query params which are not in the schema in latest Mongoose version
         // Udemy source: https://mongoosejs.com/docs/tutorials/query_casting.html#the-strictquery-option
@@ -14,9 +16,11 @@ export const getAllTours = async (req: Request, res: Response) => {
         // const excludeFields = ['page', 'sort', 'limit', 'fields'];
 
         // excludeFields.forEach(field => delete queryObj[field]);
-        
+        let queryStr = JSON.stringify(req.query);
+        queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
+
         //EXECUTE QUERY
-        const query =  TourModel.find(req.query);
+        const query = TourModel.find(JSON.parse(queryStr));
         const tours = await query;
 
         //SEND REQ
