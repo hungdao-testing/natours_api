@@ -1,21 +1,51 @@
 import mongoose from 'mongoose';
 
 //Ref: https://mongoosejs.com/docs/typescript/schemas.html
-export interface Tour extends mongoose.Document{
+export interface Tour extends mongoose.Document {
     id: number;
     name: string;
-    rating?: number,
+    ratings: number;
+    ratingsAverage?: number,
+    ratingsQuantity?: number,
     price: number;
-
+    duration: number;
+    maxGroupSize: number;
+    difficulty: string;
+    priceDiscount?: number,
+    summary: string,
+    description?: string,
+    imageCover: string,
+    images: string[],
+    createdAt: Date,
+    startDates: Date[],
 }
-
 
 const tourSchema = new mongoose.Schema<Tour>({
     id: Number,
-    name: { type: String, required: [true, 'A tour must have name'], unique: true },
+    name: {
+        type: String,
+        required: [true, 'A tour must have name'],
+        unique: true,
+        trim: true
+    },
     price: { type: Number, required: [true, 'A tour must have price'] },
-    rating: { type: Number, default: 4.5 },
-})
+    ratings: { type: Number, default: 4.5 },
+    duration: { type: Number, required: [true, 'A tour must have a duration'] },
+    maxGroupSize: {
+        type: Number,
+        required: [true, 'A tour must have max group size']
+    },
+    difficulty: { type: String, required: [true, 'A tour must have difficulty'] },
+    ratingsAverage: { type: Number, default: 4.5 },
+    ratingsQuantity: { type: Number, default: 0 },
+    priceDiscount: { type: Number },
+    summary: { type: String, trim: true, required: [true, 'A tour must have summary'] },
+    description: { type: String, trim: true, },
+    imageCover: { type: String, required: [true, 'A tour must have image cover'] },
+    images: [String],
+    createdAt: { type: Date, default: new Date() },
+    startDates: { type: [Date] }
 
+});
 
 export const TourModel = mongoose.model<Tour>('Tour', tourSchema);
