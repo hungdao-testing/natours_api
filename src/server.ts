@@ -12,14 +12,14 @@ mongoose.connect(DB_URI).then(conn => {
 
 
 
-const testTour: mongoose.Document = new TourModel({
-    name: 'The Parent Forest Hiking',
-    //rating: 4.7,
-    price: 497
-});
-testTour.save().then(doc => {
-    console.log(doc);
-}).catch(e => { console.log("Error on saving database: ", e) })
+// const testTour: mongoose.Document = new TourModel({
+//     name: 'The Parent Forest Hiking',
+//     //rating: 4.7,
+//     price: 497
+// });
+// testTour.save().then(doc => {
+//     console.log(doc);
+// }).catch(e => { console.log("Error on saving database: ", e) })
 
 
 const port = process.env.PORT || 3000;
