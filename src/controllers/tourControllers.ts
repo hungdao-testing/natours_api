@@ -16,11 +16,27 @@ export const getAllTours = async (req: Request, res: Response) => {
         // const excludeFields = ['page', 'sort', 'limit', 'fields'];
 
         // excludeFields.forEach(field => delete queryObj[field]);
+        // 1) Filtering
         let queryStr = JSON.stringify(req.query);
         queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
 
+        let query = TourModel.find(JSON.parse(queryStr));
+
+        // 2) Sort
+        if (req.query.sort) {
+            // In Mongoose, to sort multiple props, we pass a list of props with the white-space between them
+            // => e.g. sort("price ratingsAverage")
+            // But in Postname, to sort multiple props, we use pattern `sort=prop1,prop2` 
+            // => First, we need to split props by "," (comma); then join by white-space. 
+            const sortBy = req.query.sort.toString().split(",").join(" ");
+
+            query = query.sort(sortBy)
+        } else {
+            query = query.sort('-createdAt');
+        }
+
+
         //EXECUTE QUERY
-        const query = TourModel.find(JSON.parse(queryStr));
         const tours = await query;
 
         //SEND REQ

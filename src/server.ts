@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import app from './app';
 import mongoose from 'mongoose';
-import { TourModel } from './models/tourModel';
+
 
 
 dotenv.config({ path: './config.env' });
