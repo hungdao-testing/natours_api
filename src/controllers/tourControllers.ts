@@ -34,9 +34,17 @@ export const getAllTours = async (req: Request, res: Response) => {
         } else {
             //https://www.udemy.com/course/nodejs-express-mongodb-bootcamp/learn/lecture/15065094#questions/12847927
             //https://stackoverflow.com/questions/49760024/why-mongodb-sort-by-id-is-much-faster-than-sort-by-any-other-indexed-field
-            query = query.sort({_id: -1});
+            query = query.sort({ _id: -1 });
         }
 
+        //3) Limiting 
+        if (req.query.fields) {
+            const fields = req.query.fields.toString().split(",").join(" ");
+            query = query.select(fields)
+        } else {
+            //here `-` means : excluding
+            query.select('-__v')
+        }
 
         //EXECUTE QUERY
         const tours = await query;

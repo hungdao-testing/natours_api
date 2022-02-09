@@ -43,7 +43,7 @@ const tourSchema = new mongoose.Schema<Tour>({
     description: { type: String, trim: true, },
     imageCover: { type: String, required: [true, 'A tour must have image cover'] },
     images: [String],
-    createdAt: { type: Date, default: new Date() },
+    createdAt: { type: Date, default: new Date() , select: false}, // "select: false" means not expose (Lecture 98)
     startDates: { type: [Date] }
 
 });
