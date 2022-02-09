@@ -32,7 +32,9 @@ export const getAllTours = async (req: Request, res: Response) => {
 
             query = query.sort(sortBy)
         } else {
-            query = query.sort('-createdAt');
+            //https://www.udemy.com/course/nodejs-express-mongodb-bootcamp/learn/lecture/15065094#questions/12847927
+            //https://stackoverflow.com/questions/49760024/why-mongodb-sort-by-id-is-much-faster-than-sort-by-any-other-indexed-field
+            query = query.sort({_id: -1});
         }
 
 
