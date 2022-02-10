@@ -19,3 +19,5 @@
 6. Lecture #100, in `Tour Router` file, if we place the `top-5-cheap` router below the router `:id`, it  will  cause error
    https://www.udemy.com/course/nodejs-express-mongodb-bootcamp/learn/lecture/15065098#questions/9204676
    Notes: there is still not clear the reason
+   => Answer from StackOverflow: 
+   https://stackoverflow.com/questions/47432912/express-router-cast-to-objectid-error
