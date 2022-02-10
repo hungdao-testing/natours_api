@@ -15,3 +15,7 @@
 5. Lecture #98, `query.select(-[field])`, here `-` (minus) is excluding (defining in tourController)
    https://mongoosejs.com/docs/api.html#query_Query-select
    Or, we could exclude a prop in schema by adding prop `select:false`
+
+6. Lecture #100, in `Tour Router` file, if we place the `top-5-cheap` router below the router `:id`, it  will  cause error
+   https://www.udemy.com/course/nodejs-express-mongodb-bootcamp/learn/lecture/15065098#questions/9204676
+   Notes: there is still not clear the reason
