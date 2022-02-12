@@ -16,8 +16,13 @@
    https://mongoosejs.com/docs/api.html#query_Query-select
    Or, we could exclude a prop in schema by adding prop `select:false`
 
-6. Lecture #100, in `Tour Router` file, if we place the `top-5-cheap` router below the router `:id`, it  will  cause error
+6. Lecture #100, in `Tour Router` file, if we place the `top-5-cheap` router below the router `:id`, it will cause error
    https://www.udemy.com/course/nodejs-express-mongodb-bootcamp/learn/lecture/15065098#questions/9204676
    Notes: there is still not clear the reason
-   => Answer from StackOverflow: 
+   => Answer from StackOverflow:
    https://stackoverflow.com/questions/47432912/express-router-cast-to-objectid-error
+
+7. Lecture #103, Aggregation :
+   - sort: 1 (asc) and -1 (desc)
+   - project: { \_id: 0 } => 0 means not shown up, 1 is shown up
+   - group: $sum: 1 => means add `1` to each document going through the pipeline and accumulate
