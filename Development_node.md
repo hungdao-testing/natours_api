@@ -4,8 +4,9 @@
    https://mongoosejs.com/docs/typescript/schemas.html
 
 2. As the lecture #94, we need to exclude the query params which are not belong to schema to prevent DB returning wrong result. But, in the latest version, Mongoose will do it for us
-   Udemy: https://www.udemy.com/course/nodejs-express-mongodb-bootcamp/learn/lecture/15065086#questions/16342802
-   Mongoose: https://mongoosejs.com/docs/tutorials/query_casting.html#the-strictquery-option
+      Udemy: https://www.udemy.com/course/nodejs-express-mongodb-bootcamp/learn/lecture/15065086#questions/16342802
+
+      Mongoose: https://mongoosejs.com/docs/tutorials/query_casting.html#the-strictquery-option
 
 3. Lecture #95, in case to query the MongoDb with operator (>=, <=, >, <), the API client (e.g Postman) needs to pass input with `<field>[gte|lte|gt|lt]` (e.g. duration[gte]=5 , means duration >= 5 )
 
@@ -28,3 +29,29 @@
    - group: $sum: 1 => means add `1` to each document going through the pipeline and accumulate
 
 8. Lecture #104, could not use `virtual property` for query
+
+9. Lecture #105, 
+ 
+   - `save` is a hook_name 
+   - `pre.(save)` is used to process something before saving under DB.
+   - `post.(save)` is used to process something after saving document under DB.
+
+   Notes: https://mongoosejs.com/docs/middleware.html#notes
+   ```
+   Pre and post save() hooks are not executed on update(), findOneAndUpdate()
+   ```
+   
+   ```pre
+   //Document middleware: runs before .save() and .create()
+   tourSchema.pre('save', function(){
+
+   })
+   ```
+
+   
+   ```post
+   //Document middleware: runs before .save() and .create()
+   tourSchema.post('save', function(){
+
+   })
+   ```

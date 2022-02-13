@@ -1,10 +1,11 @@
-import mongoose from 'mongoose';
-import { runInThisContext } from 'vm';
+import mongoose, { Document } from 'mongoose';
+import slugify from 'slugify';
 
 //Ref: https://mongoosejs.com/docs/typescript/schemas.html
 export interface Tour extends mongoose.Document {
     id: number;
     name: string;
+    slug: string;
     ratings: number;
     ratingsAverage?: number,
     ratingsQuantity?: number,
@@ -29,6 +30,7 @@ const tourSchema = new mongoose.Schema<Tour>({
         unique: true,
         trim: true
     },
+    slug: String,
     price: { type: Number, required: [true, 'A tour must have price'] },
     ratings: { type: Number, default: 4.5 },
     duration: { type: Number, required: [true, 'A tour must have a duration'] },
@@ -56,5 +58,25 @@ const tourSchema = new mongoose.Schema<Tour>({
 tourSchema.virtual('durationWeeks').get(function (this: Tour) { // have to declare the type for `this`
     return this.duration / 7;
 })
+
+//Document middleware: runs before .save() and .create()
+// `save` is a hook
+tourSchema.pre('save', function (next) {
+    // console.log(this); // this -> currently being saved document
+    this.slug = slugify(this.name, { lower: true });
+    next();
+
+});
+
+// tourSchema.pre('save', function (next) {
+//     console.log("Will save document");
+//     next();
+
+// })
+
+// tourSchema.post('save', function (doc, next) {
+//     console.log(doc);
+//     next();
+// })
 
 export const TourModel = mongoose.model<Tour>('Tour', tourSchema);
