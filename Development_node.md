@@ -26,3 +26,5 @@
    - sort: 1 (asc) and -1 (desc)
    - project: { \_id: 0 } => 0 means not shown up, 1 is shown up
    - group: $sum: 1 => means add `1` to each document going through the pipeline and accumulate
+
+8. Lecture #104, could not use `virtual property` for query

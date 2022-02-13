@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { runInThisContext } from 'vm';
 
 //Ref: https://mongoosejs.com/docs/typescript/schemas.html
 export interface Tour extends mongoose.Document {
@@ -43,9 +44,17 @@ const tourSchema = new mongoose.Schema<Tour>({
     description: { type: String, trim: true, },
     imageCover: { type: String, required: [true, 'A tour must have image cover'] },
     images: [String],
-    createdAt: { type: Date, default: new Date() , select: false}, // "select: false" means not expose (Lecture 98)
+    createdAt: { type: Date, default: new Date(), select: false }, // "select: false" means not expose (Lecture 98)
     startDates: { type: [Date] }
 
+}, {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+
 });
+
+tourSchema.virtual('durationWeeks').get(function (this: Tour) { // have to declare the type for `this`
+    return this.duration / 7;
+})
 
 export const TourModel = mongoose.model<Tour>('Tour', tourSchema);
