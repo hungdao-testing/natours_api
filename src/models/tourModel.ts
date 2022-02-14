@@ -1,4 +1,4 @@
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Aggregate } from 'mongoose';
 import slugify from 'slugify';
 
 //Ref: https://mongoosejs.com/docs/typescript/schemas.html
@@ -97,7 +97,15 @@ tourSchema.pre(/^find/, { query: true }, function (next) {
 
 tourSchema.post(/^find/, { query: true }, function (docs, next) {
     console.log(docs);
+    next();
+})
+
+
+//Aggregation Middleware
+tourSchema.pre<Aggregate<Tour>>('aggregate', function (next) {
+    this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
     next()
 })
+
 
 export const TourModel = mongoose.model<Tour>('Tour', tourSchema);
