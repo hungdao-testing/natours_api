@@ -40,7 +40,7 @@
    ```
    Pre and post save() hooks are not executed on update(), findOneAndUpdate()
    ```
-   
+
    ```pre
    //Document middleware: runs before .save() and .create()
    tourSchema.pre('save', function(){
@@ -55,3 +55,13 @@
 
    })
    ```
+
+10. Lecture #106: using object {query: true} to turn `pre` middleware into Query type
+   - Ref: https://mongoosejs.com/docs/middleware.html
+```
+tourSchema.pre(/^find/, {query: true} ,function (next) {
+
+    this.find({ secretTour: { $ne: true } });
+    next();
+})
+```

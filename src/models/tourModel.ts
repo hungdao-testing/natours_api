@@ -20,6 +20,7 @@ export interface Tour extends mongoose.Document {
     images: string[],
     createdAt: Date,
     startDates: Date[],
+    secretTour: boolean
 }
 
 const tourSchema = new mongoose.Schema<Tour>({
@@ -47,7 +48,11 @@ const tourSchema = new mongoose.Schema<Tour>({
     imageCover: { type: String, required: [true, 'A tour must have image cover'] },
     images: [String],
     createdAt: { type: Date, default: new Date(), select: false }, // "select: false" means not expose (Lecture 98)
-    startDates: { type: [Date] }
+    startDates: { type: [Date] },
+    secretTour: {
+        type: Boolean,
+        default: false,
+    }
 
 }, {
     toJSON: { virtuals: true },
@@ -68,6 +73,8 @@ tourSchema.pre('save', function (next) {
 
 });
 
+
+
 // tourSchema.pre('save', function (next) {
 //     console.log("Will save document");
 //     next();
@@ -78,5 +85,19 @@ tourSchema.pre('save', function (next) {
 //     console.log(doc);
 //     next();
 // })
+
+// Query Middleware -> this: current query object
+// To apply the middleware functions to all sorts of `find` (e.g find, findOne,...) => using regex
+
+tourSchema.pre(/^find/, { query: true }, function (next) {
+
+    this.find({ secretTour: { $ne: true } });
+    next();
+})
+
+tourSchema.post(/^find/, { query: true }, function (docs, next) {
+    console.log(docs);
+    next()
+})
 
 export const TourModel = mongoose.model<Tour>('Tour', tourSchema);
