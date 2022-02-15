@@ -1,5 +1,6 @@
 import mongoose, { Aggregate } from 'mongoose';
 import slugify from 'slugify';
+import validator from 'validator';
 
 //Ref: https://mongoosejs.com/docs/typescript/schemas.html
 export interface Tour extends mongoose.Document {
@@ -32,7 +33,8 @@ const tourSchema = new mongoose.Schema<Tour>(
             unique: true,
             trim: true,
             maxlength: [40, 'Tour name must have less or equal than 40 chars'],
-            minlength: [10, 'Tour name must have more or equal than 10 chars']
+            minlength: [10, 'Tour name must have more or equal than 10 chars'],
+            // validate: [validator.isAlpha, 'Tour name must contain only chars'] // declare function
         },
         slug: String,
         price: { type: Number, required: [true, 'A tour must have price'] },
@@ -57,7 +59,16 @@ const tourSchema = new mongoose.Schema<Tour>(
             max: [5.0, 'rating must be below 5.0']
         },
         ratingsQuantity: { type: Number, default: 0 },
-        priceDiscount: { type: Number },
+        priceDiscount: {
+            type: Number,
+            validate: {
+                validator: function (this: Tour, val: number) {
+                    // `this` points current doc to NEW document on creation flow
+                    return val < this.price;
+                },
+                message: 'discount price ({VALUE}) should be less than regular price'
+            }
+        },
         summary: {
             type: String,
             trim: true,
