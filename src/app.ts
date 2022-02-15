@@ -13,12 +13,12 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.json());
 app.use(express.static(`${__dirname}/public`));
 
-app.use((req: express.Request, res: express.Response, next:express.NextFunction) => {
+app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
     console.log('Hello from the middleware 👋');
     next();
 });
 
-app.use((req: express.Request, res: express.Response, next:express.NextFunction) => {
+app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
     req.requestTime = new Date().toISOString();
     next();
 });
@@ -26,5 +26,12 @@ app.use((req: express.Request, res: express.Response, next:express.NextFunction)
 // 3) ROUTES
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
+
+app.all("*", (req: express.Request, res: express.Response) => {
+    res.status(404).json({
+        status: 'fail',
+        message: `Could not find ${req.originalUrl} on this server !`
+    })
+})
 
 export default app;
