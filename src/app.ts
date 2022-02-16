@@ -5,6 +5,19 @@ import userRouter from './routes/userRoutes';
 
 const app = express();
 
+class CustomError extends Error {
+    public message: string;
+    public status: string;
+    public statusCode?: number;
+
+    constructor(message: string, status: string, statusCode: number = 500) {
+        super();
+        this.message = message;
+        this.status = status;
+        this.statusCode = statusCode
+    }
+}
+
 // 1) MIDDLEWARES
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
@@ -27,10 +40,23 @@ app.use((req: express.Request, res: express.Response, next: express.NextFunction
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 
-app.all("*", (req: express.Request, res: express.Response) => {
-    res.status(404).json({
-        status: 'fail',
-        message: `Could not find ${req.originalUrl} on this server !`
+app.all("*", (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    // res.status(404).json({
+    //     status: 'fail',
+    //     message: `Could not find ${req.originalUrl} on this server !`
+    // })
+    const err = new CustomError(`Could not find ${req.originalUrl} on this server !`, 'fail');
+
+    next(err);
+});
+
+
+app.use((err: CustomError, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    err.statusCode = err.statusCode;
+    err.status = err.status || 'error';
+    res.status(err.statusCode!).json({
+        status: err.status,
+        message: err.message
     })
 })
 
