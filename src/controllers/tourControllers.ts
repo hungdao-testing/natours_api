@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { TourModel } from '../models/tourModel';
 import APIFeatures from '../utils/apiFeatures';
+import AppError from '../utils/appError';
 import { catchAsync } from '../utils/catchAsync';
 
 export const aliasTopTour = async (
@@ -36,6 +37,9 @@ export const getAllTours = catchAsync(
 export const getTour = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
         const tour = await TourModel.findById(req.params.id);
+        if (!tour) {
+            return next(new AppError("No tour found with the passing ID", 404))
+        }
 
         res.status(200).json({
             status: 'success',
@@ -62,6 +66,9 @@ export const updateTour = catchAsync(
             new: true,
             runValidators: true
         });
+        if (!newTour) {
+            return next(new AppError("No tour found with the passing ID", 404))
+        }
         res.status(200).json({
             status: 'success',
             data: {
@@ -73,7 +80,10 @@ export const updateTour = catchAsync(
 
 export const deleteTour = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
-        await TourModel.findByIdAndDelete(req.params.id);
+        const tour = await TourModel.findByIdAndDelete(req.params.id);
+        if (!tour) {
+            return next(new AppError("No tour found with the passing ID", 404))
+        }
         res.status(204).json({
             status: 'success',
             data: null
