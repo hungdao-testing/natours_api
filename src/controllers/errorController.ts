@@ -1,5 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import AppError from '../utils/appError';
+import mongoose from 'mongoose';
+
+
+function handleCastErrorDB(err: mongoose.Error.CastError) {
+    const message = `Invalid ${err.path}: ${err.value}.`
+    return new AppError(message, 400)
+}
 
 const sendErrorDev = (err: AppError, res: Response) => {
     res.status(err.statusCode!).json({
@@ -40,12 +47,22 @@ export default function errorController(
     res: Response,
     next: NextFunction
 ) {
+
     err.statusCode = err.statusCode;
     err.status = err.status || 'error';
+    console.log(err)
 
     if (process.env.NODE_ENV === 'development') {
         sendErrorDev(err, res);
+
     } else if (process.env.NODE_ENV === 'production') {
-        sendErrorProd(err, res);
+        let error = Object.create(err);
+
+        if (error instanceof mongoose.Error.CastError) error = handleCastErrorDB(error);
+
+
+        sendErrorProd(error, res);
     }
 }
+
+

@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 export default class AppError extends Error {
     public status: string;
     public statusCode: number;
