@@ -50,7 +50,6 @@ export default function errorController(
 
     err.statusCode = err.statusCode;
     err.status = err.status || 'error';
-    console.log(err)
 
     if (process.env.NODE_ENV === 'development') {
         sendErrorDev(err, res);
