@@ -2,10 +2,22 @@ import { NextFunction, Request, Response } from 'express';
 import AppError from '../utils/appError';
 import mongoose from 'mongoose';
 
-
 function handleCastErrorDB(err: mongoose.Error.CastError) {
-    const message = `Invalid ${err.path}: ${err.value}.`
-    return new AppError(message, 400)
+    const message = `Invalid ${err.path}: ${err.value}.`;
+    return new AppError(message, 400);
+}
+
+function handleDuplicaFieldsDB(error: mongoose.Error) {
+    if (!Object.getPrototypeOf(error).keyValue) {
+        return new AppError(error.message, 400);
+    }
+    const errorField = Object.getPrototypeOf(error).keyValue;
+    const message = `The key '${Object.keys(
+        errorField
+    )}' has duplicate value of: "${Object.values(
+        errorField
+    )}". Please use another value.`;
+    return new AppError(message, 400);
 }
 
 const sendErrorDev = (err: AppError, res: Response) => {
@@ -26,8 +38,6 @@ const sendErrorProd = (err: AppError, res: Response) => {
 
             message: err.message
         });
-
-
     }
     // Programming or other unknown error: dont leak detail
     else {
@@ -41,27 +51,24 @@ const sendErrorProd = (err: AppError, res: Response) => {
     }
 };
 
-export default function errorController(
-    err: AppError,
+export default function errorController<T extends Error>(
+    err: T,
     req: Request,
     res: Response,
     next: NextFunction
 ) {
-
-    err.statusCode = err.statusCode;
-    err.status = err.status || 'error';
+    let error = Object.create(err);
+    error.statusCode = error.statusCode;
+    error.status = error.status || 'error';
 
     if (process.env.NODE_ENV === 'development') {
-        sendErrorDev(err, res);
-
+        sendErrorDev(error, res);
     } else if (process.env.NODE_ENV === 'production') {
-        let error = Object.create(err);
-
-        if (error instanceof mongoose.Error.CastError) error = handleCastErrorDB(error);
-
+        if (error instanceof mongoose.Error.CastError)
+            error = handleCastErrorDB(error);
+        if (Object.getPrototypeOf(error).code === 11000)
+            error = handleDuplicaFieldsDB(error);
 
         sendErrorProd(error, res);
     }
 }
-
-
