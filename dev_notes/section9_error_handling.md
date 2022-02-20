@@ -6,3 +6,6 @@
     - E.g. `Error.captureStackTrace(this, AppError.constructor)` => the stacktrace doesn't contain class `AppError`
     
     - Ref: https://stackoverflow.com/a/67073333
+
+3. Lecture #122, 
+    Using `server.close` allows pending requests/processes finishing their cycles, and then stop server immediately `proces.exit()`. If the `process.exit()` is used first, all on-going processes are aborted immediately which are not grateful way.
