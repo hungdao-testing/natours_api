@@ -20,8 +20,15 @@ function handleDuplicaFieldsDB(error: mongoose.Error) {
     return new AppError(message, 400);
 }
 
+function handleValidationErrorDB(err: mongoose.Error.ValidationError) {
+    const errors = Object.values(err.errors).map(el => el.message);
+    const message = `Invalid input data: ${errors.join(". ")}`;
+    return new AppError(message, 400);
+}
+
 const sendErrorDev = (err: AppError, res: Response) => {
-    res.status(err.statusCode!).json({
+    if (!err.statusCode) err.statusCode = 500;
+    res.status(err.statusCode).json({
         status: err.status,
         error: err,
         message: err.message,
@@ -29,7 +36,7 @@ const sendErrorDev = (err: AppError, res: Response) => {
     });
 };
 
-const sendErrorProd = (err: AppError, res: Response) => {
+const sendErrorProd = <T extends mongoose.Error & AppError>(err: T, res: Response) => {
     // Operational, trusted error: send message to client
 
     if (err.isOperational) {
@@ -51,8 +58,8 @@ const sendErrorProd = (err: AppError, res: Response) => {
     }
 };
 
-export default function errorController<T extends Error>(
-    err: T,
+export default function errorController(
+    err: Error,
     req: Request,
     res: Response,
     next: NextFunction
@@ -66,9 +73,15 @@ export default function errorController<T extends Error>(
     } else if (process.env.NODE_ENV === 'production') {
         if (error instanceof mongoose.Error.CastError)
             error = handleCastErrorDB(error);
+
         if (Object.getPrototypeOf(error).code === 11000)
             error = handleDuplicaFieldsDB(error);
+
+        if (error instanceof mongoose.Error.ValidationError)
+            error = handleValidationErrorDB(error);
 
         sendErrorProd(error, res);
     }
 }
+
+
