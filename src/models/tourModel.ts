@@ -1,9 +1,9 @@
 import mongoose, { Aggregate } from 'mongoose';
 import slugify from 'slugify';
-import validator from 'validator';
+
 
 //Ref: https://mongoosejs.com/docs/typescript/schemas.html
-export interface Tour extends mongoose.Document {
+export interface ITour extends mongoose.Document {
     id: number;
     name: string;
     slug: string;
@@ -24,7 +24,7 @@ export interface Tour extends mongoose.Document {
     secretTour: boolean;
 }
 
-const tourSchema = new mongoose.Schema<Tour>(
+const tourSchema = new mongoose.Schema<ITour>(
     {
         id: Number,
         name: {
@@ -62,7 +62,7 @@ const tourSchema = new mongoose.Schema<Tour>(
         priceDiscount: {
             type: Number,
             validate: {
-                validator: function (this: Tour, val: number) {
+                validator: function (this: ITour, val: number) {
                     // `this` points current doc to NEW document on creation flow
                     return val < this.price;
                 },
@@ -93,7 +93,7 @@ const tourSchema = new mongoose.Schema<Tour>(
     }
 );
 
-tourSchema.virtual('durationWeeks').get(function (this: Tour) {
+tourSchema.virtual('durationWeeks').get(function (this: ITour) {
     // have to declare the type for `this`
     return this.duration / 7;
 });
@@ -131,9 +131,9 @@ tourSchema.post(/^find/, { query: true }, function (docs, next) {
 });
 
 //Aggregation Middleware
-tourSchema.pre<Aggregate<Tour>>('aggregate', function (next) {
+tourSchema.pre<Aggregate<ITour>>('aggregate', function (next) {
     this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
     next();
 });
 
-export const TourModel = mongoose.model<Tour>('Tour', tourSchema);
+export const TourModel = mongoose.model<ITour>('Tour', tourSchema);

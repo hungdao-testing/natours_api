@@ -1,11 +1,11 @@
 import { Query } from "mongoose";
-import { Tour } from "../models/tourModel";
+import { ITour } from "../models/tourModel";
 
 export default class APIFeatures {
-    public query: Query<Tour[], Tour>;
+    public query: Query<ITour[], ITour>;
     protected queryString: any;
 
-    constructor(query: Query<Tour[], Tour>, queryString: any) {
+    constructor(query: Query<ITour[], ITour>, queryString: any) {
         this.query = query;
         this.queryString = queryString
     }
