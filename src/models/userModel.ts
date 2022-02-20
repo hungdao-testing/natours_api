@@ -25,7 +25,12 @@ const userSchema = new mongoose.Schema<IUser>({
         required: [true, 'Please provide password'],
         minlength: [8, 'The min length is at least 8 chars']
     },
-    passwordConfirm: { type: String, required: [true, 'Please provide password'] }
+    passwordConfirm: { type: String, required: [true, 'Please provide password'] , validate: {
+        //THIS only works on save
+        validator: function(this: IUser ,el: string){
+            return el === this.password;
+        }
+    }}
 });
 
 

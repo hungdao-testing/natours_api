@@ -68,4 +68,4 @@ tourSchema.pre(/^find/, {query: true} ,function (next) {
 11. Lecture 109: 
 
    - To access the input value, mongoose supports a pattern `{VALUE}` to get 
-   - [`this` points current doc to NEW document on creation flow, therefore could not work on update/delete](https://mongoosejs.com/docs/validation.html#update-validators-and-this)
+   - [`this` points current doc to NEW document on creation/save flow, therefore could not work on update/delete](https://mongoosejs.com/docs/validation.html#update-validators-and-this)
