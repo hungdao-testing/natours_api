@@ -4,6 +4,12 @@ import mongoose from 'mongoose';
 
 
 
+process.on("uncaughtException", (err: Error) => {
+    console.log("Uncaught Exception!!! -- Shuttting down");
+    console.log(err.name, err.message);
+    process.exit(1);
+})
+
 dotenv.config({ path: './config.env' });
 const DB_URI = process.env.DB_CONN_STRING!.replace('<PASSWORD>', process.env.DB_PASSWORD!);
 mongoose.connect(DB_URI).then(conn => {
@@ -12,24 +18,14 @@ mongoose.connect(DB_URI).then(conn => {
 
 
 
-// const testTour: mongoose.Document = new TourModel({
-//     name: 'The Parent Forest Hiking',
-//     //rating: 4.7,
-//     price: 497
-// });
-// testTour.save().then(doc => {
-//     console.log(doc);
-// }).catch(e => { console.log("Error on saving database: ", e) })
-
-
 const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {
     console.log(`App running on port ${port}...`);
 });
 
 process.on("unhandledRejection", (err: Error) => {
+    console.log("Unhandle Rejection!!! -- Shuttting down");
     console.log(err.name, err.message);
-    console.log("Unhandle Rejection!!!");
     server.close(() => {
         process.exit(1)
     })
