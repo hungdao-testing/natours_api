@@ -1,8 +1,9 @@
-import mongoose from 'mongoose';
+import mongoose, { Document, Model, Schema } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 
-export interface IUser extends mongoose.Document {
+
+interface IUserDocument extends Document {
     name: string;
     email: string;
     photo?: string;
@@ -10,7 +11,13 @@ export interface IUser extends mongoose.Document {
     passwordConfirm: string | undefined;
 }
 
-const userSchema = new mongoose.Schema<IUser>({
+export interface IUser extends IUserDocument {
+    correctPassword: (password1: string, password2: string) => Promise<boolean>
+}
+
+interface IUserModel extends Model<IUserDocument, {}> { }
+
+const userSchema = new Schema<IUser, IUserModel>({
     name: { type: String, required: [true, 'Please tell us your name'] },
     email: {
         type: String,
@@ -23,12 +30,13 @@ const userSchema = new mongoose.Schema<IUser>({
     password: {
         type: String,
         required: [true, 'Please provide password'],
-        minlength: [8, 'The min length is at least 8 chars']
+        minlength: [8, 'The min length is at least 8 chars'],
+        select: false // means doesn't show in the API response
     },
     passwordConfirm: {
         type: String, required: [true, 'Please provide password'], validate: {
             //THIS only works on save
-            validator: function (this: IUser, el: string) {
+            validator: function (this: IUserDocument, el: string) {
                 return el === this.password;
             },
             message: "Password are not the same as"
@@ -36,7 +44,7 @@ const userSchema = new mongoose.Schema<IUser>({
     }
 });
 
-userSchema.pre('save', async function (this: IUser, next) {
+userSchema.pre('save', async function (this: IUserDocument, next) {
     // Only run this function if password is actually modified
     if (!this.isModified('password')) next();
 
@@ -46,6 +54,13 @@ userSchema.pre('save', async function (this: IUser, next) {
     // Delete passwordConfirm
     this.passwordConfirm = undefined;
 
-})
+});
+
+userSchema.methods.correctPassword = async function (candidatePassword: string, userPassword: string) {
+
+    return await bcrypt.compare(candidatePassword, userPassword);
+}
 
 export const UserModel = mongoose.model<IUser>('User', userSchema);
+
+
