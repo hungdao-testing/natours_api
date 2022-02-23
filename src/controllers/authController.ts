@@ -54,10 +54,31 @@ export const login = catchAsync(
 
         // 3) send token
         const token = signToken(user._id);
-        
+
         res.status(200).json({
             status: 'success',
             token: token
         });
     }
 );
+
+export const protect = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+
+    // 1. Getting token and check of it's existed
+    let token: string = '';
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        token = req.headers.authorization.split(' ')[1];
+    }
+
+    if (!token) {
+        return next(new AppError('You are not logged in! Please login to get access', 401))
+    }
+    // 2. Verification the token
+
+    // 3. Check if user still exists
+
+    // 4. Check if user changed password after the token was issued
+
+
+    next()
+})

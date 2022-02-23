@@ -23,6 +23,7 @@ app.use((req: express.Request, res: express.Response, next: express.NextFunction
 
 app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
     req.requestTime = new Date().toISOString();
+    console.log(req.headers);
     next();
 });
 

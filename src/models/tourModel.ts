@@ -126,7 +126,7 @@ tourSchema.pre(/^find/, { query: true }, function (next) {
 });
 
 tourSchema.post(/^find/, { query: true }, function (docs, next) {
-    console.log(docs);
+    // console.log(docs);
     next();
 });
 
