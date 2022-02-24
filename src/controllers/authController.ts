@@ -54,9 +54,6 @@ export const login = catchAsync(
         }
 
         // 2) Check user is existed && password is correct on DB
-        //https://mongoosejs.com/docs/api.html#query_Query-select
-        // By default, the `password` field is excluded by schema level (UserModel), to load it to do something, we
-        // user the .select("+ <fieldnName>")
         const user = await UserModel.findOne({ email }).select('+password');
 
         if (!user || !(await user.correctPassword(password, user.password))) {
