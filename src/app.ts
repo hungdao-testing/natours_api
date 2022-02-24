@@ -21,7 +21,11 @@ app.use((req: express.Request, res: express.Response, next: express.NextFunction
     next();
 });
 
-app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
+interface CustomRequest extends express.Request {
+    requestTime?: string | undefined
+}
+
+app.use((req: CustomRequest, res: express.Response, next: express.NextFunction) => {
     req.requestTime = new Date().toISOString();
     console.log(req.headers);
     next();

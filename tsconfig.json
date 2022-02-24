@@ -14,10 +14,10 @@
     "strict": true,
 
     "skipLibCheck": true,
-    "typeRoots": ["types"],
+    "typeRoots": ["./types", "./node_modules/@types"],
     "rootDir": "./src",
     "outDir": "./dist",
     "sourceMap": true
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "types"]
 }

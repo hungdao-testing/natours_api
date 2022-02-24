@@ -16,3 +16,9 @@
     -   https://stackoverflow.com/questions/42448372/typescript-mongoose-static-model-method-property-does-not-exist-on-type/45675548#45675548
     
     -   https://github.com/Automattic/mongoose/issues/10358#issuecomment-861779692
+
+6. Lecture 132:
+    a. `jwt.verify()` has 2 versions:
+        - if callback function is supplied as parameter in the function => `jwt.verify()` is async
+        - if callback function is NOT supplied as parameter in the function => `jwt.verify()` is sync
+        - Normally the `verify` function takes lots of time of verifying and could block the events if using the sync. Therefore, we choose the `async` version for the time of processing.

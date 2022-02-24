@@ -1,8 +1,11 @@
+import util from 'util';
 import { NextFunction, Request, Response } from 'express';
 import { UserModel } from '../models/userModel';
 import { catchAsync } from '../utils/catchAsync';
 import jwt from 'jsonwebtoken';
 import AppError from '../utils/appError';
+import { decode } from 'punycode';
+
 
 
 const signToken = (id: string) => {
@@ -74,6 +77,7 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
         return next(new AppError('You are not logged in! Please login to get access', 401))
     }
     // 2. Verification the token
+    const decoded = await util.promisify<string, string>(jwt.verify)(token, process.env.JWT_SECRET!)
 
     // 3. Check if user still exists
 
@@ -82,3 +86,5 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
 
     next()
 })
+
+
