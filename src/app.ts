@@ -3,6 +3,7 @@ import morgan from 'morgan';
 import { default as globalErrorHandler } from './controllers/errorController';
 import tourRouter from './routes/tourRoutes';
 import userRouter from './routes/userRoutes';
+import { ICustomRequestExpress } from './typing/customExpress';
 import AppError from './utils/appError';
 
 const app = express();
@@ -21,13 +22,9 @@ app.use((req: express.Request, res: express.Response, next: express.NextFunction
     next();
 });
 
-interface CustomRequest extends express.Request {
-    requestTime?: string | undefined
-}
 
-app.use((req: CustomRequest, res: express.Response, next: express.NextFunction) => {
+app.use((req: ICustomRequestExpress, res: express.Response, next: express.NextFunction) => {
     req.requestTime = new Date().toISOString();
-    console.log(req.headers);
     next();
 });
 

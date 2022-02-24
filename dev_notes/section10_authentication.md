@@ -19,6 +19,31 @@
 
 6. Lecture 132:
     a. `jwt.verify()` has 2 versions:
-        - if callback function is supplied as parameter in the function => `jwt.verify()` is async
-        - if callback function is NOT supplied as parameter in the function => `jwt.verify()` is sync
-        - Normally the `verify` function takes lots of time of verifying and could block the events if using the sync. Therefore, we choose the `async` version for the time of processing.
+        
+    - if callback function is supplied as parameter in the function => `jwt.verify()` is async
+
+    - if callback function is NOT supplied as parameter in the function => `jwt.verify()` is sync
+        
+    Normally the `verify` function takes lots of time of verifying and could block the events if using the sync. Therefore, we choose the `async` version for the time of processing.
+
+    To apply the async, we have 2 ways:
+
+            a.1. Use `util.promisify<string, string>(jwt.verify)(token, secret)`
+
+            a.2. Use `Promise` 
+                ```js
+                const verifyToken = (token: string, secret: string): Promise<string | JwtPayload> => {
+                    return new Promise((resolve, reject) => {
+                        jwt.verify(token, secret, (err, payload) => {
+                            if (err) return reject(err);
+                            return resolve(payload as (string | JwtPayload))
+                        })
+                    })
+                }
+            
+                ``` 
+    b. Business
+        1. Getting token and check of it's existed in the request body
+        2. Verification the token in the process of sign-verify circle
+        3. Check if user still exists (make sure no one changes the user under back-end after system generates token previously)
+        4. Check if user changed password after the token was issued by comparing jwt_token_time and changePasswordAt (on DB)

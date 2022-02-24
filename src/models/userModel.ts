@@ -9,10 +9,12 @@ interface IUserDocument extends Document {
     photo?: string;
     password: string;
     passwordConfirm: string | undefined;
+    passwordChangedAt: Date
 }
 
 export interface IUser extends IUserDocument {
-    correctPassword: (password1: string, password2: string) => Promise<boolean>
+    correctPassword: (password1: string, password2: string) => Promise<boolean>,
+    changePasswordAfter: (JWTTimestamp: string) => boolean
 }
 
 interface IUserModel extends Model<IUserDocument, {}> { }
@@ -41,7 +43,8 @@ const userSchema = new Schema<IUser, IUserModel>({
             },
             message: "Password are not the same as"
         }
-    }
+    },
+    passwordChangedAt: Date
 });
 
 userSchema.pre('save', async function (this: IUserDocument, next) {
@@ -59,6 +62,17 @@ userSchema.pre('save', async function (this: IUserDocument, next) {
 userSchema.methods.correctPassword = async function (candidatePassword: string, userPassword: string) {
 
     return await bcrypt.compare(candidatePassword, userPassword);
+}
+
+userSchema.methods.changePasswordAfter = function (this: IUser, JWTTimestamp: number) {
+    if (this.passwordChangedAt) {
+        const changedTimestamp = this.passwordChangedAt.getTime() / 1000;
+        console.log(JWTTimestamp, changedTimestamp)
+        return JWTTimestamp < changedTimestamp;
+    }
+
+    //False means not change
+    return false;
 }
 
 export const UserModel = mongoose.model<IUser>('User', userSchema);

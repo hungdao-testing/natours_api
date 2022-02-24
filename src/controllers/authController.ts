@@ -1,12 +1,19 @@
-import util from 'util';
 import { NextFunction, Request, Response } from 'express';
 import { UserModel } from '../models/userModel';
 import { catchAsync } from '../utils/catchAsync';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import AppError from '../utils/appError';
-import { decode } from 'punycode';
+import { ICustomRequestExpress } from '../typing/customExpress';
 
 
+const verifyToken = (token: string, secret: string): Promise<JwtPayload> => {
+    return new Promise((resolve, reject) => {
+        jwt.verify(token, secret, (err, payload) => {
+            if (err) return reject(err);
+            return resolve(payload as (JwtPayload))
+        })
+    })
+}
 
 const signToken = (id: string) => {
     return jwt.sign({ id }, process.env.JWT_SECRET!, {
@@ -21,7 +28,8 @@ export const signup = catchAsync(
             name: req.body.name,
             email: req.body.email,
             password: req.body.password,
-            passwordConfirm: req.body.passwordConfirm
+            passwordConfirm: req.body.passwordConfirm,
+            passwordChangedAt: req.body.passwordChangedAt
         });
 
         const token = signToken(newUser._id);
@@ -65,7 +73,7 @@ export const login = catchAsync(
     }
 );
 
-export const protect = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+export const protect = catchAsync(async (req: ICustomRequestExpress, res: Response, next: NextFunction) => {
 
     // 1. Getting token and check of it's existed
     let token: string = '';
@@ -77,14 +85,25 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
         return next(new AppError('You are not logged in! Please login to get access', 401))
     }
     // 2. Verification the token
-    const decoded = await util.promisify<string, string>(jwt.verify)(token, process.env.JWT_SECRET!)
+    const decoded = await verifyToken(token, process.env.JWT_SECRET!);
 
-    // 3. Check if user still exists
+
+    // 3. Check if user still exists (make sure no one changes the user under back-end after system generates token previously)
+    const currentUser = await UserModel.findById(decoded["id"]);
+    if (!currentUser) {
+        return next(new AppError('The user belongs to this token is no longer existed', 401))
+    }
 
     // 4. Check if user changed password after the token was issued
+    if (currentUser.changePasswordAfter((decoded.iat!).toString())) {
+        return next(new AppError('User is recently changed password, please login again!', 401))
+    }
 
+    //Grant access to the next route
+    req.user = currentUser;
 
-    next()
+    next();
+
 })
 
 

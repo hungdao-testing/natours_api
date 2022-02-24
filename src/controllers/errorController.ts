@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import AppError from '../utils/appError';
 import mongoose from 'mongoose';
+import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
+
 
 function handleCastErrorDB(err: mongoose.Error.CastError) {
     const message = `Invalid ${err.path}: ${err.value}.`;
@@ -24,6 +26,14 @@ function handleValidationErrorDB(err: mongoose.Error.ValidationError) {
     const errors = Object.values(err.errors).map(el => el.message);
     const message = `Invalid input data: ${errors.join(". ")}`;
     return new AppError(message, 400);
+}
+
+function handleJWTError(err: JsonWebTokenError) {
+    return new AppError('Invalid token, please login again', 401)
+}
+
+function handleJWTExpiredError(err: TokenExpiredError) {
+    return new AppError('Your token is expired, please login again', 401)
 }
 
 const sendErrorDev = (err: AppError, res: Response) => {
@@ -79,6 +89,9 @@ export default function errorController(
 
         if (error instanceof mongoose.Error.ValidationError)
             error = handleValidationErrorDB(error);
+
+        if (error.name == 'JsonWebTokenError') error = handleJWTError(error);
+        if (error.name == 'TokenExpiredError') error = handleJWTExpiredError(error);
 
         sendErrorProd(error, res);
     }
