@@ -3,7 +3,7 @@ import morgan from 'morgan';
 import { default as globalErrorHandler } from './controllers/errorController';
 import tourRouter from './routes/tourRoutes';
 import userRouter from './routes/userRoutes';
-import { ICustomRequestExpress } from './typing/customExpress';
+import { ICustomRequestExpress } from './typing/types';
 import AppError from './utils/appError';
 
 const app = express();

@@ -3,7 +3,7 @@ import { UserModel } from '../models/userModel';
 import { catchAsync } from '../utils/catchAsync';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import AppError from '../utils/appError';
-import { ICustomRequestExpress } from '../typing/customExpress';
+import { ICustomRequestExpress } from '../typing/types';
 
 
 const verifyToken = (token: string, secret: string): Promise<JwtPayload> => {
@@ -29,7 +29,8 @@ export const signup = catchAsync(
             email: req.body.email,
             password: req.body.password,
             passwordConfirm: req.body.passwordConfirm,
-            passwordChangedAt: req.body.passwordChangedAt
+            passwordChangedAt: req.body.passwordChangedAt,
+            role: req.body.role
         });
 
         const token = signToken(newUser._id);
@@ -103,4 +104,13 @@ export const protect = catchAsync(async (req: ICustomRequestExpress, res: Respon
 
 })
 
+
+export const restrictTo = (...roles: string[]) => {
+    return catchAsync(async (req: ICustomRequestExpress, res: Response, next: NextFunction) => {
+        if (!roles.includes(req.user!.role)) {
+            return next(new AppError('You do not have permission to perform this action', 403))
+        }
+        next();
+    })
+}
 

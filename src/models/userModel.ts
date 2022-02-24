@@ -1,7 +1,7 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
-
+import { UserRoles } from '../typing/types';
 
 interface IUserDocument extends Document {
     name: string;
@@ -9,12 +9,13 @@ interface IUserDocument extends Document {
     photo?: string;
     password: string;
     passwordConfirm: string | undefined;
-    passwordChangedAt: Date
+    passwordChangedAt: Date;
+    role: string;
 }
 
 export interface IUser extends IUserDocument {
-    correctPassword: (password1: string, password2: string) => Promise<boolean>,
-    changePasswordAfter: (JWTTimestamp: string) => boolean
+    correctPassword: (password1: string, password2: string) => Promise<boolean>;
+    changePasswordAfter: (JWTTimestamp: string) => boolean;
 }
 
 interface IUserModel extends Model<IUserDocument, {}> { }
@@ -29,6 +30,14 @@ const userSchema = new Schema<IUser, IUserModel>({
         validate: [validator.isEmail, 'Please provide valid email']
     },
     photo: { type: String },
+    role: {
+        type: String,
+        enum: {
+            values: [UserRoles.ADMIN, UserRoles.GUIDE, UserRoles.LEAD_GUIDE, UserRoles.USER],
+            message: 'The input role is not matched to supported list'
+        },
+        default: 'user'
+    },
     password: {
         type: String,
         required: [true, 'Please provide password'],
@@ -36,12 +45,14 @@ const userSchema = new Schema<IUser, IUserModel>({
         select: false // means doesn't show in the API response
     },
     passwordConfirm: {
-        type: String, required: [true, 'Please provide password'], validate: {
+        type: String,
+        required: [true, 'Please provide password'],
+        validate: {
             //THIS only works on save
             validator: function (this: IUserDocument, el: string) {
                 return el === this.password;
             },
-            message: "Password are not the same as"
+            message: 'Password are not the same as'
         }
     },
     passwordChangedAt: Date
@@ -56,25 +67,27 @@ userSchema.pre('save', async function (this: IUserDocument, next) {
 
     // Delete passwordConfirm
     this.passwordConfirm = undefined;
-
 });
 
-userSchema.methods.correctPassword = async function (candidatePassword: string, userPassword: string) {
-
+userSchema.methods.correctPassword = async function (
+    candidatePassword: string,
+    userPassword: string
+) {
     return await bcrypt.compare(candidatePassword, userPassword);
-}
+};
 
-userSchema.methods.changePasswordAfter = function (this: IUser, JWTTimestamp: number) {
+userSchema.methods.changePasswordAfter = function (
+    this: IUser,
+    JWTTimestamp: number
+) {
     if (this.passwordChangedAt) {
         const changedTimestamp = this.passwordChangedAt.getTime() / 1000;
-        console.log(JWTTimestamp, changedTimestamp)
+        console.log(JWTTimestamp, changedTimestamp);
         return JWTTimestamp < changedTimestamp;
     }
 
     //False means not change
     return false;
-}
+};
 
 export const UserModel = mongoose.model<IUser>('User', userSchema);
-
-
