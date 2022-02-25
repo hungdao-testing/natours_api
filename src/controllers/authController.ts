@@ -6,21 +6,21 @@ import AppError from '../utils/appError';
 import { ICustomRequestExpress } from '../typing/types';
 
 
+
 const verifyToken = (token: string, secret: string): Promise<JwtPayload> => {
     return new Promise((resolve, reject) => {
         jwt.verify(token, secret, (err, payload) => {
             if (err) return reject(err);
-            return resolve(payload as (JwtPayload))
-        })
-    })
-}
+            return resolve(payload as JwtPayload);
+        });
+    });
+};
 
 const signToken = (id: string) => {
     return jwt.sign({ id }, process.env.JWT_SECRET!, {
         expiresIn: process.env.JWT_EXPIRES_IN!
-    })
+    });
 };
-
 
 export const signup = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -71,46 +71,81 @@ export const login = catchAsync(
     }
 );
 
-export const protect = catchAsync(async (req: ICustomRequestExpress, res: Response, next: NextFunction) => {
+export const protect = catchAsync(
+    async (req: ICustomRequestExpress, res: Response, next: NextFunction) => {
+        // 1. Getting token and check of it's existed
+        let token: string = '';
+        if (
+            req.headers.authorization &&
+            req.headers.authorization.startsWith('Bearer')
+        ) {
+            token = req.headers.authorization.split(' ')[1];
+        }
 
-    // 1. Getting token and check of it's existed
-    let token: string = '';
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-        token = req.headers.authorization.split(' ')[1];
+        if (!token) {
+            return next(
+                new AppError('You are not logged in! Please login to get access', 401)
+            );
+        }
+        // 2. Verification the token
+        const decoded = await verifyToken(token, process.env.JWT_SECRET!);
+
+        // 3. Check if user still exists (make sure no one changes the user under back-end after system generates token previously)
+        const currentUser = await UserModel.findById(decoded['id']);
+        if (!currentUser) {
+            return next(
+                new AppError('The user belongs to this token is no longer existed', 401)
+            );
+        }
+
+        // 4. Check if user changed password after the token was issued
+        if (currentUser.changePasswordAfter(decoded.iat!.toString())) {
+            return next(
+                new AppError(
+                    'User is recently changed password, please login again!',
+                    401
+                )
+            );
+        }
+
+        //Grant access to the next route
+        req.user = currentUser;
+
+        next();
     }
-
-    if (!token) {
-        return next(new AppError('You are not logged in! Please login to get access', 401))
-    }
-    // 2. Verification the token
-    const decoded = await verifyToken(token, process.env.JWT_SECRET!);
-
-
-    // 3. Check if user still exists (make sure no one changes the user under back-end after system generates token previously)
-    const currentUser = await UserModel.findById(decoded["id"]);
-    if (!currentUser) {
-        return next(new AppError('The user belongs to this token is no longer existed', 401))
-    }
-
-    // 4. Check if user changed password after the token was issued
-    if (currentUser.changePasswordAfter((decoded.iat!).toString())) {
-        return next(new AppError('User is recently changed password, please login again!', 401))
-    }
-
-    //Grant access to the next route
-    req.user = currentUser;
-
-    next();
-
-})
-
+);
 
 export const restrictTo = (...roles: string[]) => {
-    return catchAsync(async (req: ICustomRequestExpress, res: Response, next: NextFunction) => {
-        if (!roles.includes(req.user!.role)) {
-            return next(new AppError('You do not have permission to perform this action', 403))
+    return catchAsync(
+        async (req: ICustomRequestExpress, res: Response, next: NextFunction) => {
+            if (!roles.includes(req.user!.role)) {
+                return next(
+                    new AppError('You do not have permission to perform this action', 403)
+                );
+            }
+            next();
         }
-        next();
-    })
-}
+    );
+};
 
+export const forgotPassword = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+        // 1. Get user based on the email in request body
+        const user = await UserModel.findOne({ email: req.body.email });
+        if (!user) {
+            return next(new AppError("There is no user with email", 404))
+        }
+
+        // 2. Generate random token
+        const resetToken = user.createPasswordResetToken();
+        await user.save({ validateBeforeSave: false });
+        console.log(user)
+
+        // 3. Send token to user's email
+
+    }
+);
+
+export const resettPassword = catchAsync(
+    async (req: ICustomRequestExpress, res: Response, next: NextFunction) => { }
+);

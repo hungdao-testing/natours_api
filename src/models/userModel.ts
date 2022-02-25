@@ -2,6 +2,8 @@ import mongoose, { Document, Model, Schema } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import { UserRoles } from '../typing/types';
+import crypto from 'crypto';
+
 
 interface IUserDocument extends Document {
     name: string;
@@ -11,11 +13,14 @@ interface IUserDocument extends Document {
     passwordConfirm: string | undefined;
     passwordChangedAt: Date;
     role: string;
+    passwordResetToken: string;
+    passwordResetExpires: Date;
 }
 
 export interface IUser extends IUserDocument {
     correctPassword: (password1: string, password2: string) => Promise<boolean>;
     changePasswordAfter: (JWTTimestamp: string) => boolean;
+    createPasswordResetToken: () => string
 }
 
 interface IUserModel extends Model<IUserDocument, {}> { }
@@ -55,7 +60,9 @@ const userSchema = new Schema<IUser, IUserModel>({
             message: 'Password are not the same as'
         }
     },
-    passwordChangedAt: Date
+    passwordChangedAt: Date,
+    passwordResetToken: String,
+    passwordResetExpires: Date,
 });
 
 userSchema.pre('save', async function (this: IUserDocument, next) {
@@ -89,5 +96,16 @@ userSchema.methods.changePasswordAfter = function (
     //False means not change
     return false;
 };
+
+userSchema.methods.createPasswordResetToken = function (this: IUser) {
+    const resetToken = crypto.randomBytes(32).toString('hex'); // generate random bytes and convert to hex
+
+    this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+    this.passwordResetExpires = new Date(Date.now() + 10 * 60 * 1000) //expire on 10 mins;
+
+    console.log({resetToken}, this.passwordResetToken);
+    return resetToken;
+
+}
 
 export const UserModel = mongoose.model<IUser>('User', userSchema);

@@ -47,3 +47,13 @@
         2. Verification the token in the process of sign-verify circle
         3. Check if user still exists (make sure no one changes the user under back-end after system generates token previously)
         4. Check if user changed password after the token was issued by comparing jwt_token_time and changePasswordAt (on DB)
+
+7. Lecture #135:
+
+    a. Lecture summarization: https://www.udemy.com/course/nodejs-express-mongodb-bootcamp/learn/lecture/15065314#questions/16608090
+
+    b. `const resetToken = crypto.randomBytes(36).toString('hex');` //create a new, temporary password for the user using node's crypto module.
+
+    =>  This creates a 72 characters long, cryptographically strong (very random) password using hexadecimal encoding (numbers 0-9, letters A-F). Try running this in the terminal to understand the returned value: `node -e "console.log(require('crypto').randomBytes(4).toString('hex'));"`
+
+   
