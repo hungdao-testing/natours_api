@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import { UserModel } from '../models/userModel';
 import { catchAsync } from '../utils/catchAsync';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt, { Jwt, JwtPayload } from 'jsonwebtoken';
 import AppError from '../utils/appError';
 import { sendEmail } from '../utils/email';
 import { ICustomRequestExpress } from '../typing/types';
 import crypto from 'crypto';
+
 
 const verifyToken = (token: string, secret: string): Promise<JwtPayload> => {
     return new Promise((resolve, reject) => {
