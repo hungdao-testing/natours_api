@@ -1,6 +1,11 @@
-1. Function overload issue:
+1. Function overload issue of `promisification`:
 
-   - Reference: https://github.com/microsoft/TypeScript/issues/26048
+   - Reference: 
+    
+     - https://github.com/microsoft/TypeScript/issues/26048
+
+     - https://stackoverflow.com/questions/46552920/typescript-type-inference-in-a-generalized-promisify-function
+
 
 2. How to implement `verifyToken()` by using promification
 
