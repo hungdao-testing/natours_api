@@ -13,8 +13,8 @@ interface IUserDocument extends Document {
     passwordConfirm: string | undefined;
     passwordChangedAt: Date;
     role: string;
-    passwordResetToken: string;
-    passwordResetExpires: Date;
+    passwordResetToken: string | undefined;
+    passwordResetExpires: Date | undefined;
 }
 
 export interface IUser extends IUserDocument {
@@ -103,7 +103,7 @@ userSchema.methods.createPasswordResetToken = function (this: IUser) {
     this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
     this.passwordResetExpires = new Date(Date.now() + 10 * 60 * 1000) //expire on 10 mins;
 
-    console.log({resetToken}, this.passwordResetToken);
+    console.log({resetToken: resetToken}, {passwordResetToken: this.passwordResetToken});
     return resetToken;
 
 }

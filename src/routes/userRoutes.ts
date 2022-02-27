@@ -11,7 +11,7 @@ router.post('/login', authController.login);
 
 router.post('/forgotPassword', authController.forgotPassword);
 
-router.post('/resetPassword', authController.resettPassword);
+router.patch('/resetPassword/:token', authController.resettPassword); // edit password => using PATCH or PUT, but edit just a portion of User data => PATCH
 
 router
     .route('/')

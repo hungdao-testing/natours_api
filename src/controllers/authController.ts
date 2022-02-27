@@ -3,9 +3,8 @@ import { UserModel } from '../models/userModel';
 import { catchAsync } from '../utils/catchAsync';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import AppError from '../utils/appError';
+import { sendEmail } from '../utils/email';
 import { ICustomRequestExpress } from '../typing/types';
-
-
 
 const verifyToken = (token: string, secret: string): Promise<JwtPayload> => {
     return new Promise((resolve, reject) => {
@@ -133,16 +132,38 @@ export const forgotPassword = catchAsync(
         // 1. Get user based on the email in request body
         const user = await UserModel.findOne({ email: req.body.email });
         if (!user) {
-            return next(new AppError("There is no user with email", 404))
+            return next(new AppError('There is no user with email', 404));
         }
 
         // 2. Generate random token
         const resetToken = user.createPasswordResetToken();
         await user.save({ validateBeforeSave: false });
-        console.log(user)
 
-        // 3. Send token to user's email
+        // 3. Send token (plain version) to user's email
+        const resetURL = `${req.protocol}://${req.get(
+            'host'
+        )}/api/v1/users/resetPassword/${resetToken}`;
 
+        const message = `Forgot your password? Submit a PATCH request witho your new password and passwordConfirm to: ${resetURL}.\n If you didnot forget your password, please ignore this email`;
+
+        try {
+            await sendEmail({
+                email: user.email,
+                subject: 'Your password reset token (valid for 10 mins)',
+                message
+            });
+
+            res.status(200).json({
+                status: 'success',
+                messsage: 'Token is sent to user\'s email!'
+            })
+        } catch (error) {
+            user.passwordResetToken = undefined;
+            user.passwordResetExpires = undefined;
+            await user.save({ validateBeforeSave: false });
+
+            return next(new AppError('There was an error sending email, try again later', 500))
+        }
     }
 );
 

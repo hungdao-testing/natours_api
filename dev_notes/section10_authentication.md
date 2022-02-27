@@ -56,4 +56,7 @@
 
     =>  This creates a 72 characters long, cryptographically strong (very random) password using hexadecimal encoding (numbers 0-9, letters A-F). Try running this in the terminal to understand the returned value: `node -e "console.log(require('crypto').randomBytes(4).toString('hex'));"`
 
+    c. Notes: encrypted resetToken is stored in DB, the plain resetToken is used to send email to user.
    
+8. Lecture #136:
+    - Send plain-version of resetToken to user via email, and compare it with the encrypted-version of the resetToken under DB.
