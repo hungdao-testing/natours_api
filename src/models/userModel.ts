@@ -76,6 +76,16 @@ userSchema.pre('save', async function (this: IUserDocument, next) {
     this.passwordConfirm = undefined;
 });
 
+userSchema.pre('save', async function(this: IUserDocument, next) {
+    // Only run this function if password is actually modified
+    if (!this.isModified('password') || this.isNew) next();
+
+    this.passwordChangedAt = new Date(Date.now() - 1000);
+    next()
+
+})
+
+
 userSchema.methods.correctPassword = async function (
     candidatePassword: string,
     userPassword: string

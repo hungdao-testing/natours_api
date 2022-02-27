@@ -60,3 +60,6 @@
    
 8. Lecture #136:
     - Send plain-version of resetToken to user via email, and compare it with the encrypted-version of the resetToken under DB.
+
+9. Lecture #137:
+    1. ` this.passwordChangedAt = new Date(Date.now() - 1000);` sometimes, the time to generate JWT is a bit before setting `passwordChangeAt`, => causes the token is invalid because of comparision inside the function `methods.changePasswordAfter()`. Therefore, to make sure the time of updating passwordChangeAt is always before JWT, we minus (-1000: 1 second) as a trick way. 
