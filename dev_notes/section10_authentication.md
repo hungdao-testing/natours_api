@@ -86,3 +86,6 @@
 
 11. Lecture #139
     - The business intention for FE part will be: update_password and update_user_profile are placed different screens => 2 API(s)
+
+12. Lecture #130: 
+    - Delete user means set it to inactive in DB

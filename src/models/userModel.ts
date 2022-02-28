@@ -15,6 +15,7 @@ interface IUserDocument extends Document {
     role: string;
     passwordResetToken: string | undefined;
     passwordResetExpires: Date | undefined;
+    active: boolean
 }
 
 export interface IUser extends IUserDocument {
@@ -63,6 +64,11 @@ const userSchema = new Schema<IUser, IUserModel>({
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,
+    active: {
+        type: Boolean,
+        default: true,
+        select: false
+    }
 });
 
 userSchema.pre('save', async function (this: IUserDocument, next) {
@@ -76,7 +82,7 @@ userSchema.pre('save', async function (this: IUserDocument, next) {
     this.passwordConfirm = undefined;
 });
 
-userSchema.pre('save', async function(this: IUserDocument, next) {
+userSchema.pre('save', async function (this: IUserDocument, next: Function) {
     // Only run this function if password is actually modified
     if (!this.isModified('password') || this.isNew) next();
 
@@ -85,6 +91,11 @@ userSchema.pre('save', async function(this: IUserDocument, next) {
 
 })
 
+userSchema.pre(/^find/, { query: true }, function (next: Function) {
+    //this point to current query
+    this.find({ active: { $ne: false } });
+    next()
+})
 
 userSchema.methods.correctPassword = async function (
     candidatePassword: string,
@@ -113,7 +124,7 @@ userSchema.methods.createPasswordResetToken = function (this: IUser) {
     this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
     this.passwordResetExpires = new Date(Date.now() + 10 * 60 * 1000) //expire on 10 mins;
 
-    console.log({resetToken: resetToken}, {passwordResetToken: this.passwordResetToken});
+    console.log({ resetToken: resetToken }, { passwordResetToken: this.passwordResetToken });
     return resetToken;
 
 }
