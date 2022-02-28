@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { IUser, UserModel } from '../models/userModel';
 import { catchAsync } from '../utils/catchAsync';
-import jwt, { Jwt, JwtPayload } from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import AppError from '../utils/appError';
 import { sendEmail } from '../utils/email';
 import { ICustomRequestExpress } from '../typing/types';
@@ -31,8 +31,8 @@ const createSendToken = (user: IUser, statusCode: number, res: Response) => {
         data: {
             user
         }
-    })
-}
+    });
+};
 
 export const signup = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -185,7 +185,7 @@ export const resetPassword = catchAsync(
 
         // 2. If the token has expired, and there is a user, set new password
         if (!user) {
-            return next(new AppError("Token is invalid or expired", 400))
+            return next(new AppError('Token is invalid or expired', 400));
         }
 
         user.password = req.body.password;
@@ -197,29 +197,33 @@ export const resetPassword = catchAsync(
 
         // 3. Update changePasswordAt property for user
 
-
         // 4. Log the user in => send JWT
         createSendToken(user, 200, res);
-
     }
 );
 
 export const updatePassword = catchAsync(
     async (req: ICustomRequestExpress, res: Response, next: NextFunction) => {
-
         // 1. Get user from collection
-        const user = await UserModel.findById(req.user!._id).select("+password")
+        const user = await UserModel.findById(req.user!._id).select('+password');
 
         // 2. check if POSTed current password is correct
         let currentUser: IUser;
         if (!user) {
-            return next(new AppError('Please check your user information again', 401))
+            return next(
+                new AppError('Please check your user information again', 401)
+            );
         } else {
             currentUser = user;
         }
 
-        if (!(await currentUser.correctPassword(req.body.passwordCurrent, currentUser.password))) {
-            return next(new AppError('Your current password is wrong.', 401))
+        if (
+            !(await currentUser.correctPassword(
+                req.body.passwordCurrent,
+                currentUser.password
+            ))
+        ) {
+            return next(new AppError('Your current password is wrong.', 401));
         }
 
         // 3. if so, update password.
@@ -228,7 +232,6 @@ export const updatePassword = catchAsync(
         await currentUser.save();
 
         //4. Log user in, send JWT
-        createSendToken(currentUser, 200, res)
-
-
-    })
+        createSendToken(currentUser, 200, res);
+    }
+);
