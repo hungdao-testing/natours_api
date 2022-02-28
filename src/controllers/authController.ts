@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { UserModel } from '../models/userModel';
+import { IUser, UserModel } from '../models/userModel';
 import { catchAsync } from '../utils/catchAsync';
 import jwt, { Jwt, JwtPayload } from 'jsonwebtoken';
 import AppError from '../utils/appError';
@@ -23,6 +23,17 @@ const signToken = (id: string) => {
     });
 };
 
+const createSendToken = (user: IUser, statusCode: number, res: Response) => {
+    const token = signToken(user._id);
+    res.status(statusCode).json({
+        status: 'success',
+        token,
+        data: {
+            user
+        }
+    })
+}
+
 export const signup = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
         const newUser = await UserModel.create({
@@ -34,15 +45,7 @@ export const signup = catchAsync(
             role: req.body.role
         });
 
-        const token = signToken(newUser._id);
-
-        res.status(201).json({
-            status: 'success',
-            token,
-            data: {
-                user: newUser
-            }
-        });
+        createSendToken(newUser, 201, res);
     }
 );
 
@@ -63,12 +66,7 @@ export const login = catchAsync(
         }
 
         // 3) send token
-        const token = signToken(user._id);
-
-        res.status(200).json({
-            status: 'success',
-            token: token
-        });
+        createSendToken(user, 200, res);
     }
 );
 
@@ -171,7 +169,7 @@ export const forgotPassword = catchAsync(
     }
 );
 
-export const resettPassword = catchAsync(
+export const resetPassword = catchAsync(
     async (req: ICustomRequestExpress, res: Response, next: NextFunction) => {
         // 1. Get user based token: get token (sent via email in plain text), then encrypted => compare to the saved one on DB
 
@@ -201,12 +199,36 @@ export const resettPassword = catchAsync(
 
 
         // 4. Log the user in => send JWT
-
-        const token = signToken(user._id);
-        res.status(200).json({
-            status: 'success',
-            token
-        });
+        createSendToken(user, 200, res);
 
     }
 );
+
+export const updatePassword = catchAsync(
+    async (req: ICustomRequestExpress, res: Response, next: NextFunction) => {
+
+        // 1. Get user from collection
+        const user = await UserModel.findById(req.user!._id).select("+password")
+
+        // 2. check if POSTed current password is correct
+        let currentUser: IUser;
+        if (!user) {
+            return next(new AppError('Please check your user information again', 401))
+        } else {
+            currentUser = user;
+        }
+
+        if (!(await currentUser.correctPassword(req.body.passwordCurrent, currentUser.password))) {
+            return next(new AppError('Your current password is wrong.', 401))
+        }
+
+        // 3. if so, update password.
+        currentUser.password = req.body.password;
+        currentUser.passwordConfirm = req.body.passwordConfirm;
+        await currentUser.save();
+
+        //4. Log user in, send JWT
+        createSendToken(currentUser, 200, res)
+
+
+    })
