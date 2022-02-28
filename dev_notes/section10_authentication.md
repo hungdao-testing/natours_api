@@ -83,3 +83,6 @@
     - Why we don't use `findByIDAndUpdate()` but `findById()`?
     
         a. In the `UserModel.ts` the validator (userSchema) for passwordConfirm is applied to `Create and Save` process, NOT the update process.
+
+11. Lecture #139
+    - The business intention for FE part will be: update_password and update_user_profile are placed different screens => 2 API(s)
