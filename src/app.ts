@@ -7,7 +7,10 @@ import { ICustomRequestExpress } from './typing/types';
 import AppError from './utils/appError';
 import { rateLimit } from 'express-rate-limit';
 import helmet from 'helmet';
+import mongoSanitize from 'express-mongo-sanitize'
 
+const xss = require('xss-clean');
+// import xss from 'xss-clean';
 
 
 const app = express();
@@ -33,7 +36,14 @@ const limiter = rateLimit({
 app.use('/api', limiter); // apply rate-limit to routes starts-with '/api'
 
 // Body parser, reading data from body into req.body
-app.use(express.json({limit: '10kb'})); // not allow data > 10kb to be passed into body
+app.use(express.json({ limit: '10kb' })); // not allow data > 10kb to be passed into body
+
+// Data sanitization against NOSQL query
+app.use(mongoSanitize());
+
+// Data sanitization against XSS
+app.use(xss())
+
 
 // Serving static file
 app.use(express.static(`${__dirname}/public`));
