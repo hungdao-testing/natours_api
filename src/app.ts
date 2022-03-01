@@ -6,14 +6,23 @@ import userRouter from './routes/userRoutes';
 import { ICustomRequestExpress } from './typing/types';
 import AppError from './utils/appError';
 import { rateLimit } from 'express-rate-limit';
+import helmet from 'helmet';
+
+
 
 const app = express();
 
 // 1) GLOBAL MIDDLEWARES
+
+// Set security HTTP Header
+app.use(helmet());
+
+// Development logging
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 
+// Limit request from same API
 const limiter = rateLimit({
     // 1IP is allowed to do max 100 reqs in 1 hour
     max: 100,
@@ -23,9 +32,13 @@ const limiter = rateLimit({
 
 app.use('/api', limiter); // apply rate-limit to routes starts-with '/api'
 
-app.use(express.json());
+// Body parser, reading data from body into req.body
+app.use(express.json({limit: '10kb'})); // not allow data > 10kb to be passed into body
+
+// Serving static file
 app.use(express.static(`${__dirname}/public`));
 
+// TEST middleware
 app.use(
     (req: express.Request, res: express.Response, next: express.NextFunction) => {
         console.log('Hello from the middleware 👋');
