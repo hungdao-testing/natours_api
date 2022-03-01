@@ -27,7 +27,6 @@
 
         Normally the `verify` function takes lots of time of verifying and could block the events if using the sync. Therefore, we choose the `async` version for the time of processing.
 
-        
     To apply the async, we have 2 ways:
 
         a.1. Use promisify (read the doc Typescript.md -> section 2)
@@ -36,7 +35,7 @@
                     import type { VerifyOptions, Secret, JwtPayload } from 'jsonwebtoken';
 
                     const verifyToken = util.promisify<string, Secret,VerifyOptions | undefined, JwtPayload>(jwt.verify)(token, process.env.JWT_SECRET!, undefined);
-        
+
                 ```
 
         a.2. Use `Promise`
@@ -59,33 +58,36 @@
         2. Verification the token in the process of sign-verify circle
 
         3. Check if user still exists (make sure no one changes the user under back-end after system generates token previously)
-        
+
         4. Check if user changed password after the token was issued by comparing jwt_token_time and changePasswordAt (on DB)
 
-7. Lecture #135:
+7.  Lecture #135:
 
     a. Lecture summarization: https://www.udemy.com/course/nodejs-express-mongodb-bootcamp/learn/lecture/15065314#questions/16608090
 
     b. `const resetToken = crypto.randomBytes(36).toString('hex');` //create a new, temporary password for the user using node's crypto module.
 
-    =>  This creates a 72 characters long, cryptographically strong (very random) password using hexadecimal encoding (numbers 0-9, letters A-F). Try running this in the terminal to understand the returned value: `node -e "console.log(require('crypto').randomBytes(4).toString('hex'));"`
+    => This creates a 72 characters long, cryptographically strong (very random) password using hexadecimal encoding (numbers 0-9, letters A-F). Try running this in the terminal to understand the returned value: `node -e "console.log(require('crypto').randomBytes(4).toString('hex'));"`
 
     c. Notes: encrypted resetToken is stored in DB, the plain resetToken is used to send email to user.
 
-8. Lecture #136:
+8.  Lecture #136:
+
     - Send plain-version of resetToken to user via email, and compare it with the encrypted-version of the resetToken under DB.
 
-9. Lecture #137:
+9.  Lecture #137:
+
     1. ` this.passwordChangedAt = new Date(Date.now() - 1000);` sometimes, the time to generate JWT is a bit before setting `passwordChangeAt`, => causes the token is invalid because of comparision inside the function `methods.changePasswordAfter()`. Therefore, to make sure the time of updating passwordChangeAt is always before JWT, we minus (-1000: 1 second) as a trick way.
 
-
 10. Lecture #138:
+
     - Why we don't use `findByIDAndUpdate()` but `findById()`?
-    
-        a. In the `UserModel.ts` the validator (userSchema) for passwordConfirm is applied to `Create and Save` process, NOT the update process.
+
+      a. In the `UserModel.ts` the validator (userSchema) for passwordConfirm is applied to `Create and Save` process, NOT the update process.
 
 11. Lecture #139
+
     - The business intention for FE part will be: update_password and update_user_profile are placed different screens => 2 API(s)
 
-12. Lecture #130: 
+12. Lecture #130:
     - Delete user means set it to inactive in DB

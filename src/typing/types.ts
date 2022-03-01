@@ -1,15 +1,14 @@
-import { Request } from "express";
-import { IUser } from "../models/userModel";
+import { Request } from 'express'
+import { IUser } from '../models/userModel'
 
 export interface ICustomRequestExpress extends Request {
-    requestTime?: string | undefined,
-    user?: IUser
+  requestTime?: string | undefined
+  user?: IUser
 }
 
 export enum UserRoles {
-    ADMIN = "admin",
-    GUIDE = 'guide',
-    LEAD_GUIDE = 'lead-guide',
-    USER = 'user'
-
+  ADMIN = 'admin',
+  GUIDE = 'guide',
+  LEAD_GUIDE = 'lead-guide',
+  USER = 'user',
 }

@@ -1,6 +1,5 @@
-declare module 'xss-clean'
-{
-    const xss: Function;
+declare module 'xss-clean' {
+  const xss: Function
 
-    export default xss;
+  export default xss
 }
