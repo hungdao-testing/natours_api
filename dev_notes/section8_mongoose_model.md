@@ -4,9 +4,9 @@
    https://mongoosejs.com/docs/typescript/schemas.html
 
 2. As the lecture #94, we need to exclude the query params which are not belong to schema to prevent DB returning wrong result. But, in the latest version, Mongoose will do it for us
-      Udemy: https://www.udemy.com/course/nodejs-express-mongodb-bootcamp/learn/lecture/15065086#questions/16342802
+   Udemy: https://www.udemy.com/course/nodejs-express-mongodb-bootcamp/learn/lecture/15065086#questions/16342802
 
-      Mongoose: https://mongoosejs.com/docs/tutorials/query_casting.html#the-strictquery-option
+   Mongoose: https://mongoosejs.com/docs/tutorials/query_casting.html#the-strictquery-option
 
 3. Lecture #95, in case to query the MongoDb with operator (>=, <=, >, <), the API client (e.g Postman) needs to pass input with `<field>[gte|lte|gt|lt]` (e.g. duration[gte]=5 , means duration >= 5 )
 
@@ -24,19 +24,21 @@
    https://stackoverflow.com/questions/47432912/express-router-cast-to-objectid-error
 
 7. Lecture #103, Aggregation :
+
    - sort: 1 (asc) and -1 (desc)
    - project: { \_id: 0 } => 0 means not shown up, 1 is shown up
    - group: $sum: 1 => means add `1` to each document going through the pipeline and accumulate
 
 8. Lecture #104, could not use `virtual property` for query
 
-9. Lecture #105, 
- 
-   - `save` is a hook_name 
+9. Lecture #105,
+
+   - `save` is a hook_name
    - `pre.(save)` is used to process something before saving under DB.
    - `post.(save)` is used to process something after saving document under DB.
 
    Notes: https://mongoosejs.com/docs/middleware.html#notes
+
    ```
    Pre and post save() hooks are not executed on update(), findOneAndUpdate()
    ```
@@ -48,7 +50,6 @@
    })
    ```
 
-   
    ```post
    //Document middleware: runs before .save() and .create()
    tourSchema.post('save', function(){
@@ -57,7 +58,9 @@
    ```
 
 10. Lecture #106: using object {query: true} to turn `pre` middleware into Query type
-   - Ref: https://mongoosejs.com/docs/middleware.html
+
+- Ref: https://mongoosejs.com/docs/middleware.html
+
 ```
 tourSchema.pre(/^find/, {query: true} ,function (next) {
 
@@ -65,7 +68,8 @@ tourSchema.pre(/^find/, {query: true} ,function (next) {
     next();
 })
 ```
-11. Lecture 109: 
 
-   - To access the input value, mongoose supports a pattern `{VALUE}` to get 
-   - [`this` points current doc to NEW document on creation flow, therefore could not work on update/delete](https://mongoosejs.com/docs/validation.html#update-validators-and-this)
+11. Lecture 109:
+
+- To access the input value, mongoose supports a pattern `{VALUE}` to get
+- [`this` points current doc to NEW document on creation/save flow, therefore could not work on update/delete](https://mongoosejs.com/docs/validation.html#update-validators-and-this)

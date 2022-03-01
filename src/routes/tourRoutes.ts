@@ -1,28 +1,34 @@
-import express from 'express';
-import * as tourController from '../controllers/tourControllers';
+import express from 'express'
+import * as tourController from '../controllers/tourControllers'
+import * as authController from '../controllers/authController'
+import { UserRoles } from '../typing/types'
 
-const router = express.Router();
+const router = express.Router()
 
 // router.param('id', tourController.checkID);
 
 // modify the request query on `aliasTopTour` (role as middleware) then pass into `getAllTours`
 router
-    .route('/top-5-cheap')
-    .get(tourController.aliasTopTour, tourController.getAllTours);
+  .route('/top-5-cheap')
+  .get(tourController.aliasTopTour, tourController.getAllTours)
 
-router.route('/tour-stats').get(tourController.getTourStats);
+router.route('/tour-stats').get(tourController.getTourStats)
 
-router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
-
-router
-    .route('/')
-    .get(tourController.getAllTours)
-    .post(tourController.createTour);
+router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan)
 
 router
-    .route('/:id')
-    .get(tourController.getTour)
-    .patch(tourController.updateTour)
-    .delete(tourController.deleteTour);
+  .route('/')
+  .get(authController.protect, tourController.getAllTours)
+  .post(tourController.createTour)
 
-export default router;
+router
+  .route('/:id')
+  .get(tourController.getTour)
+  .patch(tourController.updateTour)
+  .delete(
+    authController.protect,
+    authController.restrictTo(UserRoles.ADMIN, UserRoles.LEAD_GUIDE),
+    tourController.deleteTour,
+  )
+
+export default router
