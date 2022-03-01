@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { CookieOptions, NextFunction, Request, Response } from 'express';
 import { IUser, UserModel } from '../models/userModel';
 import { catchAsync } from '../utils/catchAsync';
 import jwt, { JwtPayload } from 'jsonwebtoken';
@@ -6,6 +6,7 @@ import AppError from '../utils/appError';
 import { sendEmail } from '../utils/email';
 import { ICustomRequestExpress } from '../typing/types';
 import crypto from 'crypto';
+
 
 
 const verifyToken = (token: string, secret: string): Promise<JwtPayload> => {
@@ -25,13 +26,36 @@ const signToken = (id: string) => {
 
 const createSendToken = (user: IUser, statusCode: number, res: Response) => {
     const token = signToken(user._id);
+
+    const cookieOptions: CookieOptions = {
+        expires: new Date(
+            Date.now() +
+            parseInt(process.env.JWT_COOKIE_EXPIRES_IN!) * 24 * 60 * 60 * 1000
+        ),
+        httpOnly: true,
+    };
+
+    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+
+    res.cookie('jwt', token, cookieOptions);
+
+    //Pick-up selected fields from the IUser and show to output
+    const currentUser: Partial<IUser> = {
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        active: user.active,
+        _id: user._id
+    }
+
     res.status(statusCode).json({
         status: 'success',
         token,
         data: {
-            user
+            currentUser
         }
     });
+
 };
 
 export const signup = catchAsync(
