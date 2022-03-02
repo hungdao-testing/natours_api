@@ -1,6 +1,12 @@
 import mongoose, { Aggregate } from 'mongoose'
 import slugify from 'slugify'
 
+type Location = {
+  type: string
+  coordinates: number[]
+  address: string
+  description: string
+}
 //Ref: https://mongoosejs.com/docs/typescript/schemas.html
 export interface ITour extends mongoose.Document {
   id: number
@@ -21,6 +27,8 @@ export interface ITour extends mongoose.Document {
   createdAt: Date
   startDates: Date[]
   secretTour: boolean
+  startLocation: Location
+  locations: (Location & { day: number })[]
 }
 
 const tourSchema = new mongoose.Schema<ITour>(
@@ -85,6 +93,29 @@ const tourSchema = new mongoose.Schema<ITour>(
       type: Boolean,
       default: false,
     },
+    startLocation: {
+      type: {
+        type: String,
+        default: 'Point',
+        enum: ['Point'],
+      },
+      coordinates: [Number],
+      address: String,
+      description: String,
+    },
+    locations: [
+      {
+        type: {
+          type: String,
+          default: 'Point',
+          enum: ['Point'],
+        },
+        coordinates: [Number],
+        address: String,
+        description: String,
+        day: Number,
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },
