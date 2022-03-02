@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "format": "prettier --write ./src/**/*.*",
     "dev": "npx cross-env NODE_ENV=development  nodemon ",
     "prod": "npx cross-env NODE_ENV=production nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
