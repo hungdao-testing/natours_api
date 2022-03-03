@@ -1,6 +1,6 @@
 import mongoose, { Aggregate } from 'mongoose'
 import slugify from 'slugify'
-import { IUser, UserModel } from './userModel'
+import { IUser } from './userModel'
 
 type Location = {
   type: string
@@ -29,7 +29,7 @@ export interface ITour extends mongoose.Document {
   startDates: Date[]
   secretTour: boolean
   startLocation: Location
-  locations: (Location & { day: number })[],
+  locations: (Location & { day: number })[]
   guides: (IUser | null)[]
 }
 
@@ -119,11 +119,11 @@ const tourSchema = new mongoose.Schema<ITour>(
       },
     ],
     guides: [
-      { 
+      {
         type: mongoose.SchemaTypes.ObjectId,
-        ref: 'User'
-      }
-    ]
+        ref: 'User',
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },
@@ -144,9 +144,16 @@ tourSchema.pre('save', function (next) {
   next()
 })
 
-
 // Query Middleware -> this: current query object
 // To apply the middleware functions to all sorts of `find` (e.g find, findOne,...) => using regex
+
+tourSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'guides',
+    select: '-passwordChangedAt -__v',
+  })
+  next()
+})
 
 tourSchema.pre(/^find/, { query: true }, function (next) {
   this.find({ secretTour: { $ne: true } })

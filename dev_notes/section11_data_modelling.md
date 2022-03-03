@@ -1,0 +1,1 @@
+1. Lecture #153: `populate` creates a new query => affect to performance
