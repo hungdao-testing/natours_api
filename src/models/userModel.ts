@@ -23,9 +23,7 @@ export interface IUser extends IUserDocument {
   createPasswordResetToken: () => string
 }
 
-interface IUserModel extends Model<IUserDocument, {}> {}
-
-const userSchema = new Schema<IUser, IUserModel>({
+const userSchema = new Schema<IUser>({
   name: { type: String, required: [true, 'Please tell us your name'] },
   email: {
     type: String,
