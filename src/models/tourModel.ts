@@ -118,7 +118,12 @@ const tourSchema = new mongoose.Schema<ITour>(
         day: Number,
       },
     ],
-    guides: Array
+    guides: [
+      { 
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'User'
+      }
+    ]
   },
   {
     toJSON: { virtuals: true },
@@ -139,18 +144,6 @@ tourSchema.pre('save', function (next) {
   next()
 })
 
-tourSchema.pre('save', async function (next) {
-
-  const guidesPromises = this.guides.map(async id => await UserModel.findById(id).select("-passwordChangedAt"));
-  this.guides = await Promise.all(guidesPromises);
-  next();
-
-})
-
-// tourSchema.post('save', function (doc, next) {
-//     console.log(doc);
-//     next();
-// })
 
 // Query Middleware -> this: current query object
 // To apply the middleware functions to all sorts of `find` (e.g find, findOne,...) => using regex
