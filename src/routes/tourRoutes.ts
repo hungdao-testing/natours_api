@@ -2,7 +2,6 @@ import express from 'express'
 import * as tourController from '../controllers/tourControllers'
 import * as authController from '../controllers/authController'
 
-
 const router = express.Router()
 
 // router.param('id', tourController.checkID);
@@ -27,7 +26,7 @@ router
   .patch(tourController.updateTour)
   .delete(
     authController.protect,
-    authController.restrictTo("ADMIN", "LEAD_GUIDE"),
+    authController.restrictTo('ADMIN', 'LEAD_GUIDE'),
     tourController.deleteTour,
   )
 
