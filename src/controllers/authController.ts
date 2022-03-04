@@ -4,7 +4,7 @@ import { catchAsync } from '../utils/catchAsync'
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import AppError from '../utils/appError'
 import { sendEmail } from '../utils/email'
-import { ICustomRequestExpress } from '../typing/types'
+import { ICustomRequestExpress, UserRoles } from '../typing/types'
 import crypto from 'crypto'
 
 const verifyToken = (token: string, secret: string): Promise<JwtPayload> => {
@@ -28,7 +28,7 @@ const createSendToken = (user: IUser, statusCode: number, res: Response) => {
   const cookieOptions: CookieOptions = {
     expires: new Date(
       Date.now() +
-        parseInt(process.env.JWT_COOKIE_EXPIRES_IN!) * 24 * 60 * 60 * 1000,
+      parseInt(process.env.JWT_COOKIE_EXPIRES_IN!) * 24 * 60 * 60 * 1000,
     ),
     httpOnly: true,
   }
@@ -138,10 +138,13 @@ export const protect = catchAsync(
   },
 )
 
-export const restrictTo = (...roles: string[]) => {
+type TSpreadUser = keyof typeof UserRoles;
+export const restrictTo = (...roles: Array<TSpreadUser>) => {
   return catchAsync(
     async (req: ICustomRequestExpress, res: Response, next: NextFunction) => {
-      if (!roles.includes(req.user!.role)) {
+      const reqRole = (req.user?.role.toUpperCase()) as TSpreadUser;
+
+      if (!roles.includes(reqRole)) {
         return next(
           new AppError(
             'You do not have permission to perform this action',

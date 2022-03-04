@@ -3,6 +3,7 @@ import morgan from 'morgan'
 import { default as globalErrorHandler } from './controllers/errorController'
 import tourRouter from './routes/tourRoutes'
 import userRouter from './routes/userRoutes'
+import reviewRouter from './routes/reviewRoutes'
 import { ICustomRequestExpress } from './typing/types'
 import AppError from './utils/appError'
 import { rateLimit } from 'express-rate-limit'
@@ -85,6 +86,7 @@ app.use(
 // 3) ROUTES
 app.use('/api/v1/tours', tourRouter)
 app.use('/api/v1/users', userRouter)
+app.use('/api/v1/reviews', reviewRouter)
 
 app.all(
   '*',

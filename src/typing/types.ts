@@ -9,6 +9,6 @@ export interface ICustomRequestExpress extends Request {
 export enum UserRoles {
   ADMIN = 'admin',
   GUIDE = 'guide',
-  LEAD_GUIDE = 'lead-guide',
+  LEAD_GUIDE = 'lead_guide',
   USER = 'user',
 }

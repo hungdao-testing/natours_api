@@ -1,7 +1,7 @@
 import express from 'express'
 import * as tourController from '../controllers/tourControllers'
 import * as authController from '../controllers/authController'
-import { UserRoles } from '../typing/types'
+
 
 const router = express.Router()
 
@@ -27,7 +27,7 @@ router
   .patch(tourController.updateTour)
   .delete(
     authController.protect,
-    authController.restrictTo(UserRoles.ADMIN, UserRoles.LEAD_GUIDE),
+    authController.restrictTo("ADMIN", "LEAD_GUIDE"),
     tourController.deleteTour,
   )
 

@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
 import { TourModel } from '../models/tourModel'
-import { IUser } from '../models/userModel'
 import APIFeatures from '../utils/apiFeatures'
 import AppError from '../utils/appError'
 import { catchAsync } from '../utils/catchAsync'
