@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose, { Model, PopulatedDoc, Schema, Types } from 'mongoose'
 import { ITour } from './tourModel'
 import { IUser } from './userModel'
 
@@ -6,24 +6,24 @@ interface IReviewDocument extends mongoose.Document {
   review: String
   rating: number
   createdAt: Date
-  tour: ITour
+  tour: ITour,
   user: IUser
 }
 
-export interface IReview extends IReviewDocument {}
+export interface IReview extends IReviewDocument { }
 
-const reviewSchema = new mongoose.Schema<IReviewDocument>(
+const reviewSchema = new mongoose.Schema<IReviewDocument, Model<IReviewDocument>>(
   {
     review: { type: String, required: [true, 'Review cannot be empty'] },
     rating: { type: Number, min: 1, max: 5 },
     createdAt: { type: Date, default: new Date() },
     tour: {
-      type: mongoose.SchemaTypes.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'Tour',
       required: [true, 'Review must belong to a tour.'],
     },
     user: {
-      type: mongoose.SchemaTypes.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'User',
       required: [true, 'Review must belong to a user'],
     },
@@ -33,6 +33,16 @@ const reviewSchema = new mongoose.Schema<IReviewDocument>(
     toObject: { virtuals: true },
   },
 )
+
+reviewSchema.pre(/^find/, async function (next) {
+  this.populate({ path: 'tour', select: 'name' });
+
+  this.populate({
+    path: 'user',
+    select: 'name'
+  })
+  next()
+})
 
 export const ReviewModel = mongoose.model<IReviewDocument>(
   'Review',
