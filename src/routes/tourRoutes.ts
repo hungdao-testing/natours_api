@@ -1,6 +1,7 @@
 import express from 'express'
 import * as tourController from '../controllers/tourControllers'
 import * as authController from '../controllers/authController'
+import * as reviewController from '../controllers/reviewController'
 
 const router = express.Router()
 
@@ -28,6 +29,14 @@ router
     authController.protect,
     authController.restrictTo('ADMIN', 'LEAD_GUIDE'),
     tourController.deleteTour,
+  )
+
+router
+  .route('/:tourId/reviews')
+  .post(
+    authController.protect,
+    authController.restrictTo('USER'),
+    reviewController.createReview,
   )
 
 export default router
