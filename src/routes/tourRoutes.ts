@@ -1,9 +1,11 @@
 import express from 'express'
 import * as tourController from '../controllers/tourControllers'
 import * as authController from '../controllers/authController'
-import * as reviewController from '../controllers/reviewController'
+import reviewRouter from '../routes/reviewRoutes'
 
 const router = express.Router()
+
+router.use('/:tourId/reviews', reviewRouter)
 
 // router.param('id', tourController.checkID);
 
@@ -29,14 +31,6 @@ router
     authController.protect,
     authController.restrictTo('ADMIN', 'LEAD_GUIDE'),
     tourController.deleteTour,
-  )
-
-router
-  .route('/:tourId/reviews')
-  .post(
-    authController.protect,
-    authController.restrictTo('USER'),
-    reviewController.createReview,
   )
 
 export default router
