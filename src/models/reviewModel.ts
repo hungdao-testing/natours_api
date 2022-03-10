@@ -6,13 +6,16 @@ interface IReviewDocument extends mongoose.Document {
   review: String
   rating: number
   createdAt: Date
-  tour: ITour,
+  tour: ITour
   user: IUser
 }
 
-export interface IReview extends IReviewDocument { }
+export interface IReview extends IReviewDocument {}
 
-const reviewSchema = new mongoose.Schema<IReviewDocument, Model<IReviewDocument>>(
+const reviewSchema = new mongoose.Schema<
+  IReviewDocument,
+  Model<IReviewDocument>
+>(
   {
     review: { type: String, required: [true, 'Review cannot be empty'] },
     rating: { type: Number, min: 1, max: 5 },
@@ -35,11 +38,11 @@ const reviewSchema = new mongoose.Schema<IReviewDocument, Model<IReviewDocument>
 )
 
 reviewSchema.pre(/^find/, async function (next) {
-  this.populate({ path: 'tour', select: 'name' });
+  // this.populate({ path: 'tour', select: 'name' });
 
   this.populate({
     path: 'user',
-    select: 'name'
+    select: 'name photo',
   })
   next()
 })
