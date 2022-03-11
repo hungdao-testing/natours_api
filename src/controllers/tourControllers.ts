@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
-import { TourModel } from '../models/tourModel'
+import { ITour, TourModel as model } from '../models/tourModel'
 import APIFeatures from '../utils/apiFeatures'
 import AppError from '../utils/appError'
 import { catchAsync } from '../utils/catchAsync'
+import * as factory from './handlerFactory'
 
 export const aliasTopTour = async (
   req: Request,
@@ -17,7 +18,7 @@ export const aliasTopTour = async (
 
 export const getAllTours = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const features = new APIFeatures(TourModel.find(), req.query)
+    const features = new APIFeatures(model.find(), req.query)
       .filter()
       .sort()
       .limitFields()
@@ -37,7 +38,7 @@ export const getAllTours = catchAsync(
 
 export const getTour = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const tour = await TourModel.findById(req.params.id).populate('reviews')
+    const tour = await model.findById(req.params.id).populate('reviews')
     if (!tour) {
       return next(new AppError('No tour found with the passing ID', 404))
     }
@@ -51,7 +52,7 @@ export const getTour = catchAsync(
 
 export const createTour = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const newTour = await TourModel.create(req.body)
+    const newTour = await model.create(req.body)
     res.status(201).json({
       status: 'success',
       data: {
@@ -63,7 +64,7 @@ export const createTour = catchAsync(
 
 export const updateTour = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const newTour = await TourModel.findByIdAndUpdate(req.params.id, req.body, {
+    const newTour = await model.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
     })
@@ -79,22 +80,11 @@ export const updateTour = catchAsync(
   },
 )
 
-export const deleteTour = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const tour = await TourModel.findByIdAndDelete(req.params.id)
-    if (!tour) {
-      return next(new AppError('No tour found with the passing ID', 404))
-    }
-    res.status(204).json({
-      status: 'success',
-      data: null,
-    })
-  },
-)
+export const deleteTour = factory.deleteOne<ITour>(model)
 
 export const getTourStats = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const stats = await TourModel.aggregate([
+    const stats = await model.aggregate([
       {
         $match: { ratingsAverage: { $gte: 4.5 } },
       },
@@ -123,7 +113,7 @@ export const getTourStats = catchAsync(
 export const getMonthlyPlan = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const year = req.params.year ? parseInt(req.params.year) : 1
-    const plan = await TourModel.aggregate([
+    const plan = await model.aggregate([
       {
         $unwind: '$startDates', //$unwind is used to deconstruct an array
       },

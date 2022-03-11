@@ -1,7 +1,7 @@
 import mongoose, { Document, Model, Schema } from 'mongoose'
 import validator from 'validator'
 import bcrypt from 'bcryptjs'
-import { UserRoles } from '../typing/types'
+import { UserRoles } from '../typing/app.type'
 import crypto from 'crypto'
 
 interface IUserDocument extends Document {

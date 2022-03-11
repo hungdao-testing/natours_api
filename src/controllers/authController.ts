@@ -4,7 +4,7 @@ import { catchAsync } from '../utils/catchAsync'
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import AppError from '../utils/appError'
 import { sendEmail } from '../utils/email'
-import { ICustomRequestExpress, UserRoles } from '../typing/types'
+import { ICustomRequestExpress, UserRoles } from '../typing/app.type'
 import crypto from 'crypto'
 
 const verifyToken = (token: string, secret: string): Promise<JwtPayload> => {
