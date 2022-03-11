@@ -50,35 +50,9 @@ export const getTour = catchAsync(
   },
 )
 
-export const createTour = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const newTour = await model.create(req.body)
-    res.status(201).json({
-      status: 'success',
-      data: {
-        tour: newTour,
-      },
-    })
-  },
-)
+export const createTour = factory.createOne<ITour>(model)
 
-export const updateTour = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const newTour = await model.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    })
-    if (!newTour) {
-      return next(new AppError('No tour found with the passing ID', 404))
-    }
-    res.status(200).json({
-      status: 'success',
-      data: {
-        tour: newTour,
-      },
-    })
-  },
-)
+export const updateTour = factory.updateOne<ITour>(model)
 
 export const deleteTour = factory.deleteOne<ITour>(model)
 

@@ -4,21 +4,15 @@ import { ICustomRequestExpress } from '../typing/app.type'
 import { catchAsync } from '../utils/catchAsync'
 import * as factory from './handlerFactory'
 
-export const createReview = catchAsync(
-  async (req: ICustomRequestExpress, res: Response, next: NextFunction) => {
-    if (!req.body.tour) req.body.tour = req.params.tourId
-    if (!req.body.user) req.body.user = req.user!.id
-
-    const newReview = await model.create(req.body)
-
-    res.status(201).json({
-      status: 'success',
-      data: {
-        review: newReview,
-      },
-    })
-  },
-)
+export const setTourUserIds = (
+  req: ICustomRequestExpress,
+  res: Response,
+  next: NextFunction,
+) => {
+  if (!req.body.tour) req.body.tour = req.params.tourId
+  if (!req.body.user) req.body.user = req.user!.id
+  next()
+}
 
 export const getAllReviews = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -33,5 +27,9 @@ export const getAllReviews = catchAsync(
     })
   },
 )
+
+export const createReview = factory.createOne<IReview>(model)
+
+export const updateReview = factory.updateOne<IReview>(model)
 
 export const deleteReview = factory.deleteOne<IReview>(model)

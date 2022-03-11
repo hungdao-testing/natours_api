@@ -27,7 +27,50 @@ export function deleteOne<T>(model: Model<T>) {
 
       res.status(204).json({
         status: 'success',
+        doc,
+      })
+    },
+  )
+}
+
+export function updateOne<T>(model: Model<T>) {
+  return catchAsync(
+    async (
+      req: ICustomRequestExpress,
+      res: ICustomResponseExpress,
+      next: ICustomNextFunction,
+    ) => {
+      const collectionName = model.collection.collectionName
+      const doc = await model.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true,
+      })
+      if (!doc) {
+        return next(
+          new AppError(`No ${collectionName} found with the passing ID`, 404),
+        )
+      }
+      res.status(200).json({
+        status: 'success',
         data: doc,
+      })
+    },
+  )
+}
+
+export function createOne<T>(model: Model<T>) {
+  return catchAsync(
+    async (
+      req: ICustomRequestExpress,
+      res: ICustomResponseExpress,
+      next: ICustomNextFunction,
+    ) => {
+      const doc = await model.create(req.body)
+      res.status(201).json({
+        status: 'success',
+        data: {
+          doc,
+        },
       })
     },
   )

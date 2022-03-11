@@ -103,14 +103,8 @@ export const createUser = (
     message: 'This route is not yet defined!',
   })
 }
-export const updateUser = (
-  req: ICustomRequestExpress,
-  res: ICustomResponseExpress,
-  next: ICustomNextFunction,
-) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined!',
-  })
-}
+
+// DO not update password with this!!!
+export const updateUser = factory.updateOne<IUser>(model)
+
 export const deleteUser = factory.deleteOne<IUser>(model)
