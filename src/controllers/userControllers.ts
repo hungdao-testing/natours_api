@@ -21,6 +21,15 @@ const filterObj = (
 
 export const getAllUsers = factory.getAll<IUser>(model)
 
+export const getMe = (
+  req: ICustomRequestExpress,
+  res: ICustomResponseExpress,
+  next: ICustomNextFunction,
+) => {
+  req.params.id = req.user?.id
+  next()
+}
+
 // users update theif info by themselves
 export const updateMe = catchAsync(
   async (
