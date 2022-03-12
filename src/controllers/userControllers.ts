@@ -19,18 +19,7 @@ const filterObj = (
   return newObj
 }
 
-export const getAllUsers = catchAsync(
-  async (req: ICustomRequestExpress, res: ICustomResponseExpress) => {
-    const users = await model.find()
-    res.status(200).json({
-      status: 'success',
-      results: users.length,
-      data: {
-        users,
-      },
-    })
-  },
-)
+export const getAllUsers = factory.getAll<IUser>(model)
 
 // users update theif info by themselves
 export const updateMe = catchAsync(
@@ -83,16 +72,6 @@ export const deleteMe = catchAsync(
   },
 )
 
-export const getUser = (
-  req: ICustomRequestExpress,
-  res: ICustomResponseExpress,
-  next: ICustomNextFunction,
-) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined!',
-  })
-}
 export const createUser = (
   req: ICustomRequestExpress,
   res: ICustomResponseExpress,
@@ -100,9 +79,10 @@ export const createUser = (
 ) => {
   res.status(500).json({
     status: 'error',
-    message: 'This route is not yet defined!',
+    message: 'This route is not yet defined! Please use /signup instead',
   })
 }
+export const getUser = factory.getOne<IUser>(model)
 
 // DO not update password with this!!!
 export const updateUser = factory.updateOne<IUser>(model)

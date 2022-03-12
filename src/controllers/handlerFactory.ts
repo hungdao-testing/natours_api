@@ -1,13 +1,15 @@
-import { Model } from 'mongoose'
+import { Model, PopulateOptions, Query } from 'mongoose'
 import {
   ICustomRequestExpress,
   ICustomResponseExpress,
   ICustomNextFunction,
+  TModels,
 } from '../typing/app.type'
+import APIFeatures from '../utils/apiFeatures'
 import AppError from '../utils/appError'
 import { catchAsync } from '../utils/catchAsync'
 
-export function deleteOne<T>(model: Model<T>) {
+export function deleteOne<T extends TModels>(model: Model<T>) {
   return catchAsync(
     async (
       req: ICustomRequestExpress,
@@ -33,7 +35,7 @@ export function deleteOne<T>(model: Model<T>) {
   )
 }
 
-export function updateOne<T>(model: Model<T>) {
+export function updateOne<T extends TModels>(model: Model<T>) {
   return catchAsync(
     async (
       req: ICustomRequestExpress,
@@ -58,7 +60,7 @@ export function updateOne<T>(model: Model<T>) {
   )
 }
 
-export function createOne<T>(model: Model<T>) {
+export function createOne<T extends TModels>(model: Model<T>) {
   return catchAsync(
     async (
       req: ICustomRequestExpress,
@@ -70,6 +72,67 @@ export function createOne<T>(model: Model<T>) {
         status: 'success',
         data: {
           doc,
+        },
+      })
+    },
+  )
+}
+
+export function getOne<T extends TModels>(
+  model: Model<T>,
+  populateOpts?: PopulateOptions,
+) {
+  return catchAsync(
+    async (
+      req: ICustomRequestExpress,
+      res: ICustomResponseExpress,
+      next: ICustomNextFunction,
+    ) => {
+      const collectionName = model.collection.collectionName
+
+      let query: Query<T | null, T> = model.findById(req.params.id)
+      if (populateOpts) query = query!.populate(populateOpts)
+
+      const doc = await query
+      if (!doc) {
+        return next(
+          new AppError(`No ${collectionName} found with the passing ID`, 404),
+        )
+      }
+
+      res.status(200).json({
+        status: 'success',
+        data: { data: doc },
+      })
+    },
+  )
+}
+export function getAll<T extends TModels>(model: Model<T>) {
+  return catchAsync(
+    async (
+      req: ICustomRequestExpress,
+      res: ICustomResponseExpress,
+      next: ICustomNextFunction,
+    ) => {
+      // To allow for nested GET reviews on tour (hack)
+      // Find a way to handle it later
+
+      let filter = {}
+      if (req.params.tourId) filter = { tour: req.params.tourId }
+
+      const features = new APIFeatures<T>(model.find(filter), req.query)
+        .filter()
+        .sort()
+        .limitFields()
+        .paginate()
+      const docs = await features.query
+
+      //SEND REQ
+      res.status(200).json({
+        status: 'success',
+        result: docs.length,
+        data: {
+          data: docs,
         },
       })
     },

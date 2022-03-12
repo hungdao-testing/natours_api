@@ -1,14 +1,16 @@
-import { NextFunction, Request, Response } from 'express'
+import {
+  ICustomRequestExpress,
+  ICustomResponseExpress,
+  ICustomNextFunction,
+} from '../typing/app.type'
 import { ITour, TourModel as model } from '../models/tourModel'
-import APIFeatures from '../utils/apiFeatures'
-import AppError from '../utils/appError'
 import { catchAsync } from '../utils/catchAsync'
 import * as factory from './handlerFactory'
 
 export const aliasTopTour = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
+  req: ICustomRequestExpress,
+  res: ICustomResponseExpress,
+  next: ICustomNextFunction,
 ) => {
   req.query.limit = '5'
   req.query.sort = '-ratingsAverage,price'
@@ -16,39 +18,9 @@ export const aliasTopTour = async (
   next()
 }
 
-export const getAllTours = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const features = new APIFeatures(model.find(), req.query)
-      .filter()
-      .sort()
-      .limitFields()
-      .paginate()
-    const tours = await features.query
+export const getAllTours = factory.getAll<ITour>(model)
 
-    //SEND REQ
-    res.status(200).json({
-      status: 'success',
-      result: tours.length,
-      data: {
-        tours,
-      },
-    })
-  },
-)
-
-export const getTour = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const tour = await model.findById(req.params.id).populate('reviews')
-    if (!tour) {
-      return next(new AppError('No tour found with the passing ID', 404))
-    }
-
-    res.status(200).json({
-      status: 'success',
-      data: { tour },
-    })
-  },
-)
+export const getTour = factory.getOne<ITour>(model, { path: 'reviews' })
 
 export const createTour = factory.createOne<ITour>(model)
 
@@ -57,7 +29,11 @@ export const updateTour = factory.updateOne<ITour>(model)
 export const deleteTour = factory.deleteOne<ITour>(model)
 
 export const getTourStats = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (
+    req: ICustomRequestExpress,
+    res: ICustomResponseExpress,
+    next: ICustomNextFunction,
+  ) => {
     const stats = await model.aggregate([
       {
         $match: { ratingsAverage: { $gte: 4.5 } },
@@ -85,7 +61,11 @@ export const getTourStats = catchAsync(
 )
 
 export const getMonthlyPlan = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (
+    req: ICustomRequestExpress,
+    res: ICustomResponseExpress,
+    next: ICustomNextFunction,
+  ) => {
     const year = req.params.year ? parseInt(req.params.year) : 1
     const plan = await model.aggregate([
       {
