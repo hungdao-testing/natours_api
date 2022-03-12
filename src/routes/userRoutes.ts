@@ -12,22 +12,27 @@ router.post('/forgotPassword', authController.forgotPassword)
 
 router.patch('/resetPassword/:token', authController.resetPassword) // edit password => using PATCH or PUT, but edit just a portion of User data => PATCH
 
+// all routes below this line will be applied `protect`
+router.use(authController.protect)
+
 router.patch(
   '/updateMyPassword',
-  authController.protect,
+
   authController.updatePassword,
 )
 
 router.get(
   '/me',
-  authController.protect,
+
   userController.getMe,
   userController.getUser,
 )
 
-router.patch('/updateMe', authController.protect, userController.updateMe)
+router.patch('/updateMe', userController.updateMe)
 
-router.delete('/deleteMe', authController.protect, userController.deleteMe)
+router.delete('/deleteMe', userController.deleteMe)
+
+router.use(authController.restrictTo('ADMIN'))
 
 router
   .route('/')
