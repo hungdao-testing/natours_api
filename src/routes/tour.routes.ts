@@ -1,7 +1,7 @@
 import express from 'express'
-import * as tourController from '../controllers/tourControllers'
-import * as authController from '../controllers/authController'
-import reviewRouter from '../routes/reviewRoutes'
+import * as tourController from '../controllers/tour.controllers'
+import * as authController from '../controllers/auth.controller'
+import reviewRouter from './review.routes'
 
 const router = express.Router()
 

@@ -1,10 +1,10 @@
-import { IReview, ReviewModel as model } from '../models/reviewModel'
+import { IReview, ReviewModel as model } from '../models/review.model'
 import {
   ICustomRequestExpress,
   ICustomResponseExpress,
   ICustomNextFunction,
 } from '../typing/app.type'
-import * as factory from './handlerFactory'
+import * as factory from './handlerFactory.controller'
 
 export const setTourUserIds = (
   req: ICustomRequestExpress,

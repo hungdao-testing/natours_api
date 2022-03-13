@@ -9,7 +9,6 @@ import APIFeatures from '../utils/apiFeatures'
 import AppError from '../utils/appError'
 import { catchAsync } from '../utils/catchAsync'
 
-
 export function deleteOne<T extends TModels>(model: Model<T>) {
   return catchAsync(
     async (
@@ -114,7 +113,7 @@ type ForeignQueryParam = {
   paramField: string
 }
 
-/**  
+/**
  *  The function extracts query param and maps to a foreign field (which is a prop of a foreign document)
  */
 const setFilterObjByQueryParam = (
@@ -124,7 +123,6 @@ const setFilterObjByQueryParam = (
   const pName = req.params?.[filterObj.paramField]
   return pName ? { [filterObj.foreignField]: pName } : {}
 }
-
 
 /**
  * Get all documents, applied for nested (e.g. get review on tour) and unnested routes

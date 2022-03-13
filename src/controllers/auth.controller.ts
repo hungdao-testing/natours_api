@@ -1,5 +1,5 @@
 import { CookieOptions, NextFunction, Request, Response } from 'express'
-import { IUser, UserModel } from '../models/userModel'
+import { IUser, UserModel } from '../models/user.model'
 import { catchAsync } from '../utils/catchAsync'
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import AppError from '../utils/appError'

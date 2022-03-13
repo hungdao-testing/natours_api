@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
-import { IReview } from '../models/reviewModel'
-import { ITour } from '../models/tourModel'
-import { IUser } from '../models/userModel'
+import { IReview } from '../models/review.model'
+import { ITour } from '../models/tour.model'
+import { IUser } from '../models/user.model'
 
 export interface ICustomRequestExpress extends Request {
   requestTime?: string | undefined

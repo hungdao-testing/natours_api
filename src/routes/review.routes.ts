@@ -1,6 +1,6 @@
 import express from 'express'
-import * as authController from '../controllers/authController'
-import * as reviewController from '../controllers/reviewController'
+import * as authController from '../controllers/auth.controller'
+import * as reviewController from '../controllers/review.controller'
 
 const router = express.Router({ mergeParams: true })
 

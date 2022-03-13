@@ -1,6 +1,6 @@
 import mongoose, { Model, PopulatedDoc, Schema, Types } from 'mongoose'
-import { ITour } from './tourModel'
-import { IUser } from './userModel'
+import { ITour } from './tour.model'
+import { IUser } from './user.model'
 
 interface IReviewDocument extends mongoose.Document {
   review: String

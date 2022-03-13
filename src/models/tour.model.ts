@@ -1,6 +1,6 @@
 import mongoose, { Aggregate } from 'mongoose'
 import slugify from 'slugify'
-import { IUser } from './userModel'
+import { IUser } from './user.model'
 
 type Location = {
   type: string

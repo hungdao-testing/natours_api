@@ -3,9 +3,9 @@ import {
   ICustomResponseExpress,
   ICustomNextFunction,
 } from '../typing/app.type'
-import { ITour, TourModel as model } from '../models/tourModel'
+import { ITour, TourModel as model } from '../models/tour.model'
 import { catchAsync } from '../utils/catchAsync'
-import * as factory from './handlerFactory'
+import * as factory from './handlerFactory.controller'
 
 export const aliasTopTour = async (
   req: ICustomRequestExpress,

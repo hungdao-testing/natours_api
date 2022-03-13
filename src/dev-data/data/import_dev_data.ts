@@ -2,9 +2,9 @@ import dotenv from 'dotenv'
 import app from '../../app'
 import mongoose from 'mongoose'
 import fs from 'fs'
-import { TourModel } from '../../models/tourModel'
-import { ReviewModel } from '../../models/reviewModel'
-import { UserModel } from '../../models/userModel'
+import { TourModel } from '../../models/tour.model'
+import { ReviewModel } from '../../models/review.model'
+import { UserModel } from '../../models/user.model'
 
 dotenv.config({ path: './config.env' })
 const DB_URI = process.env.DB_CONN_STRING!.replace(
