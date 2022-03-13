@@ -108,15 +108,19 @@ export function getOne<T extends TModels>(
   )
 }
 
-type FilterWithForeignField = {
+type QueryObjForForeignField = {
   foreignField: 'tour' | 'review' | 'user'
   paramField: string
 }
 
+/**  `QueryObjForForeignField` is formed by `{foreignField: string, queryParams: string}`
+ * 
+ *  The function is created to get query param and map to foreign field (which are referencing to a document)
+ */
 const getFilterObjByQueryParam = (
-  filterObj: FilterWithForeignField,
+  filterObj: QueryObjForForeignField,
   req: ICustomRequestExpress,
-): FilterWithForeignField | {} => {
+): QueryObjForForeignField | {} => {
   const pName = req.params?.[filterObj.paramField]
   return pName ? { [filterObj.foreignField]: pName } : {}
 }
@@ -124,12 +128,12 @@ const getFilterObjByQueryParam = (
 /**
  * Get all documents, applied for nested (e.g. get review on tour) and unnested routes 
  *
- * @param model                the database model
- * @param foreignFieldObj      the foreign fields are extracted from query params and passed into the query object
+ * @param model                        the database model
+ * @param filterObjWithQueryParam      is `QueryObjForForeignField` type and passed into the query object
  */
 export function getAll<T extends TModels>(
   model: Model<T>,
-  foreignFieldObj?: FilterWithForeignField,
+  filterObjWithQueryParam?: QueryObjForForeignField,
 ) {
   return catchAsync(
     async (
@@ -139,9 +143,9 @@ export function getAll<T extends TModels>(
     ) => {
       let filter: FilterQuery<T> = {}
 
-      if (foreignFieldObj && Object.keys(foreignFieldObj).length > 0) {
+      if (filterObjWithQueryParam && Object.keys(filterObjWithQueryParam).length > 0) {
         filter = getFilterObjByQueryParam(
-          foreignFieldObj,
+          filterObjWithQueryParam,
           req,
         ) as FilterQuery<T>
       }
