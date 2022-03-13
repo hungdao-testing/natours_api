@@ -126,7 +126,7 @@ const getFilterObjViaForeinField = (
  * Get all documents
  *
  * @param model                the model
- * @param foreignFieldObj      the foreign fields are getting from query params and passed into the query object
+ * @param foreignFieldObj      the foreign fields are extracted from query params and passed into the query object
  */
 export function getAll<T extends TModels>(
   model: Model<T>,
