@@ -16,7 +16,10 @@ export const setTourUserIds = (
   next()
 }
 
-export const getAllReviews = factory.getAll<IReview>(model, { foreignField: 'tour', paramField: 'tourId', })
+export const getAllReviews = factory.getAll<IReview>(model, {
+  foreignField: 'tour',
+  paramField: 'tourId',
+})
 
 export const getReview = factory.getOne<IReview>(model)
 

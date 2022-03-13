@@ -109,10 +109,28 @@ export function getOne<T extends TModels>(
   )
 }
 
+type FilterWithForeignField = {
+  foreignField: 'tour' | 'review' | 'user'
+  paramField: string
+}
 
+const getFilterObjViaForeinField = (
+  filterObj: FilterWithForeignField,
+  req: ICustomRequestExpress,
+) => {
+  const pName = req.params?.[filterObj.paramField]
+  return pName ? { [filterObj.foreignField]: pName } : {}
+}
+
+/**
+ * Get all documents
+ *
+ * @param model                the model
+ * @param foreignFieldObj      the foreign fields are getting from query params and passed into the query object
+ */
 export function getAll<T extends TModels>(
   model: Model<T>,
-  filterObj?: { foreignField: 'tour' | 'review' | 'user'; paramField: string },
+  foreignFieldObj?: FilterWithForeignField,
 ) {
   return catchAsync(
     async (
@@ -120,10 +138,14 @@ export function getAll<T extends TModels>(
       res: ICustomResponseExpress,
       next: ICustomNextFunction,
     ) => {
-
       let filter: FilterQuery<T> = {}
-      if (filterObj && Object.keys(filterObj).length > 0)
-        filter = filterObj as FilterQuery<T>
+
+      if (foreignFieldObj && Object.keys(foreignFieldObj).length > 0) {
+        filter = getFilterObjViaForeinField(
+          foreignFieldObj,
+          req,
+        ) as FilterQuery<T>
+      }
 
       const features = new APIFeatures<T>(model.find(filter), req.query)
         .filter()
