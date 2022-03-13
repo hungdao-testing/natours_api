@@ -1,5 +1,4 @@
 import { FilterQuery, Model, PopulateOptions, Query } from 'mongoose'
-import { ITour } from '../models/tourModel'
 import {
   ICustomRequestExpress,
   ICustomResponseExpress,
