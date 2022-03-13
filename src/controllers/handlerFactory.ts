@@ -29,7 +29,7 @@ export function deleteOne<T extends TModels>(model: Model<T>) {
 
       res.status(204).json({
         status: 'success',
-        doc,
+        [model.collection.collectionName]: doc,
       })
     },
   )
@@ -54,7 +54,7 @@ export function updateOne<T extends TModels>(model: Model<T>) {
       }
       res.status(200).json({
         status: 'success',
-        data: doc,
+        [model.collection.collectionName]: doc,
       })
     },
   )
@@ -71,7 +71,7 @@ export function createOne<T extends TModels>(model: Model<T>) {
       res.status(201).json({
         status: 'success',
         data: {
-          doc,
+          [model.collection.collectionName]: doc,
         },
       })
     },
@@ -102,7 +102,7 @@ export function getOne<T extends TModels>(
 
       res.status(200).json({
         status: 'success',
-        data: { data: doc },
+        [model.collection.collectionName]: doc,
       })
     },
   )
@@ -131,9 +131,7 @@ export function getAll<T extends TModels>(model: Model<T>) {
       res.status(200).json({
         status: 'success',
         result: docs.length,
-        data: {
-          data: docs,
-        },
+        [model.collection.collectionName]: docs,
       })
     },
   )
