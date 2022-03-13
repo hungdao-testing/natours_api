@@ -9,6 +9,7 @@ import APIFeatures from '../utils/apiFeatures'
 import AppError from '../utils/appError'
 import { catchAsync } from '../utils/catchAsync'
 
+
 export function deleteOne<T extends TModels>(model: Model<T>) {
   return catchAsync(
     async (
@@ -108,32 +109,32 @@ export function getOne<T extends TModels>(
   )
 }
 
-type QueryObjForForeignField = {
+type ForeignQueryParam = {
   foreignField: 'tour' | 'review' | 'user'
   paramField: string
 }
 
-/**  `QueryObjForForeignField` is formed by `{foreignField: string, queryParams: string}`
- *
- *  The function is created to get query param and map to foreign field (which are referencing to a document)
+/**  
+ *  The function extracts query param and maps to a foreign field (which is a prop of a foreign document)
  */
-const getFilterObjByQueryParam = (
-  filterObj: QueryObjForForeignField,
+const setFilterObjByQueryParam = (
+  filterObj: ForeignQueryParam,
   req: ICustomRequestExpress,
-): QueryObjForForeignField | {} => {
+): ForeignQueryParam | {} => {
   const pName = req.params?.[filterObj.paramField]
   return pName ? { [filterObj.foreignField]: pName } : {}
 }
 
+
 /**
  * Get all documents, applied for nested (e.g. get review on tour) and unnested routes
  *
- * @param model                        the database model
- * @param filterObjWithQueryParam      is `QueryObjForForeignField` type and passed into the query object
+ * @param {Model} model - A database model
+ * @param {ForeignQueryParam=} filterObjWithQueryParam - is a filter object and passed into the query object
  */
 export function getAll<T extends TModels>(
   model: Model<T>,
-  filterObjWithQueryParam?: QueryObjForForeignField,
+  filterObjWithQueryParam?: ForeignQueryParam,
 ) {
   return catchAsync(
     async (
@@ -147,7 +148,7 @@ export function getAll<T extends TModels>(
         filterObjWithQueryParam &&
         Object.keys(filterObjWithQueryParam).length > 0
       ) {
-        filter = getFilterObjByQueryParam(
+        filter = setFilterObjByQueryParam(
           filterObjWithQueryParam,
           req,
         ) as FilterQuery<T>
