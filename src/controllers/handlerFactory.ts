@@ -117,15 +117,15 @@ type FilterWithForeignField = {
 const getFilterObjViaForeinField = (
   filterObj: FilterWithForeignField,
   req: ICustomRequestExpress,
-) => {
+): FilterWithForeignField | {} => {
   const pName = req.params?.[filterObj.paramField]
   return pName ? { [filterObj.foreignField]: pName } : {}
 }
 
 /**
- * Get all documents
+ * Get all documents, applied for nested (e.g. get review on tour) and unnested routes 
  *
- * @param model                the model
+ * @param model                the database model
  * @param foreignFieldObj      the foreign fields are extracted from query params and passed into the query object
  */
 export function getAll<T extends TModels>(
