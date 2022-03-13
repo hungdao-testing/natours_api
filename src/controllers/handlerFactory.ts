@@ -1,4 +1,5 @@
-import { Model, PopulateOptions, Query } from 'mongoose'
+import { FilterQuery, Model, PopulateOptions, Query } from 'mongoose'
+import { ITour } from '../models/tourModel'
 import {
   ICustomRequestExpress,
   ICustomResponseExpress,
@@ -107,18 +108,22 @@ export function getOne<T extends TModels>(
     },
   )
 }
-export function getAll<T extends TModels>(model: Model<T>) {
+
+
+export function getAll<T extends TModels>(
+  model: Model<T>,
+  filterObj?: { foreignField: 'tour' | 'review' | 'user'; paramField: string },
+) {
   return catchAsync(
     async (
       req: ICustomRequestExpress,
       res: ICustomResponseExpress,
       next: ICustomNextFunction,
     ) => {
-      // To allow for nested GET reviews on tour (hack)
-      // Find a way to handle it later
 
-      let filter = {}
-      if (req.params.tourId) filter = { tour: req.params.tourId }
+      let filter: FilterQuery<T> = {}
+      if (filterObj && Object.keys(filterObj).length > 0)
+        filter = filterObj as FilterQuery<T>
 
       const features = new APIFeatures<T>(model.find(filter), req.query)
         .filter()
