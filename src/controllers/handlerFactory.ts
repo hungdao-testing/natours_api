@@ -114,7 +114,7 @@ type FilterWithForeignField = {
   paramField: string
 }
 
-const getFilterObjViaForeinField = (
+const getFilterObjByQueryParam = (
   filterObj: FilterWithForeignField,
   req: ICustomRequestExpress,
 ): FilterWithForeignField | {} => {
@@ -141,7 +141,7 @@ export function getAll<T extends TModels>(
       let filter: FilterQuery<T> = {}
 
       if (foreignFieldObj && Object.keys(foreignFieldObj).length > 0) {
-        filter = getFilterObjViaForeinField(
+        filter = getFilterObjByQueryParam(
           foreignFieldObj,
           req,
         ) as FilterQuery<T>
