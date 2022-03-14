@@ -1,4 +1,4 @@
-import { IUser, UserModel as model } from '../models/user.model'
+import { UserModel as model } from '../models/user.model'
 import {
   ICustomRequestExpress,
   ICustomResponseExpress,

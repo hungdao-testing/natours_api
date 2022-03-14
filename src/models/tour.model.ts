@@ -9,7 +9,7 @@ type Location = {
   description: string
 }
 //Ref: https://mongoosejs.com/docs/typescript/schemas.html
-export interface ITour extends mongoose.Document {
+interface ITourDocument extends mongoose.Document {
   id: number
   name: string
   slug: string
@@ -32,6 +32,8 @@ export interface ITour extends mongoose.Document {
   locations: (Location & { day: number })[]
   guides: (IUser | null)[]
 }
+
+export interface ITour extends ITourDocument {}
 
 const tourSchema = new mongoose.Schema<ITour>(
   {

@@ -1,4 +1,4 @@
-import mongoose, { Model, PopulatedDoc, Schema, Types } from 'mongoose'
+import mongoose, { Model, Schema } from 'mongoose'
 import { ITour } from './tour.model'
 import { IUser } from './user.model'
 
@@ -12,10 +12,7 @@ interface IReviewDocument extends mongoose.Document {
 
 export interface IReview extends IReviewDocument {}
 
-const reviewSchema = new mongoose.Schema<
-  IReviewDocument,
-  Model<IReviewDocument>
->(
+const reviewSchema = new mongoose.Schema<IReview, Model<IReview>>(
   {
     review: { type: String, required: [true, 'Review cannot be empty'] },
     rating: { type: Number, min: 1, max: 5 },
@@ -47,7 +44,4 @@ reviewSchema.pre(/^find/, async function (next) {
   next()
 })
 
-export const ReviewModel = mongoose.model<IReviewDocument>(
-  'Review',
-  reviewSchema,
-)
+export const ReviewModel = mongoose.model<IReview>('Review', reviewSchema)

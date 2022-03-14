@@ -1,4 +1,4 @@
-import { IReview, ReviewModel as model } from '../models/review.model'
+import { ReviewModel as model } from '../models/review.model'
 import {
   ICustomRequestExpress,
   ICustomResponseExpress,
