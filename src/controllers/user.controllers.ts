@@ -19,7 +19,7 @@ const filterObj = (
   return newObj
 }
 
-export const getAllUsers = factory.getAll<IUser>(model)
+export const getAllUsers = factory.getAll(model)
 
 export const getMe = (
   req: ICustomRequestExpress,
@@ -91,9 +91,9 @@ export const createUser = (
     message: 'This route is not yet defined! Please use /signup instead',
   })
 }
-export const getUser = factory.getOne<IUser>(model)
+export const getUser = factory.getOne(model)
 
 // DO not update password with this!!!
-export const updateUser = factory.updateOne<IUser>(model)
+export const updateUser = factory.updateOne(model)
 
-export const deleteUser = factory.deleteOne<IUser>(model)
+export const deleteUser = factory.deleteOne(model)

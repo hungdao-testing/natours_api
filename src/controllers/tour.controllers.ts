@@ -18,15 +18,15 @@ export const aliasTopTour = async (
   next()
 }
 
-export const getAllTours = factory.getAll<ITour>(model)
+export const getAllTours = factory.getAll(model)
 
-export const getTour = factory.getOne<ITour>(model, { path: 'reviews' })
+export const getTour = factory.getOne(model, { path: 'reviews' })
 
-export const createTour = factory.createOne<ITour>(model)
+export const createTour = factory.createOne(model)
 
-export const updateTour = factory.updateOne<ITour>(model)
+export const updateTour = factory.updateOne(model)
 
-export const deleteTour = factory.deleteOne<ITour>(model)
+export const deleteTour = factory.deleteOne(model)
 
 export const getTourStats = catchAsync(
   async (
