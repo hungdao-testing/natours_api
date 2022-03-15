@@ -157,6 +157,8 @@ export function getAll<T extends TModels>(
         .sort()
         .limitFields()
         .paginate()
+
+      // const docs = await features.query.explain()
       const docs = await features.query
 
       //SEND REQ

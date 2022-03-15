@@ -133,6 +133,11 @@ const tourSchema = new mongoose.Schema<ITour>(
   },
 )
 
+// tourSchema.index({ price: 1 });
+tourSchema.index({ price: 1, ratingsAverage: -1 })
+
+tourSchema.index({ slug: 1 })
+
 tourSchema.virtual('durationWeeks').get(function (this: ITour) {
   // have to declare the type for `this`
   return this.duration / 7
