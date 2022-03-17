@@ -1,4 +1,4 @@
-import mongoose, { Aggregate } from 'mongoose'
+import mongoose, { Aggregate, Model } from 'mongoose'
 import slugify from 'slugify'
 import { IUser } from './user.model'
 
@@ -35,7 +35,7 @@ interface ITourDocument extends mongoose.Document {
 
 export interface ITour extends ITourDocument {}
 
-const tourSchema = new mongoose.Schema<ITour>(
+const tourSchema = new mongoose.Schema<ITour, Model<ITour>, undefined, {}>(
   {
     id: Number,
     name: {
