@@ -79,3 +79,26 @@ To reduce the query time, we apply `indexing` for prop `price` by setting `tourS
   - `1` is one of IndexOption, 1 - ascending sort
 
 Runnning again `{{url}}/api/v1/tours?price[lt]=1000` => get docs with price >= 1000 => scan only 3 docs
+
+6. Lecture #168-169: need to investigate to understand more `this.constructor()`
+
+7. Lecture #170: 
+
+a. To set value a prop in schema => use `set` 
+
+
+``` ts
+ ratingsAverage: {
+      type: Number,
+      default: 4.5,
+      min: [1.0, 'rating must be above 1.0'],
+      max: [5.0, 'rating must be below 5.0'],
+      set: (val: number) => Math.round(val * 10) / 10,
+    },
+```
+
+b. To set unique combination value as: 1 user - 1 review - 1 tour => use compound unique
+
+```ts
+reviewSchema.index({ tour: 1, user: 1 }, { unique: true });
+```
