@@ -1,6 +1,6 @@
 import express from 'express'
-import * as userController from '../controllers/userControllers'
-import * as authController from '../controllers/authController'
+import * as userController from '../controllers/user.controllers'
+import * as authController from '../controllers/auth.controller'
 
 const router = express.Router()
 
@@ -12,15 +12,27 @@ router.post('/forgotPassword', authController.forgotPassword)
 
 router.patch('/resetPassword/:token', authController.resetPassword) // edit password => using PATCH or PUT, but edit just a portion of User data => PATCH
 
+// all routes below this line will be applied `protect`
+router.use(authController.protect)
+
 router.patch(
   '/updateMyPassword',
-  authController.protect,
+
   authController.updatePassword,
 )
 
-router.patch('/updateMe', authController.protect, userController.updateMe)
+router.get(
+  '/me',
 
-router.delete('/deleteMe', authController.protect, userController.deleteMe)
+  userController.getMe,
+  userController.getUser,
+)
+
+router.patch('/updateMe', userController.updateMe)
+
+router.delete('/deleteMe', userController.deleteMe)
+
+router.use(authController.restrictTo('ADMIN'))
 
 router
   .route('/')

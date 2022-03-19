@@ -2,7 +2,9 @@ import dotenv from 'dotenv'
 import app from '../../app'
 import mongoose from 'mongoose'
 import fs from 'fs'
-import { TourModel } from '../../models/tourModel'
+import { TourModel } from '../../models/tour.model'
+import { ReviewModel } from '../../models/review.model'
+import { UserModel } from '../../models/user.model'
 
 dotenv.config({ path: './config.env' })
 const DB_URI = process.env.DB_CONN_STRING!.replace(
@@ -13,14 +15,20 @@ mongoose.connect(DB_URI).then((conn) => {
   console.log('DB connection is established!')
 })
 
-const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8'),
+const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, 'utf-8'))
+const users = JSON.parse(fs.readFileSync(`${__dirname}/users.json`, 'utf-8'))
+const reviews = JSON.parse(
+  fs.readFileSync(`${__dirname}/reviews.json`, 'utf-8'),
 )
 
 // Import data
 const importData = async function () {
   try {
-    await TourModel.create(tours)
+    await Promise.all([
+      TourModel.create(tours),
+      ReviewModel.create(reviews),
+      UserModel.create(users, { validateBeforeSave: false }),
+    ])
     console.log('Data is successfully loaded!!!')
     process.exit()
   } catch (error) {
@@ -31,7 +39,11 @@ const importData = async function () {
 // Delete data
 const deleteData = async function () {
   try {
-    await TourModel.deleteMany()
+    await Promise.all([
+      TourModel.deleteMany(),
+      ReviewModel.deleteMany(),
+      UserModel.deleteMany(),
+    ])
     console.log('Data is successfully deleted!!!')
     process.exit()
   } catch (error) {

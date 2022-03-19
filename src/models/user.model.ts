@@ -1,7 +1,7 @@
 import mongoose, { Document, Model, Schema } from 'mongoose'
 import validator from 'validator'
 import bcrypt from 'bcryptjs'
-import { UserRoles } from '../typing/types'
+import { UserRoles } from '../typing/app.type'
 import crypto from 'crypto'
 
 interface IUserDocument extends Document {
@@ -23,9 +23,7 @@ export interface IUser extends IUserDocument {
   createPasswordResetToken: () => string
 }
 
-interface IUserModel extends Model<IUserDocument, {}> {}
-
-const userSchema = new Schema<IUser, IUserModel>({
+const userSchema = new Schema<IUser>({
   name: { type: String, required: [true, 'Please tell us your name'] },
   email: {
     type: String,
@@ -130,10 +128,6 @@ userSchema.methods.createPasswordResetToken = function (this: IUser) {
     .digest('hex')
   this.passwordResetExpires = new Date(Date.now() + 10 * 60 * 1000) //expire on 10 mins;
 
-  console.log(
-    { resetToken: resetToken },
-    { passwordResetToken: this.passwordResetToken },
-  )
   return resetToken
 }
 

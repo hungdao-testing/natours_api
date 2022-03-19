@@ -1,11 +1,11 @@
 import { Query } from 'mongoose'
-import { ITour } from '../models/tourModel'
+import { TModels } from '../typing/app.type'
 
-export default class APIFeatures {
-  public query: Query<ITour[], ITour>
+export default class APIFeatures<T extends TModels> {
+  public query: Query<T[], T>
   protected queryString: any
 
-  constructor(query: Query<ITour[], ITour>, queryString: any) {
+  constructor(query: Query<T[], T>, queryString: any) {
     this.query = query
     this.queryString = queryString
   }

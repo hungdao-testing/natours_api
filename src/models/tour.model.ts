@@ -1,8 +1,15 @@
-import mongoose, { Aggregate } from 'mongoose'
+import mongoose, { Aggregate, Model } from 'mongoose'
 import slugify from 'slugify'
+import { IUser } from './user.model'
 
+type Location = {
+  type: string
+  coordinates: number[]
+  address: string
+  description: string
+}
 //Ref: https://mongoosejs.com/docs/typescript/schemas.html
-export interface ITour extends mongoose.Document {
+interface ITourDocument extends mongoose.Document {
   id: number
   name: string
   slug: string
@@ -21,9 +28,14 @@ export interface ITour extends mongoose.Document {
   createdAt: Date
   startDates: Date[]
   secretTour: boolean
+  startLocation: Location
+  locations: (Location & { day: number })[]
+  guides: (IUser | null)[]
 }
 
-const tourSchema = new mongoose.Schema<ITour>(
+export interface ITour extends ITourDocument {}
+
+const tourSchema = new mongoose.Schema<ITour, Model<ITour>, undefined, {}>(
   {
     id: Number,
     name: {
@@ -56,6 +68,7 @@ const tourSchema = new mongoose.Schema<ITour>(
       default: 4.5,
       min: [1.0, 'rating must be above 1.0'],
       max: [5.0, 'rating must be below 5.0'],
+      set: (val: number) => Math.round(val * 10) / 10,
     },
     ratingsQuantity: { type: Number, default: 0 },
     priceDiscount: {
@@ -85,6 +98,35 @@ const tourSchema = new mongoose.Schema<ITour>(
       type: Boolean,
       default: false,
     },
+    startLocation: {
+      type: {
+        type: String,
+        default: 'Point',
+        enum: ['Point'],
+      },
+      coordinates: [Number],
+      address: String,
+      description: String,
+    },
+    locations: [
+      {
+        type: {
+          type: String,
+          default: 'Point',
+          enum: ['Point'],
+        },
+        coordinates: [Number],
+        address: String,
+        description: String,
+        day: Number,
+      },
+    ],
+    guides: [
+      {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },
@@ -92,9 +134,22 @@ const tourSchema = new mongoose.Schema<ITour>(
   },
 )
 
+// tourSchema.index({ price: 1 });
+tourSchema.index({ price: 1, ratingsAverage: -1 })
+
+tourSchema.index({ slug: 1 })
+
+tourSchema.index({ startLocation: '2dsphere' })
+
 tourSchema.virtual('durationWeeks').get(function (this: ITour) {
   // have to declare the type for `this`
   return this.duration / 7
+})
+
+tourSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'tour',
+  localField: '_id',
 })
 
 //Document middleware: runs before .save() and .create()
@@ -105,19 +160,16 @@ tourSchema.pre('save', function (next) {
   next()
 })
 
-// tourSchema.pre('save', function (next) {
-//     console.log("Will save document");
-//     next();
-
-// })
-
-// tourSchema.post('save', function (doc, next) {
-//     console.log(doc);
-//     next();
-// })
-
 // Query Middleware -> this: current query object
 // To apply the middleware functions to all sorts of `find` (e.g find, findOne,...) => using regex
+
+tourSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'guides',
+    select: '-passwordChangedAt -__v',
+  })
+  next()
+})
 
 tourSchema.pre(/^find/, { query: true }, function (next) {
   this.find({ secretTour: { $ne: true } })
@@ -130,9 +182,10 @@ tourSchema.post(/^find/, { query: true }, function (docs, next) {
 })
 
 //Aggregation Middleware
-tourSchema.pre<Aggregate<ITour>>('aggregate', function (next) {
-  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } })
-  next()
-})
+// tourSchema.pre<Aggregate<ITour>>('aggregate', function (next) {
+//   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } })
+//   console.log(this.pipeline())
+//   next()
+// })
 
 export const TourModel = mongoose.model<ITour>('Tour', tourSchema)
