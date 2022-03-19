@@ -3,9 +3,10 @@ import {
   ICustomResponseExpress,
   ICustomNextFunction,
 } from '../typing/app.type'
-import { TourModel as model } from '../models/tour.model'
+import { TourModel as model, TourModel } from '../models/tour.model'
 import { catchAsync } from '../utils/catchAsync'
 import * as factory from './handlerFactory.controller'
+import AppError from '../utils/appError'
 
 export const aliasTopTour = async (
   req: ICustomRequestExpress,
@@ -105,6 +106,43 @@ export const getMonthlyPlan = catchAsync(
     res.status(200).json({
       status: 'success',
       data: plan,
+    })
+  },
+)
+
+export const getToursWithin = catchAsync(
+  async (
+    req: ICustomRequestExpress,
+    res: ICustomResponseExpress,
+    next: ICustomNextFunction,
+  ) => {
+    const { distance, latlng, unit } = req.params
+    const [lat, lng] = latlng.split(',')
+
+    const radius =
+      unit === 'mi'
+        ? parseFloat(distance) / 3963.2
+        : parseFloat(distance) / 6738.1
+
+    if (!lat || !lng) {
+      next(
+        new AppError(
+          'Please provide lattitude and longtitude in the format `lat,lng`',
+          400,
+        ),
+      )
+    }
+
+    const tours = await TourModel.find({
+      startLocation: { $geoWithin: { $centerSphere: [[lng, lat], radius] } },
+    })
+
+    res.status(200).json({
+      status: 'success',
+      results: tours.length,
+      data: {
+        data: tours,
+      },
     })
   },
 )

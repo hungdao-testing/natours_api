@@ -139,6 +139,8 @@ tourSchema.index({ price: 1, ratingsAverage: -1 })
 
 tourSchema.index({ slug: 1 })
 
+tourSchema.index({ startLocation: '2dsphere' })
+
 tourSchema.virtual('durationWeeks').get(function (this: ITour) {
   // have to declare the type for `this`
   return this.duration / 7

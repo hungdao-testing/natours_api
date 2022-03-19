@@ -102,3 +102,10 @@ b. To set unique combination value as: 1 user - 1 review - 1 tour => use compoun
 ```ts
 reviewSchema.index({ tour: 1, user: 1 }, { unique: true });
 ```
+
+8. Lecture #171
+
+a. Operator `$centerSphere` is mentioned in https://docs.mongodb.com/manual/reference/operator/query/centerSphere/#op._S_centerSphere
+
+
+b. To enable visualization of map on MongoDB compas: `Help -> Privacy Setting -> Enable Geographic Visualizations`
