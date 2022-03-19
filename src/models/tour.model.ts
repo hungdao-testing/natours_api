@@ -182,9 +182,10 @@ tourSchema.post(/^find/, { query: true }, function (docs, next) {
 })
 
 //Aggregation Middleware
-tourSchema.pre<Aggregate<ITour>>('aggregate', function (next) {
-  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } })
-  next()
-})
+// tourSchema.pre<Aggregate<ITour>>('aggregate', function (next) {
+//   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } })
+//   console.log(this.pipeline())
+//   next()
+// })
 
 export const TourModel = mongoose.model<ITour>('Tour', tourSchema)

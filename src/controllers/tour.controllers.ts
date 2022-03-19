@@ -146,3 +146,52 @@ export const getToursWithin = catchAsync(
     })
   },
 )
+
+export const getDistances = catchAsync(
+  async (
+    req: ICustomRequestExpress,
+    res: ICustomResponseExpress,
+    next: ICustomNextFunction,
+  ) => {
+    const { latlng, unit } = req.params
+    const [lat, lng] = latlng.split(',')
+
+    const multiplier = unit === 'mi' ? 0.000621371 : 0.001
+
+    if (!lat || !lng) {
+      next(
+        new AppError(
+          'Please provide lattitude and longtitude in the format `lat,lng`',
+          400,
+        ),
+      )
+    }
+
+    const distances = await TourModel.aggregate([
+      {
+        $geoNear: {
+          near: {
+            type: 'Point',
+            coordinates: [parseFloat(lng), parseFloat(lat)],
+          },
+          distanceField: 'distance',
+          distanceMultiplier: multiplier, // 0.00{d} (2 numbers: 0.001 and 0.000621371 to convert meter to km and miles)
+        },
+      },
+      {
+        $project: {
+          distance: 1,
+          name: 1,
+        },
+      },
+    ])
+
+    res.status(200).json({
+      status: 'success',
+
+      data: {
+        data: distances,
+      },
+    })
+  },
+)
