@@ -1,6 +1,5 @@
-import dotenv from 'dotenv'
 import app from './app'
-import mongoose from 'mongoose'
+import * as db from './db'
 
 process.on('uncaughtException', (err: Error) => {
   console.log('Uncaught Exception!!! -- Shuttting down')
@@ -8,14 +7,7 @@ process.on('uncaughtException', (err: Error) => {
   process.exit(1)
 })
 
-dotenv.config({ path: './config.env' })
-const DB_URI = process.env.DB_CONN_STRING!.replace(
-  '<PASSWORD>',
-  process.env.DB_PASSWORD!,
-)
-mongoose.connect(DB_URI).then((conn) => {
-  console.log('DB connection is established!')
-})
+db.connect()
 
 const port = process.env.PORT || 3000
 const server = app.listen(port, () => {
