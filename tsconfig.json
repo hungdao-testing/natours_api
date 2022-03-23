@@ -15,7 +15,7 @@
 
     "skipLibCheck": true,
     "typeRoots": ["./types", "./node_modules/@types"],
-    "rootDir": "./src",
+    "rootDirs": ["./src", "./config"],
     "outDir": "./dist",
     "sourceMap": true
   },

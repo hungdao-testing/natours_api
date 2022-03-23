@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
-import { IReview } from '../models/review.model'
-import { ITour } from '../models/tour.model'
-import { IUser } from '../models/user.model'
+import { IReview } from '../main/models/review.model'
+import { ITour } from '../main/models/tour.model'
+import { IUser } from '../main/models/user.model'
 
 export interface ICustomRequestExpress extends Request {
   requestTime?: string | undefined
@@ -17,6 +17,6 @@ export type TModels = ITour | IReview | IUser
 export enum UserRoles {
   ADMIN = 'admin',
   GUIDE = 'guide',
-  LEAD_GUIDE = 'lead_guide',
+  LEAD_GUIDE = 'lead-guide',
   USER = 'user',
 }

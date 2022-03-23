@@ -4,7 +4,7 @@ import {
   ICustomResponseExpress,
   ICustomNextFunction,
   TModels,
-} from '../typing/app.type'
+} from '../../typing/app.type'
 import APIFeatures from '../utils/apiFeatures'
 import AppError from '../utils/appError'
 import { catchAsync } from '../utils/catchAsync'

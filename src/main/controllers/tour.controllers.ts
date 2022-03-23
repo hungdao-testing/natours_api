@@ -2,7 +2,7 @@ import {
   ICustomRequestExpress,
   ICustomResponseExpress,
   ICustomNextFunction,
-} from '../typing/app.type'
+} from '../../typing/app.type'
 import { TourModel as model, TourModel } from '../models/tour.model'
 import { catchAsync } from '../utils/catchAsync'
 import * as factory from './handlerFactory.controller'

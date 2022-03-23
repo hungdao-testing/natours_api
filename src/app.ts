@@ -1,11 +1,12 @@
 import express from 'express'
 import morgan from 'morgan'
-import { default as globalErrorHandler } from './controllers/error.controller'
-import tourRouter from './routes/tour.routes'
-import userRouter from './routes/user.routes'
-import reviewRouter from './routes/review.routes'
+import { default as globalErrorHandler } from './main/controllers/error.controller'
+import tourRouter from './main/routes/tour.routes'
+import userRouter from './main/routes/user.routes'
+import reviewRouter from './main/routes/review.routes'
+import testRouter from './dev-data/data/fixture'
 import { ICustomRequestExpress } from './typing/app.type'
-import AppError from './utils/appError'
+import AppError from './main/utils/appError'
 import { rateLimit } from 'express-rate-limit'
 import helmet from 'helmet'
 import mongoSanitize from 'express-mongo-sanitize'
@@ -87,6 +88,7 @@ app.use(
 app.use('/api/v1/tours', tourRouter)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/reviews', reviewRouter)
+app.use('/api/v1/test-data', testRouter)
 
 app.all(
   '*',
