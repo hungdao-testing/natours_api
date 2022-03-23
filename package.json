@@ -11,7 +11,7 @@
     "local": "npx cross-env NODE_ENV=local  nodemon ",
     "dev": "npx cross-env NODE_ENV=development  nodemon ",
     "prod": "npx cross-env NODE_ENV=production nodemon",
-    "test:local:api": "npx cross-env NODE_ENV=local playwright test --config=playwright.config.ts --project=api --debug"
+    "test:local:api": "npx cross-env NODE_ENV=local playwright test --project=api"
   },
   "keywords": [],
   "author": "",
