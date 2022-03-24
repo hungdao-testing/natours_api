@@ -11,7 +11,7 @@ test.describe('Tour', () => {
     { type: getUserByRole('USER')!, isAccessable: false },
   ]
 
-  test.describe('get monthly plan', () => {
+  test.describe('GET /monthly-plan', () => {
     for (const user of users) {
       test(`As a ${user.type.role}, my permission to acess the resource is ${user.isAccessable}`, async ({
         baseURL,
@@ -40,7 +40,7 @@ test.describe('Tour', () => {
       })
     }
 
-    test('The monthly plan statistic for tours happening/happened in a year is correct', async ({
+    test('The monthly statistic for tours happening in a year is correct', async ({
       baseURL,
       request,
     }) => {
@@ -104,7 +104,7 @@ test.describe('Tour', () => {
       expect(decMonth).toHaveProperty('tours', ['The Northern Lights'])
     })
 
-    test('The monthly plan statistic for tours not happening/happened in a year is correct', async ({
+    test('The monthly plan statistic for tours not happening in a year is correct', async ({
       baseURL,
       request,
     }) => {
