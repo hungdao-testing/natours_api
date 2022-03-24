@@ -1,6 +1,4 @@
-import mongoose from 'mongoose'
 import { parseTours, parseUsers } from '../dev-data/data/parseFile'
-import { IUser } from '../main/models/user.model'
 import { UserRoles } from '../typing/app.type'
 
 export function getUserByRole(role: keyof typeof UserRoles) {

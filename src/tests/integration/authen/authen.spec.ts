@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { getUserByRole } from '../../fixtureHandler'
+import { UserRoles } from '../../../typing/app.type'
 
 test.describe('Authentication', () => {
   test.describe('Login', () => {
@@ -11,31 +12,29 @@ test.describe('Authentication', () => {
     ]
 
     for (const user of users) {
-      test(`As ${user!.role} role, ${
-        user!.name
-      } could login with valid credential`, async ({ baseURL, request }) => {
-        const res = await request.post(`${baseURL}/users/login`, {
-          data: {
-            email: user!.email,
-            password: user!.password,
-          },
-        })
-        const body = await res.json()
+      test(`As ${user!.role} role, ${user!.name
+        } could login with valid credential`, async ({ baseURL, request }) => {
+          const res = await request.post(`${baseURL}/users/login`, {
+            data: {
+              email: user!.email,
+              password: user!.password,
+            },
+          })
+          const body = await res.json()
 
-        expect(res.status()).toBe(200)
-        expect(body.token.length).toBeGreaterThan(1)
-        expect(body.data.currentUser.name).toBe(user!.name)
-        expect(body.data.currentUser.email).toBe(user!.email)
-        expect(body.data.currentUser.role).toBe(user!.role)
-      })
+          expect(res.status()).toBe(200)
+          expect(body.token.length).toBeGreaterThan(1)
+          expect(body.data.currentUser.name).toBe(user!.name)
+          expect(body.data.currentUser.email).toBe(user!.email)
+          expect(body.data.currentUser.role).toBe(user!.role)
+        })
     }
 
-    test(`User "${
-      users[3]!.name
-    }" login failed because of invalid credential`, async ({
-      baseURL,
-      request,
-    }) => {
+    test(`User "${users[3]!.name
+      }" login failed because of invalid credential`, async ({
+        baseURL,
+        request,
+      }) => {
       const res = await request.post(`${baseURL}/users/login`, {
         data: {
           email: users[3]!.email,
@@ -45,12 +44,11 @@ test.describe('Authentication', () => {
       expect(res.status()).toBe(401)
     })
 
-    test(`User "${
-      users[3]!.name
-    }" login failed because of missing password`, async ({
-      baseURL,
-      request,
-    }) => {
+    test(`User "${users[3]!.name
+      }" login failed because of missing password`, async ({
+        baseURL,
+        request,
+      }) => {
       const res = await request.post(`${baseURL}/users/login`, {
         data: {
           email: users[3]!.email,
@@ -93,7 +91,7 @@ test.describe('Authentication', () => {
         email: 'dave.josh@natour.com',
         password: '12345678x@X',
         passwordConfirm: '12345678x@X',
-        role: 'guide',
+        role: UserRoles.GUIDE,
       }
       const res = await request.post(`${baseURL}/users/signup`, {
         data: newUser,
@@ -131,7 +129,7 @@ test.describe('Authentication', () => {
         email: 'patrick.tam@natour.com',
         password: '12345678x@X',
         passwordConfirm: '12345678x@',
-        role: 'lead-guide',
+        role: UserRoles.LEAD_GUIDE,
       }
 
       const res = await request.post(`${baseURL}/users/signup`, {
