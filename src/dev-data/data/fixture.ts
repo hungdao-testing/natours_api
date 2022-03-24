@@ -24,7 +24,7 @@ const importData = catchAsync(async function (
       ReviewModel.create(parseReviews),
       UserModel.create(parseUsers, { validateBeforeSave: false }),
     ])
-    console.log('Data is successfully loaded!!!')
+
     res.status(200).json({
       status: 'Fixture is created successfully',
     })
@@ -45,7 +45,7 @@ const deleteData = catchAsync(async function (
       ReviewModel.deleteMany(),
       UserModel.deleteMany(),
     ])
-    console.log('Data is successfully deleted!!!')
+
     res.status(204).json({
       status: 'Fixture is deleted successfully',
     })

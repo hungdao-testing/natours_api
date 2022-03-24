@@ -17,6 +17,6 @@ const config: PlaywrightTestConfig = {
     ],
 
     globalSetup: require.resolve('./src/tests/hook/globalSetup.ts'),
-    globalTeardown: require.resolve('./src/tests/hook/globalTeardown')
+    // globalTeardown: require.resolve('./src/tests/hook/globalTeardown')
 }
 export default config

@@ -12,29 +12,31 @@ test.describe('Authentication', () => {
     ]
 
     for (const user of users) {
-      test(`As ${user!.role} role, ${user!.name
-        } could login with valid credential`, async ({ baseURL, request }) => {
-          const res = await request.post(`${baseURL}/users/login`, {
-            data: {
-              email: user!.email,
-              password: user!.password,
-            },
-          })
-          const body = await res.json()
-
-          expect(res.status()).toBe(200)
-          expect(body.token.length).toBeGreaterThan(1)
-          expect(body.data.currentUser.name).toBe(user!.name)
-          expect(body.data.currentUser.email).toBe(user!.email)
-          expect(body.data.currentUser.role).toBe(user!.role)
+      test(`As ${user!.role} role, ${
+        user!.name
+      } could login with valid credential`, async ({ baseURL, request }) => {
+        const res = await request.post(`${baseURL}/users/login`, {
+          data: {
+            email: user!.email,
+            password: user!.password,
+          },
         })
+        const body = await res.json()
+
+        expect(res.status()).toBe(200)
+        expect(body.token.length).toBeGreaterThan(1)
+        expect(body.data.currentUser.name).toBe(user!.name)
+        expect(body.data.currentUser.email).toBe(user!.email)
+        expect(body.data.currentUser.role).toBe(user!.role)
+      })
     }
 
-    test(`User "${users[3]!.name
-      }" login failed because of invalid credential`, async ({
-        baseURL,
-        request,
-      }) => {
+    test(`User "${
+      users[3]!.name
+    }" login failed because of invalid credential`, async ({
+      baseURL,
+      request,
+    }) => {
       const res = await request.post(`${baseURL}/users/login`, {
         data: {
           email: users[3]!.email,
@@ -44,11 +46,12 @@ test.describe('Authentication', () => {
       expect(res.status()).toBe(401)
     })
 
-    test(`User "${users[3]!.name
-      }" login failed because of missing password`, async ({
-        baseURL,
-        request,
-      }) => {
+    test(`User "${
+      users[3]!.name
+    }" login failed because of missing password`, async ({
+      baseURL,
+      request,
+    }) => {
       const res = await request.post(`${baseURL}/users/login`, {
         data: {
           email: users[3]!.email,
