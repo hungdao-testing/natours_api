@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { parseTours } from '../../../dev-data/data/parseFile'
 import { ITour } from '../../../main/models/tour.model'
 
-test.describe('Tour', () => {
+test.skip('Tour', () => {
   test.describe('Get /tours', () => {
     test('Return all tours without query params', async ({
       baseURL,

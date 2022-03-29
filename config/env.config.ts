@@ -6,3 +6,8 @@ export const config: { local_env: string; dev_env: string } = {
     local_env: path.join(configFolder, 'local.env'),
     dev_env: path.join(configFolder, 'dev.env'),
 }
+
+export const pathManagement = {
+    allureReporter: path.join(configFolder, "../reporters/allure")
+}
+

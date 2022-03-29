@@ -1,18 +1,22 @@
 import { test, expect, APIResponse } from '@playwright/test'
 import { getUserByRole } from '../../fixtureHandler'
 import jsonschema, { Schema } from 'jsonschema'
+import { allure } from 'allure-playwright';
 
 const schemaValidator = new jsonschema.Validator()
 
-test.describe('POST /login', () => {
+test.describe('POST /login', async () => {
+
+
   test.describe('Return 200 success code', () => {
+
     let res: APIResponse
     let body: any
 
-    test.beforeAll(async ({ baseURL, request }) => {
+    test.beforeAll(async ({ request }) => {
       const adminUser = getUserByRole('ADMIN')!
 
-      res = await request.post(`${baseURL}/users/login`, {
+      res = await request.post(`/api/v1/users/login`, {
         data: {
           email: adminUser.email,
           password: adminUser.password,
@@ -23,6 +27,9 @@ test.describe('POST /login', () => {
     })
 
     test('Response format is returned as defined format', async () => {
+      allure.story('Login')
+      allure.tag('smoke')
+
       const schema: Schema = {
         id: 'loginResSchema',
         type: 'object',
@@ -57,18 +64,22 @@ test.describe('POST /login', () => {
     })
 
     test('Cookie is set jwt token', async () => {
+      allure.story('Login')
+
       expect(res.headers()['set-cookie']).toContain(`jwt=${body.token}`)
     })
   })
 
   test.describe('Return Error code', () => {
     test('Return 401 error code with invalid credential', async ({
-      baseURL,
       request,
     }) => {
+      allure.story('Login')
+      allure.tag('smoke')
+
       const adminUser = getUserByRole('ADMIN')!
 
-      const res = await request.post(`${baseURL}/users/login`, {
+      const res = await request.post(`/api/v1/users/login`, {
         data: {
           email: adminUser.email,
           password: 'invalid pass',
@@ -79,12 +90,13 @@ test.describe('POST /login', () => {
     })
 
     test('Return 400 error code with missing password', async ({
-      baseURL,
       request,
     }) => {
-      const adminUser = getUserByRole('ADMIN')!
+      allure.story('Login')
+      allure.tag('smoke')
 
-      const res = await request.post(`${baseURL}/users/login`, {
+      const adminUser = getUserByRole('ADMIN')!
+      const res = await request.post(`/api/v1/users/login`, {
         data: {
           email: adminUser.email,
         },

@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 import { getUserByRole } from '../../fixtureHandler'
 import _ from 'lodash'
 
-test.describe('Tour', () => {
+test.skip('Tour', () => {
   const year = 2022
   const users = [
     { type: getUserByRole('ADMIN')!, isAccessable: true },

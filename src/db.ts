@@ -1,6 +1,7 @@
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
-import { config } from '../config/config'
+import { config } from '../config/env.config'
+
 
 const parseURI = () => {
   if (process.env.NODE_ENV === 'development') {

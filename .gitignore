@@ -39,3 +39,7 @@ dist/**/*
 
 # ignore yarn.lock
 yarn.lockm
+
+# ignore reporter
+reporters/allure/allure-results
+reporters/allure/allure-report

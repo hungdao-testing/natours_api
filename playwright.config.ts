@@ -1,21 +1,17 @@
 import { PlaywrightTestConfig } from '@playwright/test'
 
-const port = process.env.PORT
-
 
 const config: PlaywrightTestConfig = {
     projects: [
         {
             name: 'api',
             use: {
-
-                baseURL: `http://localhost:3001/api/v1`,
+                baseURL: `http://localhost:3001`,
             },
             testMatch: /.*.spec.ts/,
-
         },
     ],
-
+    reporter: [['allure-playwright']],
     globalSetup: require.resolve('./src/tests/hook/globalSetup.ts'),
     globalTeardown: require.resolve('./src/tests/hook/globalTeardown')
 }

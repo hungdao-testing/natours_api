@@ -1,4 +1,5 @@
 import { test, expect, APIResponse } from '@playwright/test'
+import { allure } from 'allure-playwright'
 import jsonschema, { Schema } from 'jsonschema'
 import _ from 'lodash'
 import { getUserByRole } from '../../fixtureHandler'
@@ -10,10 +11,10 @@ test.describe('POST /signup', () => {
   let body: any
 
   test.describe('Return 201 success code', () => {
-    test('Response is correct format and data', async ({
-      baseURL,
-      request,
-    }) => {
+    test('Response is correct format and data', async ({ request }) => {
+      allure.story('Sign-up')
+      allure.tag('smoke')
+
       const schema: Schema = {
         id: 'loginResSchema',
         type: 'object',
@@ -51,7 +52,7 @@ test.describe('POST /signup', () => {
         role: 'lead-guide',
       }
 
-      res = await request.post(`${baseURL}/users/signup`, {
+      res = await request.post(`/api/v1/users/signup`, {
         data: registerUser,
       })
 
@@ -65,9 +66,11 @@ test.describe('POST /signup', () => {
     })
 
     test('Could create a new user without mentioning role', async ({
-      baseURL,
       request,
     }) => {
+      allure.story('Sign-up')
+      allure.tag('smoke')
+
       const registerUser = {
         name: 'Joshua Lee',
         email: 'joshua.lee@natour.com',
@@ -75,7 +78,7 @@ test.describe('POST /signup', () => {
         passwordConfirm: '12345678x@X',
       }
 
-      res = await request.post(`${baseURL}/users/signup`, {
+      res = await request.post(`/api/v1/users/signup`, {
         data: registerUser,
       })
 
@@ -98,11 +101,10 @@ test.describe('POST /signup', () => {
         role: 'user',
       }
       test(`Return 500 error code because of missing required field: ${requiredField}`, async ({
-        baseURL,
         request,
       }) => {
         let updatedUser = _.omit(registerUser, requiredField)
-        res = await request.post(`${baseURL}/users/signup`, {
+        res = await request.post(`/api/v1/users/signup`, {
           data: updatedUser,
         })
 
@@ -113,9 +115,10 @@ test.describe('POST /signup', () => {
     }
 
     test('Return 500 error code because of mismatch password', async ({
-      baseURL,
       request,
     }) => {
+      allure.story('Sign-up')
+      allure.tag('regression')
       const registerUser = {
         name: 'Joshua Lee',
         email: 'joshua.lee@natour.com',
@@ -123,7 +126,7 @@ test.describe('POST /signup', () => {
         passwordConfirm: '12345678x@',
       }
 
-      res = await request.post(`${baseURL}/users/signup`, {
+      res = await request.post(`/api/v1/users/signup`, {
         data: registerUser,
       })
 
@@ -133,12 +136,14 @@ test.describe('POST /signup', () => {
     })
 
     test('Return 500 error code because of duplicating with existing one', async ({
-      baseURL,
       request,
     }) => {
+      allure.story('Sign-up')
+      allure.tag('regression')
+
       const duplicatedUser = getUserByRole('GUIDE')
 
-      res = await request.post(`${baseURL}/users/signup`, {
+      res = await request.post(`/api/v1/users/signup`, {
         data: {
           name: 'David Lee',
           email: duplicatedUser!.email,
