@@ -1,0 +1,94 @@
+[
+  {
+    startLocation: {
+      description: [32m'Banff, CAN'[39m,
+      type: [32m'Point'[39m,
+      coordinates: [36m[Array][39m,
+      address: [32m'224 Banff Ave, Banff, AB, Canada'[39m
+    },
+    ratingsAverage: [33m5[39m,
+    ratingsQuantity: [33m9[39m,
+    images: [ [32m'tour-1-1.jpg'[39m, [32m'tour-1-2.jpg'[39m, [32m'tour-1-3.jpg'[39m ],
+    startDates: [
+      [32m'2021-04-25T09:00:00.000Z'[39m,
+      [32m'2021-07-20T09:00:00.000Z'[39m,
+      [32m'2021-10-05T09:00:00.000Z'[39m
+    ],
+    _id: [32m'5c88fa8cf4afda39709c2951'[39m,
+    name: [32m'The Forest Hiker'[39m,
+    duration: [33m5[39m,
+    maxGroupSize: [33m25[39m,
+    difficulty: [32m'easy'[39m,
+    guides: [
+      [32m'5c8a21d02f8fb814b56fa189'[39m,
+      [32m'5c8a201e2f8fb814b56fa186'[39m,
+      [32m'5c8a1f292f8fb814b56fa184'[39m
+    ],
+    price: [33m397[39m,
+    summary: [32m'Breathtaking hike through the Canadian Banff National Park'[39m,
+    description: [32m'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\n'[39m +
+      [32m'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'[39m,
+    imageCover: [32m'tour-1-cover.jpg'[39m,
+    locations: [ [36m[Object][39m, [36m[Object][39m, [36m[Object][39m ]
+  },
+  {
+    startLocation: {
+      description: [32m'Miami, USA'[39m,
+      type: [32m'Point'[39m,
+      coordinates: [36m[Array][39m,
+      address: [32m'301 Biscayne Blvd, Miami, FL 33132, USA'[39m
+    },
+    ratingsAverage: [33m4.8[39m,
+    ratingsQuantity: [33m6[39m,
+    images: [ [32m'tour-2-1.jpg'[39m, [32m'tour-2-2.jpg'[39m, [32m'tour-2-3.jpg'[39m ],
+    startDates: [
+      [32m'2021-06-19T09:00:00.000Z'[39m,
+      [32m'2021-07-20T09:00:00.000Z'[39m,
+      [32m'2021-08-18T09:00:00.000Z'[39m
+    ],
+    _id: [32m'5c88fa8cf4afda39709c2955'[39m,
+    name: [32m'The Sea Explorer'[39m,
+    duration: [33m7[39m,
+    maxGroupSize: [33m15[39m,
+    difficulty: [32m'medium'[39m,
+    guides: [ [32m'5c8a22c62f8fb814b56fa18b'[39m, [32m'5c8a1f4e2f8fb814b56fa185'[39m ],
+    price: [33m497[39m,
+    summary: [32m'Exploring the jaw-dropping US east coast by foot and by boat'[39m,
+    description: [32m'Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n'[39m +
+      [32m'Irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.'[39m,
+    imageCover: [32m'tour-2-cover.jpg'[39m,
+    locations: [ [36m[Object][39m, [36m[Object][39m, [36m[Object][39m, [36m[Object][39m ]
+  },
+  {
+    startLocation: {
+      description: [32m'Aspen, USA'[39m,
+      type: [32m'Point'[39m,
+      coordinates: [36m[Array][39m,
+      address: [32m'419 S Mill St, Aspen, CO 81611, USA'[39m
+    },
+    ratingsAverage: [33m4.5[39m,
+    ratingsQuantity: [33m6[39m,
+    images: [ [32m'tour-3-1.jpg'[39m, [32m'tour-3-2.jpg'[39m, [32m'tour-3-3.jpg'[39m ],
+    startDates: [
+      [32m'2022-01-05T10:00:00.000Z'[39m,
+      [32m'2022-02-12T10:00:00.000Z'[39m,
+      [32m'2023-01-06T10:00:00.000Z'[39m
+    ],
+    _id: [32m'5c88fa8cf4afda39709c295a'[39m,
+    name: [32m'The Snow Adventurer'[39m,
+    duration: [33m4[39m,
+    maxGroupSize: [33m10[39m,
+    difficulty: [32m'difficult'[39m,
+    guides: [
+      [32m'5c8a21d02f8fb814b56fa189'[39m,
+      [32m'5c8a23412f8fb814b56fa18c'[39m,
+      [32m'5c8a1f4e2f8fb814b56fa185'[39m
+    ],
+    price: [33m997[39m,
+    summary: [32m'Exciting adventure in the snow with snowboarding and skiing'[39m,
+    description: [32m'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua, ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum!\n'[39m +
+      [32m'Dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur, exercitation ullamco laboris nisi ut aliquip. Lorem ipsum dolor sit amet, consectetur adipisicing elit!'[39m,
+    imageCover: [32m'tour-3-cover.jpg'[39m,
+    locations: [ [36m[Object][39m, [36m[Object][39m ]
+  }
+]

@@ -1,13 +1,12 @@
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
-import { config } from '../config/env.config'
-
+import { appConfig } from '../config/env.config'
 
 const parseURI = () => {
   if (process.env.NODE_ENV === 'development') {
-    dotenv.config({ path: config.dev_env })
+    dotenv.config({ path: appConfig.dev_env })
   } else if (process.env.NODE_ENV === 'local') {
-    dotenv.config({ path: config.local_env })
+    dotenv.config({ path: appConfig.local_env })
   }
 
   const DB_URI = process.env.DB_CONN_STRING!.replace(

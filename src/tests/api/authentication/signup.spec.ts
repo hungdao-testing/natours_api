@@ -6,15 +6,12 @@ import { getUserByRole } from '../../fixtureHandler'
 
 const schemaValidator = new jsonschema.Validator()
 
-test.describe('POST /signup', () => {
+test.describe('POST /signup', async () => {
   let res: APIResponse
   let body: any
 
   test.describe('Return 201 success code', () => {
     test('Response is correct format and data', async ({ request }) => {
-      allure.story('Sign-up')
-      allure.tag('smoke')
-
       const schema: Schema = {
         id: 'loginResSchema',
         type: 'object',
@@ -68,9 +65,6 @@ test.describe('POST /signup', () => {
     test('Could create a new user without mentioning role', async ({
       request,
     }) => {
-      allure.story('Sign-up')
-      allure.tag('smoke')
-
       const registerUser = {
         name: 'Joshua Lee',
         email: 'joshua.lee@natour.com',
@@ -117,8 +111,6 @@ test.describe('POST /signup', () => {
     test('Return 500 error code because of mismatch password', async ({
       request,
     }) => {
-      allure.story('Sign-up')
-      allure.tag('regression')
       const registerUser = {
         name: 'Joshua Lee',
         email: 'joshua.lee@natour.com',
@@ -138,9 +130,6 @@ test.describe('POST /signup', () => {
     test('Return 500 error code because of duplicating with existing one', async ({
       request,
     }) => {
-      allure.story('Sign-up')
-      allure.tag('regression')
-
       const duplicatedUser = getUserByRole('GUIDE')
 
       res = await request.post(`/api/v1/users/signup`, {

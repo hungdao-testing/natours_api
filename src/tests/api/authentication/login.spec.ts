@@ -1,15 +1,11 @@
 import { test, expect, APIResponse } from '@playwright/test'
 import { getUserByRole } from '../../fixtureHandler'
 import jsonschema, { Schema } from 'jsonschema'
-import { allure } from 'allure-playwright';
 
 const schemaValidator = new jsonschema.Validator()
 
 test.describe('POST /login', async () => {
-
-
   test.describe('Return 200 success code', () => {
-
     let res: APIResponse
     let body: any
 
@@ -27,9 +23,6 @@ test.describe('POST /login', async () => {
     })
 
     test('Response format is returned as defined format', async () => {
-      allure.story('Login')
-      allure.tag('smoke')
-
       const schema: Schema = {
         id: 'loginResSchema',
         type: 'object',
@@ -64,8 +57,6 @@ test.describe('POST /login', async () => {
     })
 
     test('Cookie is set jwt token', async () => {
-      allure.story('Login')
-
       expect(res.headers()['set-cookie']).toContain(`jwt=${body.token}`)
     })
   })
@@ -74,9 +65,6 @@ test.describe('POST /login', async () => {
     test('Return 401 error code with invalid credential', async ({
       request,
     }) => {
-      allure.story('Login')
-      allure.tag('smoke')
-
       const adminUser = getUserByRole('ADMIN')!
 
       const res = await request.post(`/api/v1/users/login`, {
@@ -89,12 +77,7 @@ test.describe('POST /login', async () => {
       expect(res.status()).toBe(401)
     })
 
-    test('Return 400 error code with missing password', async ({
-      request,
-    }) => {
-      allure.story('Login')
-      allure.tag('smoke')
-
+    test('Return 400 error code with missing password', async ({ request }) => {
       const adminUser = getUserByRole('ADMIN')!
       const res = await request.post(`/api/v1/users/login`, {
         data: {

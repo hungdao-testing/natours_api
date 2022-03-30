@@ -11,7 +11,7 @@
     "local": "npx cross-env NODE_ENV=local  nodemon ",
     "dev": "npx cross-env NODE_ENV=development  nodemon ",
     "prod": "npx cross-env NODE_ENV=production nodemon",
-    "test:local:api": "npx cross-env NODE_ENV=local playwright test --project=api --reporter=line,allure-playwright",
+    "test:local:api": "npx cross-env NODE_ENV=local playwright test --project=api --reporter=list,allure-playwright",
     "report:allure:api": "npx cross-env allure open ./reporters/allure/allure-report"
   },
   "keywords": [],

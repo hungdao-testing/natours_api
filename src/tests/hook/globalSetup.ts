@@ -2,21 +2,11 @@ import { FullConfig, request } from '@playwright/test'
 import { existsSync } from 'fs'
 import path from 'path'
 import rimraf from 'rimraf'
-import { pathManagement } from '../../../config/env.config';
-
-
-
-
+import { appPath } from '../../../config/env.config'
 
 function deleteAllureFolderIfExist() {
-  const allureResult = path.join(
-    pathManagement.allureReporter,
-    'allure-results',
-  )
-  const allureReport = path.join(
-    pathManagement.allureReporter,
-    'allure-report',
-  )
+  const allureResult = path.join(appPath.allureReporter, 'allure-results')
+  const allureReport = path.join(appPath.allureReporter, 'allure-report')
 
   if (existsSync(allureReport)) {
     rimraf(allureReport, function () {
