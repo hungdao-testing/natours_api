@@ -9,7 +9,7 @@ const tourSchema = JSON.parse(
   fs.readFileSync(`${__dirname}/tourSchema.json`, { encoding: 'utf-8' }),
 )
 
-test.describe.only('Get Tours', () => {
+test.describe('Get Tours', () => {
   test('Response format is returned as defined', async ({ request }) => {
     const schema: Schema = {
       id: 'getToursSchema',
@@ -158,7 +158,28 @@ test.describe.only('Get Tours', () => {
         ).toBeTruthy()
       })
 
-      test('Allow fields not to be displayed', async ({ request }) => {})
+      test('Allow fields not to be displayed', async ({ request }) => {
+        const limitFields = 'fields=-ratings,-name'
+        const newQueryStr = queryStr + '&' + limitFields
+
+        const res = await request.get(`/api/v1/tours?${newQueryStr}`)
+        const body = await res.json()
+
+        expect(res.status()).toBe(200)
+        expect(body.tours[0]).not.toHaveProperty('ratings')
+        expect(body.tours[0]).not.toHaveProperty('name')
+      })
+      test('Returning 500 if including and excluding fields are mentioning in query params', async ({
+        request,
+      }) => {
+        const limitFields = 'fields=-ratings,name'
+        const newQueryStr = queryStr + '&' + limitFields
+
+        const res = await request.get(`/api/v1/tours?${newQueryStr}`)
+        const body = await res.json()
+
+        expect(res.status()).toBe(500)
+      })
     })
   })
 })

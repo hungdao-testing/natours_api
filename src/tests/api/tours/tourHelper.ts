@@ -1,4 +1,4 @@
-import _, { sortBy } from 'lodash'
+import _ from 'lodash'
 import { parseTours } from '../../../dev-data/data/parseFile'
 import { ITour } from '../../../main/models/tour.model'
 
@@ -30,9 +30,7 @@ const predicateFunc: Record<
   lte: (number1: number, number2: number) => isLessEqualThan(number1, number2),
 }
 
-function parseQueryParam(
-  queryParams: string,
-): {
+function parseQueryParam(queryParams: string): {
   param: string
   comparisonOperator: comparisonOp | unknown
   comparedParam: unknown
@@ -94,28 +92,3 @@ export function sortToursByQueryParam(
   })
   return newTours
 }
-
-// export function limitFieldsOfTours(limitFieldParam: string, tours: ITour[]) {
-//     let newTours: (Partial<Pick<ITour, keyof ITour>>)[] = []
-//     const limitFieldStr = limitFieldParam.split("=")[1];
-//     const limitFieldProps = limitFieldStr.split(",");
-
-//     limitFieldProps.forEach(prop => {
-//         tours.forEach(tour => {
-//             let newObj: any;
-//             if (prop.includes("-")) {
-//                 prop = prop.replace("-", "");
-//                 newObj = _.omit(tour, prop as keyof ITour);
-//             } else {
-//                 newObj = { [prop]: tour[prop as keyof ITour] }
-//             }
-//         })
-//         newTours.push(newObj)
-
-//     })
-//     return newTours;
-// }
-
-// const tours = filterToursByQueryParam("price[lt]=1000&ratingsAverage[gt]=4")
-// console.log(limitFieldsOfTours("fields=name,ratingsAverage", tours));
-// sortToursByQueryParam("sort=-price,ratingsAverage", tours).forEach(el => console.log({ name: el.name, price: el.price, ratingsAverage: el.ratingsAverage }))
