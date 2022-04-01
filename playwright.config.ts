@@ -12,7 +12,7 @@ const config: PlaywrightTestConfig = {
         },
     ],
     reporter: [['allure-playwright']],
-    globalSetup: require.resolve('./src/tests/hook/globalSetup.ts'),
-    globalTeardown: require.resolve('./src/tests/hook/globalTeardown')
+    // globalSetup: require.resolve('./src/tests/hook/globalSetup.ts'),
+    // globalTeardown: require.resolve('./src/tests/hook/globalTeardown')
 }
 export default config

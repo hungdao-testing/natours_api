@@ -92,3 +92,22 @@ export function sortToursByQueryParam(
   })
   return newTours
 }
+
+export function getTourByPagination(
+  tours: ITour[],
+  pageIndex: number,
+  limit: number,
+) {
+  let skippedTours
+  let possiblePages =
+    tours.length % limit !== 0
+      ? Math.trunc(tours.length / 2) + 1
+      : Math.trunc(tours.length / 2)
+
+  if (pageIndex <= possiblePages) {
+    skippedTours = (pageIndex - 1) * limit
+    return tours.slice(skippedTours, limit + skippedTours)
+  } else {
+    return []
+  }
+}

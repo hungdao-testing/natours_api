@@ -1,8 +1,13 @@
 import { test, expect, APIResponse } from '@playwright/test'
 import jsonschema, { Schema } from 'jsonschema'
 import fs from 'fs'
-import { filterToursByQueryParam, sortToursByQueryParam } from './tourHelper'
+import {
+  filterToursByQueryParam,
+  getTourByPagination,
+  sortToursByQueryParam,
+} from './tourHelper'
 import _ from 'lodash'
+import { parseTours } from '../../../dev-data/data/parseFile'
 
 const schemaValidator = new jsonschema.Validator()
 const tourSchema = JSON.parse(
@@ -64,7 +69,7 @@ test.describe('Get Tours', () => {
       }
     })
 
-    test.describe('Limiting field', () => {
+    test.describe('Displaying field', () => {
       test('Allow fields to be displayed', async ({ request }) => {
         const schema: Schema = {
           id: 'getToursSchema',
@@ -169,6 +174,7 @@ test.describe('Get Tours', () => {
         expect(body.tours[0]).not.toHaveProperty('ratings')
         expect(body.tours[0]).not.toHaveProperty('name')
       })
+
       test('Returning 500 if including and excluding fields are mentioning in query params', async ({
         request,
       }) => {
@@ -179,6 +185,47 @@ test.describe('Get Tours', () => {
         const body = await res.json()
 
         expect(res.status()).toBe(500)
+      })
+    })
+
+    test.describe.only('Pagination and limit results', () => {
+      test("Return all tours in one page if query params dont include 'limit'", async ({
+        request,
+      }) => {
+        const res = await request.get(`/api/v1/tours?&page=1`)
+        const body = await res.json()
+
+        expect(res.status()).toBe(200)
+        expect(body.result).toBe(9)
+      })
+      test('Get tours per page', async ({ request }) => {
+        let numberToursOnPage = 3
+        let pageIndex = 2
+
+        const res = await request.get(
+          `/api/v1/tours?&page=${pageIndex}&limit=${numberToursOnPage}`,
+        )
+        const body = await res.json()
+        expect(body.result).toBe(3)
+
+        const tours = getTourByPagination(
+          parseTours,
+          pageIndex,
+          numberToursOnPage,
+        )
+        expect(_.differenceBy(tours, body.tours, 'name').length).toBe(0)
+      })
+
+      test('Get tours on non-existing page', async ({ request }) => {
+        let numberToursOnPage = 3
+        let pageIndex = 100
+
+        const res = await request.get(
+          `/api/v1/tours?&page=${pageIndex}&limit=${numberToursOnPage}`,
+        )
+        const body = await res.json()
+
+        expect(body.tours.length).toBe(0)
       })
     })
   })
