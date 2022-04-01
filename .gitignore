@@ -43,3 +43,4 @@ yarn.lockm
 # ignore reporter
 reporters/allure/allure-results
 reporters/allure/allure-report
+allure-results
