@@ -1,11 +1,7 @@
 import { test, expect, APIResponse } from '@playwright/test'
 import jsonschema, { Schema } from 'jsonschema'
 import fs from 'fs'
-import {
-  filterToursByQueryParam,
-  getTourByPagination,
-  sortToursByQueryParam,
-} from './tourHelper'
+import { filterToursByQueryParam, getTourByPagination } from './tourHelper'
 import _ from 'lodash'
 import { parseTours } from '../../../dev-data/data/parseFile'
 
@@ -56,15 +52,16 @@ test.describe('Get Tours', () => {
     })
 
     test('Sorting', async ({ request }) => {
-      let sortStr = 'sort=-price,ratingsAverage'
+      let sortStr = '-price,ratingsAverage'
       const newQueryStr = queryStr + '&' + sortStr
 
       const res = await request.get(`/api/v1/tours?${newQueryStr}`)
       const body = await res.json()
 
-      const expectedTours = sortToursByQueryParam(
-        sortStr,
+      const expectedTours = _.orderBy(
         filterToursByQueryParam(queryStr),
+        ['price', 'ratingsAverage'],
+        ['desc', 'asc'],
       )
 
       expect(res.status()).toBe(200)

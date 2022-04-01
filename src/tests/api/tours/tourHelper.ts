@@ -68,35 +68,10 @@ export function filterToursByQueryParam(filterParams: string) {
   return tours
 }
 
-export function sortToursByQueryParam(
-  sortParam: string,
-  tours: ITour[],
-): ITour[] {
-  let newTours: ITour[] = []
-  const sortStr = sortParam.split('=')[1]
-  const sortProps = sortStr.split(',')
-
-  sortProps.forEach((sortProp) => {
-    if (sortProp.includes('-')) {
-      sortProp = sortProp.replace('-', '')
-      newTours = tours.sort(
-        (obj1, obj2) =>
-          obj2[sortProp as keyof ITour] - obj1[sortProp as keyof ITour],
-      )
-    } else {
-      newTours = tours.sort(
-        (obj1, obj2) =>
-          obj1[sortProp as keyof ITour] - obj2[sortProp as keyof ITour],
-      )
-    }
-  })
-  return newTours
-}
-
 export function getTourByPagination(
   tours: ITour[],
-  pageIndex: number,
-  limit: number,
+  pageIndex = 1,
+  limit = 100,
 ) {
   let skippedTours
   let possiblePages =
