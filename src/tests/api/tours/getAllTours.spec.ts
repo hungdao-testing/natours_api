@@ -22,7 +22,12 @@ test.describe('Get Tours', () => {
       properties: {
         status: { type: 'string' },
         results: { type: 'interger' },
-        tours: { ...tourSchema },
+        tours: {
+          type: 'array',
+          items: {
+            ...tourSchema,
+          },
+        },
       },
     }
 
@@ -188,7 +193,7 @@ test.describe('Get Tours', () => {
       })
     })
 
-    test.describe.only('Pagination and limit results', () => {
+    test.describe('Pagination and limit results', () => {
       test("Return all tours in one page if query params dont include 'limit'", async ({
         request,
       }) => {
