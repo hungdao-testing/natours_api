@@ -164,7 +164,7 @@ export function getAll<T extends TModels>(
       //SEND REQ
       res.status(200).json({
         status: 'success',
-        result: docs.length,
+        results: docs.length,
         [model.collection.collectionName]: docs,
       })
     },

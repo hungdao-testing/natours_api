@@ -50,7 +50,7 @@ test.describe('Get Tours', () => {
       const expectedTours = filterToursByQueryParam(queryStr)
 
       expect(res.status()).toBe(200)
-      expect(body.result).toBe(expectedTours.length)
+      expect(body.results).toBe(expectedTours.length)
       expect(_.differenceBy(body.tours, expectedTours, 'name').length).toBe(0)
     })
 
@@ -68,7 +68,7 @@ test.describe('Get Tours', () => {
       )
 
       expect(res.status()).toBe(200)
-      expect(body.result).toBe(expectedTours.length)
+      expect(body.results).toBe(expectedTours.length)
       for (let i = 0; i < expectedTours.length; i++) {
         expect(expectedTours[i].name).toBe(body.tours[i].name)
       }
@@ -201,7 +201,7 @@ test.describe('Get Tours', () => {
         const body = await res.json()
 
         expect(res.status()).toBe(200)
-        expect(body.result).toBe(9)
+        expect(body.results).toBe(parseTours.length)
       })
       test('Get tours per page', async ({ request }) => {
         let numberToursOnPage = 3
@@ -211,7 +211,7 @@ test.describe('Get Tours', () => {
           `/api/v1/tours?&page=${pageIndex}&limit=${numberToursOnPage}`,
         )
         const body = await res.json()
-        expect(body.result).toBe(3)
+        expect(body.results).toBe(3)
 
         const tours = getTourByPagination(
           parseTours,
