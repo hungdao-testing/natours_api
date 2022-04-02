@@ -1,6 +1,6 @@
 import _ from 'lodash'
-import { parseTours } from '../../../dev-data/data/parseFile'
-import { ITour } from '../../../main/models/tour.model'
+import { parseTours } from '../../dev-data/data/parseFile'
+import { ITour } from '../../main/models/tour.model'
 
 function isGreaterThan(param: number, comparedParam: number) {
   return param > comparedParam
@@ -85,4 +85,27 @@ export function getTourByPagination(
   } else {
     return []
   }
+}
+
+const reviseTourToMonthlyPlan = (
+  data: ITour[],
+): { name: string; month: number; year: number }[] => {
+  let newArr = []
+  const tours = data.map((tour) => {
+    return _.pick(tour, ['name', 'startDates'])
+  })
+
+  for (const tour of tours) {
+    for (let i = 0; i < tour.startDates!.length; i++) {
+      const month = new Date(tour.startDates![i]).getMonth() + 1
+      const year = new Date(tour.startDates![i]).getFullYear()
+      newArr.push({ name: tour.name!, month: month, year: year })
+    }
+  }
+  return newArr
+}
+
+export function filterToursByYear(year: number) {
+  const newArr = reviseTourToMonthlyPlan(parseTours)
+  return newArr.filter((el) => el.year === year)
 }

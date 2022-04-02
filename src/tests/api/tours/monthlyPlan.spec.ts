@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { getUserByRole } from '../../fixtureHandler'
+import { getUserByRole } from '../../fixtureHelpers/userHelper'
 import _ from 'lodash'
 
 test.skip('Tour', () => {

@@ -1,5 +1,5 @@
 import { test, expect, APIResponse } from '@playwright/test'
-import { getUserByRole } from '../../fixtureHandler'
+import { getUserByRole } from '../../fixtureHelpers/userHelper'
 import jsonschema, { Schema } from 'jsonschema'
 
 const schemaValidator = new jsonschema.Validator()

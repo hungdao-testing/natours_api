@@ -1,5 +1,5 @@
-import { parseTours, parseUsers } from '../dev-data/data/parseFile'
-import { UserRoles } from '../typing/app.type'
+import { parseTours, parseUsers } from '../../dev-data/data/parseFile'
+import { UserRoles } from '../../typing/app.type'
 
 export function getUserByRole(role: keyof typeof UserRoles) {
   return parseUsers.find((el) => el.role === UserRoles[role].toLowerCase())
