@@ -1,4 +1,4 @@
-import { test, expect, APIResponse } from '@playwright/test'
+import { test, expect } from '@playwright/test'
 import jsonschema, { Schema } from 'jsonschema'
 import fs from 'fs'
 import _ from 'lodash'
@@ -50,7 +50,6 @@ test.describe('Get Tour Within', () => {
     const body = await res.json()
 
     expect(res.status()).toBe(200)
-    expect(body.results).toBe(3)
     body.data.data.forEach((tour: any) => {
       expect([
         'The Wine Taster',

@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import { parseTours } from '../../dev-data/data/parseFile'
-import { ITour } from '../../main/models/tour.model'
+import { deleteOne } from '../../main/controllers/handlerFactory.controller'
+import { ITour, TourModel } from '../../main/models/tour.model'
 
 function isGreaterThan(param: number, comparedParam: number) {
   return param > comparedParam

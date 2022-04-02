@@ -28,13 +28,22 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Limit request from same API
-const limiter = rateLimit({
-  // 1IP is allowed to do max 100 reqs in 1 hour
-  max: 100,
-  windowMs: 60 * 60 * 1000,
-  message: 'Too many request from this IP, please try again in an hour!',
-})
-
+let limiter
+if (process.env.NODE_ENV === 'local') {
+  limiter = rateLimit({
+    // 1IP is allowed to do max 100000 reqs in 1 hour
+    max: 100000,
+    windowMs: 60 * 60 * 1000,
+    message: 'Too many request from this IP, please try again in an hour!',
+  })
+} else {
+  limiter = rateLimit({
+    // 1IP is allowed to do max 100 reqs in 1 hour
+    max: 100,
+    windowMs: 60 * 60 * 1000,
+    message: 'Too many request from this IP, please try again in an hour!',
+  })
+}
 app.use('/api', limiter) // apply rate-limit to routes starts-with '/api'
 
 // Body parser, reading data from body into req.body

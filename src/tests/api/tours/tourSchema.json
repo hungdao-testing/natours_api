@@ -204,25 +204,13 @@
     }
   },
   "required": [
-    "startLocation",
     "_id",
     "name",
-    "price",
-    "ratings",
     "duration",
     "maxGroupSize",
     "difficulty",
-    "ratingsAverage",
-    "ratingsQuantity",
+    "price",
     "summary",
-    "description",
-    "imageCover",
-    "images",
-    "startDates",
-    "secretTour",
-    "locations",
-    "guides",
-    "slug",
-    "durationWeeks"
+    "imageCover"
   ]
 }

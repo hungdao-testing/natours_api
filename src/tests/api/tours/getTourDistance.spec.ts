@@ -6,7 +6,6 @@ import { parseTours } from '../../../dev-data/data/parseFile'
 const schemaValidator = new jsonschema.Validator()
 
 test.describe('Get Tour Distance', () => {
-  const distance = 400
   const latlng = '34.111745,-118.11349'
 
   test('Response format is returned as defined', async ({ request }) => {
@@ -46,7 +45,6 @@ test.describe('Get Tour Distance', () => {
   test('Response returns correct data', async ({ request }) => {
     const res = await request.get(`/api/v1/tours/distances/${latlng}/unit/mi`)
     const body = await res.json()
-
     expect(res.status()).toBe(200)
     expect(body.results).toBe(parseTours.length)
   })
