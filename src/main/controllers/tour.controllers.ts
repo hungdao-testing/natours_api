@@ -188,7 +188,7 @@ export const getDistances = catchAsync(
 
     res.status(200).json({
       status: 'success',
-
+      results: distances.length,
       data: {
         data: distances,
       },
