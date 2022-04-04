@@ -1,4 +1,4 @@
-import mongoose, { Aggregate, Model } from 'mongoose'
+import mongoose, { Model } from 'mongoose'
 import slugify from 'slugify'
 import { IUser } from './user.model'
 

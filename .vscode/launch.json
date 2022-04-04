@@ -10,6 +10,21 @@
       "args": ["--inspect", "${relativeFile}"],
       "cwd": "${workspaceRoot}",
       "skipFiles": ["<node_internals>/**", "node_modules/**"]
+    },
+    {
+      "type": "pwa-node",
+      "request": "launch",
+      "name": "Debug Express",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/src/server.ts",
+      "sourceMaps": true,
+      "preLaunchTask": "tsc: build - tsconfig.json",
+      "outFiles": ["${workspaceFolder}/dist/**/*.*"],
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/**",
+        "!**/node_modules/**"
+      ],
+      "trace": true
     }
   ]
 }

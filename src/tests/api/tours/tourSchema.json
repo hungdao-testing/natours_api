@@ -149,8 +149,7 @@
             "role": {
               "type": "string"
             }
-          },
-          "required": ["_id", "name", "email", "photo", "role"]
+          }
         },
         {
           "type": "object",

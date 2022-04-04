@@ -11,7 +11,7 @@ const config: PlaywrightTestConfig = {
             testMatch: /.*.spec.ts/,
         },
     ],
-    workers: process.env.NODE_ENV === 'local' ? 3 : 4,
+
     reporter: [['allure-playwright']],
     globalSetup: require.resolve('./src/tests/hook/globalSetup.ts'),
     globalTeardown: require.resolve('./src/tests/hook/globalTeardown')
