@@ -1,15 +1,11 @@
 import { test, expect } from '@playwright/test'
 import jsonschema, { Schema } from 'jsonschema'
-import fs from 'fs'
 import _ from 'lodash'
+import { parseTours } from '../../../../dev-data/data/parseFile'
 
 const schemaValidator = new jsonschema.Validator()
-const tourSchema = JSON.parse(
-  fs.readFileSync(`${__dirname}/tourSchema.json`, { encoding: 'utf-8' }),
-)
 
-test.describe('Get Tour Within', () => {
-  const distance = 400
+test.describe('Get Tour Distance', () => {
   const latlng = '34.111745,-118.11349'
 
   test('Response format is returned as defined', async ({ request }) => {
@@ -24,7 +20,12 @@ test.describe('Get Tour Within', () => {
             data: {
               type: 'array',
               items: {
-                ...tourSchema,
+                type: 'object',
+                properties: {
+                  _id: { type: 'string' },
+                  name: { type: 'string', required: true },
+                  distance: { type: 'number', required: true },
+                },
               },
             },
           },
@@ -32,9 +33,7 @@ test.describe('Get Tour Within', () => {
       },
     }
 
-    const res = await request.get(
-      `/api/v1/tours/tours-within/${distance}/center/${latlng}/unit/mi`,
-    )
+    const res = await request.get(`/api/v1/tours/distances/${latlng}/unit/mi`)
     const body = await res.json()
 
     expect(res.status()).toBe(200)
@@ -44,27 +43,16 @@ test.describe('Get Tour Within', () => {
   })
 
   test('Response returns correct data', async ({ request }) => {
-    const res = await request.get(
-      `/api/v1/tours/tours-within/${distance}/center/${latlng}/unit/mi`,
-    )
+    const res = await request.get(`/api/v1/tours/distances/${latlng}/unit/mi`)
     const body = await res.json()
-
     expect(res.status()).toBe(200)
-    body.data.data.forEach((tour: any) => {
-      expect([
-        'The Wine Taster',
-        'The Park Camper',
-        'The Sports Lover',
-      ]).toContain(tour.name)
-    })
+    expect(body.results).toBe(parseTours.length)
   })
 
   test('Response returns error if missing one of lat-long value', async ({
     request,
   }) => {
-    const res = await request.get(
-      `/api/v1/tours/tours-within/${distance}/center/-118.11349/unit/mi`,
-    )
+    const res = await request.get(`/api/v1/tours/distances/-118.11349/unit/mi`)
 
     expect(res.status()).toBe(400)
   })

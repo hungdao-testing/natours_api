@@ -1,9 +1,10 @@
 import { test, expect } from '@playwright/test'
 import _ from 'lodash'
 import fs from 'fs'
+import path from 'path'
 
 const invalidPayload = JSON.parse(
-  fs.readFileSync(`${__dirname}/invalidTourPayload.json`, {
+  fs.readFileSync(path.join(`${__dirname}`, '..', `invalidTourPayload.json`), {
     encoding: 'utf-8',
   }),
 )

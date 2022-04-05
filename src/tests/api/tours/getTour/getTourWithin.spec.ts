@@ -1,11 +1,18 @@
 import { test, expect } from '@playwright/test'
 import jsonschema, { Schema } from 'jsonschema'
+import fs from 'fs'
 import _ from 'lodash'
-import { parseTours } from '../../../dev-data/data/parseFile'
+import path from 'path'
 
 const schemaValidator = new jsonschema.Validator()
+const tourSchema = JSON.parse(
+  fs.readFileSync(path.join(`${__dirname}`, '..', `tourSchema.json`), {
+    encoding: 'utf-8',
+  }),
+)
 
-test.describe('Get Tour Distance', () => {
+test.describe('Get Tour Within', () => {
+  const distance = 400
   const latlng = '34.111745,-118.11349'
 
   test('Response format is returned as defined', async ({ request }) => {
@@ -20,12 +27,7 @@ test.describe('Get Tour Distance', () => {
             data: {
               type: 'array',
               items: {
-                type: 'object',
-                properties: {
-                  _id: { type: 'string' },
-                  name: { type: 'string', required: true },
-                  distance: { type: 'number', required: true },
-                },
+                ...tourSchema,
               },
             },
           },
@@ -33,7 +35,9 @@ test.describe('Get Tour Distance', () => {
       },
     }
 
-    const res = await request.get(`/api/v1/tours/distances/${latlng}/unit/mi`)
+    const res = await request.get(
+      `/api/v1/tours/tours-within/${distance}/center/${latlng}/unit/mi`,
+    )
     const body = await res.json()
 
     expect(res.status()).toBe(200)
@@ -43,16 +47,27 @@ test.describe('Get Tour Distance', () => {
   })
 
   test('Response returns correct data', async ({ request }) => {
-    const res = await request.get(`/api/v1/tours/distances/${latlng}/unit/mi`)
+    const res = await request.get(
+      `/api/v1/tours/tours-within/${distance}/center/${latlng}/unit/mi`,
+    )
     const body = await res.json()
+
     expect(res.status()).toBe(200)
-    expect(body.results).toBe(parseTours.length)
+    body.data.data.forEach((tour: any) => {
+      expect([
+        'The Wine Taster',
+        'The Park Camper',
+        'The Sports Lover',
+      ]).toContain(tour.name)
+    })
   })
 
   test('Response returns error if missing one of lat-long value', async ({
     request,
   }) => {
-    const res = await request.get(`/api/v1/tours/distances/-118.11349/unit/mi`)
+    const res = await request.get(
+      `/api/v1/tours/tours-within/${distance}/center/-118.11349/unit/mi`,
+    )
 
     expect(res.status()).toBe(400)
   })

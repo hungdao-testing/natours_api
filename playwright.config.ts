@@ -9,6 +9,7 @@ const config: PlaywrightTestConfig = {
                 baseURL: `http://localhost:3001`,
             },
             testMatch: /.*.spec.ts/,
+            testDir: "./src/tests/"
         },
     ],
 

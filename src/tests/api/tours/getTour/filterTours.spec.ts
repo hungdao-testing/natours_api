@@ -1,12 +1,11 @@
 import { test, expect, APIResponse } from '@playwright/test'
 import jsonschema, { Schema } from 'jsonschema'
-import fs from 'fs'
 import {
   filterToursByQueryParam,
   getTourByPagination,
-} from '../../fixtureHelpers/tourHelper'
+} from '../../../fixtureHelpers/tourHelper'
 import _ from 'lodash'
-import { parseTours } from '../../../dev-data/data/parseFile'
+import { parseTours } from '../../../../dev-data/data/parseFile'
 
 const schemaValidator = new jsonschema.Validator()
 

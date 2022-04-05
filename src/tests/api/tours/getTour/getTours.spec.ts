@@ -4,13 +4,16 @@ import fs from 'fs'
 import {
   filterToursByQueryParam,
   getTourByPagination,
-} from '../../fixtureHelpers/tourHelper'
+} from '../../../fixtureHelpers/tourHelper'
 import _ from 'lodash'
-import { parseTours } from '../../../dev-data/data/parseFile'
+import { parseTours } from '../../../../dev-data/data/parseFile'
+import path from 'path'
 
 const schemaValidator = new jsonschema.Validator()
 const tourSchema = JSON.parse(
-  fs.readFileSync(`${__dirname}/tourSchema.json`, { encoding: 'utf-8' }),
+  fs.readFileSync(path.join(`${__dirname}`, '..', `tourSchema.json`), {
+    encoding: 'utf-8',
+  }),
 )
 
 test.describe('Get Tours', () => {
