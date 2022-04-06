@@ -1,5 +1,4 @@
-import { test, expect } from '@playwright/test'
-import _ from 'lodash'
+import { test, expect } from '../tourFixture'
 import fs from 'fs'
 import path from 'path'
 
@@ -11,36 +10,20 @@ const validPayload = JSON.parse(
 
 test.describe('Create Tour', () => {
   let token: any
-  const guideUser = {
-    role: 'LEAD_GUIDE',
-    email: 'miyah@example.com',
-    password: 'test1234',
-  }
 
-  test.beforeAll(async ({ request }) => {
-    const loginReq = await request.post(`/api/v1/users/login`, {
-      data: {
-        email: guideUser.email,
-        password: guideUser.password,
-      },
-    })
-
-    const loginRes = await loginReq.json()
-    token = loginRes.token
+  test.beforeAll(async ({ loginToken }) => {
+    token = await loginToken('LEAD_GUIDE')
   })
 
   for (const fixture of validPayload) {
     test.describe('Verify response data', () => {
       let tourBody: any
 
-      test.afterEach(async ({ request }) => {
+      test.afterEach(async ({ deleteTour }) => {
         const tourId = tourBody.data.tours._id
-        const res = await request.delete(`/api/v1/tours/${tourId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        expect(res.status()).toBe(204)
+        const status = await deleteTour(token, tourId)
+
+        expect(status).toBe(204)
       })
 
       test(`User with role ${fixture.user.role} could create a new tour ${fixture.case}`, async ({

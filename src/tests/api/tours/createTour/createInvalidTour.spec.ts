@@ -1,5 +1,4 @@
-import { test, expect } from '@playwright/test'
-import _ from 'lodash'
+import { test, expect } from '../tourFixture'
 import fs from 'fs'
 import path from 'path'
 
@@ -10,24 +9,11 @@ const invalidPayload = JSON.parse(
 )
 
 test.describe('Create Tour', () => {
-  const guideUser = {
-    role: 'LEAD_GUIDE',
-    email: 'miyah@example.com',
-    password: 'test1234',
-  }
   let token: string = ''
   let payload: unknown = {}
 
-  test.beforeAll(async ({ request }) => {
-    const loginReq = await request.post(`/api/v1/users/login`, {
-      data: {
-        email: guideUser.email,
-        password: guideUser.password,
-      },
-    })
-
-    const loginRes = await loginReq.json()
-    token = loginRes.token
+  test.beforeAll(async ({ loginToken }) => {
+    token = await loginToken('LEAD_GUIDE')
   })
 
   for (const fixture of invalidPayload) {

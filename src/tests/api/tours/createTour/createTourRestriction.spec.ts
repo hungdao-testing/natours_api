@@ -1,6 +1,6 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from '../tourFixture'
 
-test.describe('Create Tour ', () => {
+test.describe.parallel('Create Tour ', () => {
   const payload = {
     name: '[QA] Sport Lover',
     duration: 14,
@@ -20,20 +20,9 @@ test.describe('Create Tour ', () => {
 
   test('User with role "user" could not create a new tour', async ({
     request,
+    loginToken,
   }) => {
-    const user = {
-      email: 'lisa@example.com',
-      password: 'test1234',
-    }
-    const loginReq = await request.post(`/api/v1/users/login`, {
-      data: {
-        email: user.email,
-        password: user.password,
-      },
-    })
-
-    const loginRes = await loginReq.json()
-    const token = loginRes.token
+    const token = await loginToken('USER')
 
     const tourCreationReq = await request.post(`/api/v1/tours`, {
       headers: {
@@ -47,20 +36,9 @@ test.describe('Create Tour ', () => {
 
   test('User with role "guide" could not create a new tour', async ({
     request,
+    loginToken,
   }) => {
-    const user = {
-      email: 'ben@example.com',
-      password: 'test1234',
-    }
-    const loginReq = await request.post(`/api/v1/users/login`, {
-      data: {
-        email: user.email,
-        password: user.password,
-      },
-    })
-
-    const loginRes = await loginReq.json()
-    const token = loginRes.token
+    const token = await loginToken('GUIDE')
 
     const tourCreationReq = await request.post(`/api/v1/tours`, {
       headers: {
