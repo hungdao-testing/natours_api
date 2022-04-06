@@ -1,7 +1,11 @@
-### Environment information
+## Natours Rest API project
 
-1. MongoDB account: flutter_order_food@yopmail.com / 12345678x@X
-2. MongoDB DB access:
+The code of the application is taken from the [Udemy course `Node.js, Express, MongoDB & More` (author: Jonas Schmedtmann)](https://www.udemy.com/course/nodejs-express-mongodb-bootcamp/). 
 
-- username: natours
-- password: S7EX0O3rLs7HTsOl
+The programming language in the project is converted from JS to Typescript.
+
+### Project Business
+
+### Project Structure
+### Testing
+
