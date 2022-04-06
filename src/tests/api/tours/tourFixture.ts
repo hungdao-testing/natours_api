@@ -1,6 +1,6 @@
 import { expect, test as base } from '@playwright/test'
 import { UserRoles } from '../../../typing/app.type'
-import { getUserByRole } from '../../fixtureHelpers/userHelper'
+import { getUserByRole } from '../../utils/userHelper'
 
 interface ITourTestFixture {
   loginToken: (role: keyof typeof UserRoles) => Promise<string>

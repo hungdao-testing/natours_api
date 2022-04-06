@@ -6,7 +6,7 @@
   "scripts": {
     "delete-data": "npx cross-env ts-node ./src/main/dev-data/data/import_dev_data.ts --delete",
     "import-data": "npx cross-env ts-node ./src/main/dev-data/data/import_dev_data.ts --import",
-    "format": "prettier --write ./src/**/*.*",
+    "format": "prettier --write ./src/**/*.ts",
     "build": "npx cross-env NODE_ENV=development tsc",
     "local": "npx cross-env NODE_ENV=local  nodemon ",
     "dev": "npx cross-env NODE_ENV=development  nodemon ",

@@ -1,8 +1,8 @@
 import { test, expect, APIResponse } from '@playwright/test'
 import jsonschema, { Schema } from 'jsonschema'
 import _ from 'lodash'
-import { filterToursByYear } from '../../../fixtureHelpers/tourHelper'
-import { getUserByRole } from '../../../fixtureHelpers/userHelper'
+import { filterToursByYear } from '../../../utils/tourHelper'
+import { getUserByRole } from '../../../utils/userHelper'
 
 const schemaValidator = new jsonschema.Validator()
 

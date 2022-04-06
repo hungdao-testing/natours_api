@@ -2,7 +2,7 @@ import { test, expect, APIResponse } from '@playwright/test'
 import { allure } from 'allure-playwright'
 import jsonschema, { Schema } from 'jsonschema'
 import _ from 'lodash'
-import { getUserByRole } from '../../fixtureHelpers/userHelper'
+import { getUserByRole } from '../../utils/userHelper'
 
 const schemaValidator = new jsonschema.Validator()
 

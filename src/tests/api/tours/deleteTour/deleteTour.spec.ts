@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { getUserByRole } from '../../../fixtureHelpers/userHelper'
+import { getUserByRole } from '../../../utils/userHelper'
 
 test.describe('Delete Tour', () => {
   let token: string = ''
