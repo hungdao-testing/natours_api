@@ -94,7 +94,6 @@ export const test = base.extend<ITourTestFixture>({
         headers: {
           Authorization: `Bearer ${loginToken}`,
         },
-        data: sampleTourPayload,
       })
       const status = tourDeleteReq.status()
       if (tourDeleteReq.ok()) {
@@ -105,4 +104,4 @@ export const test = base.extend<ITourTestFixture>({
     })
   },
 })
-export { expect } from '@playwright/test'
+export { expect, APIResponse } from '@playwright/test'
