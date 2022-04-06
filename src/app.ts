@@ -10,6 +10,7 @@ import AppError from './main/utils/appError'
 import { rateLimit } from 'express-rate-limit'
 import helmet from 'helmet'
 import mongoSanitize from 'express-mongo-sanitize'
+import path from 'path'
 
 const hpp = require('hpp')
 const xss = require('xss-clean')
@@ -17,7 +18,13 @@ const xss = require('xss-clean')
 
 const app = express()
 
+app.set('view engine', 'pug')
+app.set('views', path.join(__dirname, 'main', 'views'))
+
 // 1) GLOBAL MIDDLEWARES
+
+// Serving static file
+app.use(express.static(path.join(__dirname, 'public')))
 
 // Set security HTTP Header
 app.use(helmet())
@@ -71,9 +78,6 @@ app.use(
   ),
 ) // e.g. remove duplicated fields in query params
 
-// Serving static file
-app.use(express.static(`${__dirname}/public`))
-
 // TEST middleware
 app.use(
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -94,6 +98,11 @@ app.use(
 )
 
 // 3) ROUTES
+
+app.get('/', (req, res) => {
+  res.status(200).render('base')
+})
+
 app.use('/api/v1/tours', tourRouter)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/reviews', reviewRouter)
