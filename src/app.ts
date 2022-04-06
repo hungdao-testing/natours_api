@@ -4,6 +4,7 @@ import { default as globalErrorHandler } from './main/controllers/error.controll
 import tourRouter from './main/routes/tour.routes'
 import userRouter from './main/routes/user.routes'
 import reviewRouter from './main/routes/review.routes'
+import viewRouter from './main/routes/view.routes'
 import testRouter from './dev-data/data/fixture'
 import { ICustomRequestExpress } from './typing/app.type'
 import AppError from './main/utils/appError'
@@ -98,26 +99,7 @@ app.use(
 )
 
 // 3) ROUTES
-
-app.get('/', (req, res) => {
-  res.status(200).render('base', {
-    tour: 'The Forest Hiker',
-    user: 'Jonas',
-  })
-})
-
-app.get('/overview', (req, res) => {
-  res.status(200).render('overview', {
-    title: 'All Tours',
-  })
-})
-
-app.get('/tour', (req, res) => {
-  res.status(200).render('tour', {
-    title: 'The Forest Hiker Tour',
-  })
-})
-
+app.use('/', viewRouter)
 app.use('/api/v1/tours', tourRouter)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/reviews', reviewRouter)
