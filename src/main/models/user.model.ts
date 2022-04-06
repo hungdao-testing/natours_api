@@ -1,9 +1,14 @@
-import mongoose, { Document, Model, Schema } from 'mongoose'
+import mongoose, { Document, Schema } from 'mongoose'
 import validator from 'validator'
 import bcrypt from 'bcryptjs'
-import { UserRoles } from '../typing/app.type'
 import crypto from 'crypto'
 
+export enum UserRoles {
+  ADMIN = 'admin',
+  GUIDE = 'guide',
+  LEAD_GUIDE = 'lead-guide',
+  USER = 'user',
+}
 interface IUserDocument extends Document {
   name: string
   email: string

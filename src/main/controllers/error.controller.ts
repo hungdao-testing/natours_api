@@ -80,7 +80,10 @@ export default function errorController(
   error.statusCode = error.statusCode
   error.status = error.status || 'error'
 
-  if (process.env.NODE_ENV === 'development') {
+  if (
+    process.env.NODE_ENV === 'development' ||
+    process.env.NODE_ENV === 'local'
+  ) {
     sendErrorDev(error, res)
   } else if (process.env.NODE_ENV === 'production') {
     if (error instanceof mongoose.Error.CastError)

@@ -2,7 +2,7 @@ import {
   ICustomRequestExpress,
   ICustomResponseExpress,
   ICustomNextFunction,
-} from '../typing/app.type'
+} from '../../typing/app.type'
 import { TourModel as model, TourModel } from '../models/tour.model'
 import { catchAsync } from '../utils/catchAsync'
 import * as factory from './handlerFactory.controller'
@@ -188,7 +188,7 @@ export const getDistances = catchAsync(
 
     res.status(200).json({
       status: 'success',
-
+      results: distances.length,
       data: {
         data: distances,
       },

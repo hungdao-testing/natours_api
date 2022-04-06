@@ -2,31 +2,29 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "ts-node - Launch & debug",
       "type": "node",
       "request": "launch",
-      "name": "Build Project",
-      "program": "${workspaceFolder}/src/server.ts",
-      "preLaunchTask": "npm: dev",
-      "sourceMaps": true,
-      "smartStep": true,
-      "internalConsoleOptions": "openOnSessionStart",
-      "outFiles": ["${workspaceFolder}/dist/**/*.js"]
+      "runtimeArgs": ["-r", "ts-node/register"],
+      "runtimeExecutable": "node",
+      "args": ["--inspect", "${relativeFile}"],
+      "cwd": "${workspaceRoot}",
+      "skipFiles": ["<node_internals>/**", "node_modules/**"]
     },
     {
       "type": "pwa-node",
       "request": "launch",
-      "name": "Express Launch Program",
+      "name": "Debug Express",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/dist/server.js",
-      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
-      "env": { "NODE_ENV": "development" },
+      "program": "${workspaceFolder}/src/server.ts",
+      "sourceMaps": true,
+      "preLaunchTask": "tsc: build - tsconfig.json",
+      "outFiles": ["${workspaceFolder}/dist/**/*.*"],
       "resolveSourceMapLocations": [
         "${workspaceFolder}/**",
         "!**/node_modules/**"
       ],
-      "preLaunchTask": "prepare app to debug",
-      "postDebugTask": "clean app after debug",
-      "smartStep": true
+      "trace": true
     }
   ]
 }

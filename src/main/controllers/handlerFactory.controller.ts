@@ -4,7 +4,7 @@ import {
   ICustomResponseExpress,
   ICustomNextFunction,
   TModels,
-} from '../typing/app.type'
+} from '../../typing/app.type'
 import APIFeatures from '../utils/apiFeatures'
 import AppError from '../utils/appError'
 import { catchAsync } from '../utils/catchAsync'
@@ -164,7 +164,7 @@ export function getAll<T extends TModels>(
       //SEND REQ
       res.status(200).json({
         status: 'success',
-        result: docs.length,
+        results: docs.length,
         [model.collection.collectionName]: docs,
       })
     },

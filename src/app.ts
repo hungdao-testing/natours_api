@@ -1,11 +1,12 @@
 import express from 'express'
 import morgan from 'morgan'
-import { default as globalErrorHandler } from './controllers/error.controller'
-import tourRouter from './routes/tour.routes'
-import userRouter from './routes/user.routes'
-import reviewRouter from './routes/review.routes'
+import { default as globalErrorHandler } from './main/controllers/error.controller'
+import tourRouter from './main/routes/tour.routes'
+import userRouter from './main/routes/user.routes'
+import reviewRouter from './main/routes/review.routes'
+import testRouter from './dev-data/data/fixture'
 import { ICustomRequestExpress } from './typing/app.type'
-import AppError from './utils/appError'
+import AppError from './main/utils/appError'
 import { rateLimit } from 'express-rate-limit'
 import helmet from 'helmet'
 import mongoSanitize from 'express-mongo-sanitize'
@@ -27,13 +28,22 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Limit request from same API
-const limiter = rateLimit({
-  // 1IP is allowed to do max 100 reqs in 1 hour
-  max: 100,
-  windowMs: 60 * 60 * 1000,
-  message: 'Too many request from this IP, please try again in an hour!',
-})
-
+let limiter
+if (process.env.NODE_ENV === 'local') {
+  limiter = rateLimit({
+    // 1IP is allowed to do max 100000 reqs in 1 hour
+    max: 100000,
+    windowMs: 60 * 60 * 1000,
+    message: 'Too many request from this IP, please try again in an hour!',
+  })
+} else {
+  limiter = rateLimit({
+    // 1IP is allowed to do max 100 reqs in 1 hour
+    max: 100,
+    windowMs: 60 * 60 * 1000,
+    message: 'Too many request from this IP, please try again in an hour!',
+  })
+}
 app.use('/api', limiter) // apply rate-limit to routes starts-with '/api'
 
 // Body parser, reading data from body into req.body
@@ -87,6 +97,7 @@ app.use(
 app.use('/api/v1/tours', tourRouter)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/reviews', reviewRouter)
+app.use('/api/v1/test-data', testRouter)
 
 app.all(
   '*',

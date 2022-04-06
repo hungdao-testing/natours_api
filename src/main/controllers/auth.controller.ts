@@ -4,7 +4,11 @@ import { catchAsync } from '../utils/catchAsync'
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import AppError from '../utils/appError'
 import { sendEmail } from '../utils/email'
-import { ICustomRequestExpress, UserRoles } from '../typing/app.type'
+import {
+  ICustomRequestExpress,
+  ICustomResponseExpress,
+  UserRoles,
+} from '../../typing/app.type'
 import crypto from 'crypto'
 
 const verifyToken = (token: string, secret: string): Promise<JwtPayload> => {
@@ -22,7 +26,11 @@ const signToken = (id: string) => {
   })
 }
 
-const createSendToken = (user: IUser, statusCode: number, res: Response) => {
+export const createSendToken = (
+  user: IUser,
+  statusCode: number,
+  res: Response,
+) => {
   const token = signToken(user._id)
 
   const cookieOptions: CookieOptions = {
@@ -71,7 +79,11 @@ export const signup = catchAsync(
 )
 
 export const login = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (
+    req: ICustomRequestExpress,
+    res: ICustomResponseExpress,
+    next: NextFunction,
+  ) => {
     const { email, password } = req.body
 
     // 1) Check email or password is existed in request body
@@ -92,7 +104,11 @@ export const login = catchAsync(
 )
 
 export const protect = catchAsync(
-  async (req: ICustomRequestExpress, res: Response, next: NextFunction) => {
+  async (
+    req: ICustomRequestExpress,
+    res: ICustomResponseExpress,
+    next: NextFunction,
+  ) => {
     // 1. Getting token and check of it's existed
     let token: string = ''
     if (
@@ -142,9 +158,11 @@ type TSpreadUser = keyof typeof UserRoles
 export const restrictTo = (...roles: Array<TSpreadUser>) => {
   return catchAsync(
     async (req: ICustomRequestExpress, res: Response, next: NextFunction) => {
-      const reqRole = req.user?.role.toUpperCase() as TSpreadUser
-
-      if (!roles.includes(reqRole)) {
+      let reqRole = req.user?.role.toUpperCase()
+      if (reqRole === 'LEAD-GUIDE') {
+        reqRole = 'LEAD_GUIDE'
+      }
+      if (!roles.includes(reqRole as TSpreadUser)) {
         return next(
           new AppError(
             'You do not have permission to perform this action',

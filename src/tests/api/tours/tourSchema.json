@@ -1,0 +1,215 @@
+{
+  "type": "object",
+  "properties": {
+    "startLocation": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "coordinates": {
+          "type": "array",
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "address": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": ["type", "coordinates", "address", "description"]
+    },
+    "_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "price": {
+      "type": "integer"
+    },
+    "ratings": {
+      "type": "number"
+    },
+    "duration": {
+      "type": "integer"
+    },
+    "maxGroupSize": {
+      "type": "integer"
+    },
+    "difficulty": {
+      "type": "string"
+    },
+    "ratingsAverage": {
+      "type": "number"
+    },
+    "ratingsQuantity": {
+      "type": "integer"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "imageCover": {
+      "type": "string"
+    },
+    "images": {
+      "type": "array",
+      "items": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "startDates": {
+      "type": "array",
+      "items": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "secretTour": {
+      "type": "boolean"
+    },
+    "locations": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string"
+            },
+            "coordinates": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            },
+            "description": {
+              "type": "string"
+            },
+            "day": {
+              "type": "integer"
+            },
+            "_id": {
+              "type": "string"
+            }
+          },
+          "required": ["type", "coordinates", "description", "day", "_id"]
+        }
+      ]
+    },
+    "guides": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "photo": {
+              "type": "string"
+            },
+            "role": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "photo": {
+              "type": "string"
+            },
+            "role": {
+              "type": "string"
+            }
+          },
+          "required": ["_id", "name", "email", "photo", "role"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "photo": {
+              "type": "string"
+            },
+            "role": {
+              "type": "string"
+            }
+          },
+          "required": ["_id", "name", "email", "photo", "role"]
+        }
+      ]
+    },
+    "slug": {
+      "type": "string"
+    },
+    "durationWeeks": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "_id",
+    "name",
+    "duration",
+    "maxGroupSize",
+    "difficulty",
+    "price",
+    "summary",
+    "imageCover"
+  ]
+}

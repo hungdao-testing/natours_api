@@ -3,7 +3,7 @@ import {
   ICustomRequestExpress,
   ICustomResponseExpress,
   ICustomNextFunction,
-} from '../typing/app.type'
+} from '../../typing/app.type'
 import AppError from '../utils/appError'
 import { catchAsync } from '../utils/catchAsync'
 import * as factory from './handlerFactory.controller'
