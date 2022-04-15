@@ -35,7 +35,7 @@ export const getTour = catchAsync(async (
 
   // 3) render template
   res.status(200).render('tour', {
-    title: 'The Forest Hiker Tour',
+    title: `${tour!.name} Tour`,
     tour
   })
 })
