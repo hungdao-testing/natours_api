@@ -2,7 +2,9 @@ extends base
 include _reviewCard
 
 block append head
-    //- script(src='/js/mapbox.js') 
+    script(defer src='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js')
+    link(defer href='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css' rel='stylesheet')
+    script(defer src=`/js/mapbox.js`)
 
 mixin overviewBox(label, text, icon)
     .overview-box__detail

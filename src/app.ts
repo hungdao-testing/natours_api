@@ -28,7 +28,24 @@ app.set('views', path.join(__dirname, 'main', 'views'))
 app.use(express.static(path.join(__dirname, 'public')))
 
 // Set security HTTP Header
-app.use(helmet())
+app.use(
+  helmet({
+    crossOriginEmbedderPolicy: false,
+    contentSecurityPolicy: {
+      directives: {
+        scriptSrc: ["'self'", 'https://*.mapbox.com'],
+        workerSrc: ["'self'", 'data:', 'blob:'],
+        childSrc: ["'self'", 'blob:'],
+        imgSrc: ["'self'", 'data:', 'blob:'],
+        connectSrc: [
+          'https://*.tiles.mapbox.com',
+          'https://api.mapbox.com',
+          'https://events.mapbox.com',
+        ],
+      },
+    },
+  }),
+)
 
 // Development logging
 if (process.env.NODE_ENV === 'development') {
