@@ -1,7 +1,7 @@
 import { CookieOptions, NextFunction, Request, Response } from 'express'
 import { IUser, UserModel } from '../models/user.model'
 import { catchAsync } from '../utils/catchAsync'
-import jwt, { JwtPayload } from 'jsonwebtoken'
+import jwt, { Jwt, JwtPayload, Secret, VerifyOptions } from 'jsonwebtoken'
 import AppError from '../utils/appError'
 import { sendEmail } from '../utils/email'
 import {
@@ -10,6 +10,7 @@ import {
   UserRoles,
 } from '../../typing/app.type'
 import crypto from 'crypto'
+import util from 'util'
 
 const verifyToken = (token: string, secret: string): Promise<JwtPayload> => {
   return new Promise((resolve, reject) => {
@@ -36,7 +37,7 @@ export const createSendToken = (
   const cookieOptions: CookieOptions = {
     expires: new Date(
       Date.now() +
-        parseInt(process.env.JWT_COOKIE_EXPIRES_IN!) * 24 * 60 * 60 * 1000,
+      parseInt(process.env.JWT_COOKIE_EXPIRES_IN!) * 24 * 60 * 60 * 1000,
     ),
     httpOnly: true,
   }
@@ -153,6 +154,38 @@ export const protect = catchAsync(
     next()
   },
 )
+
+// export const isLoggedIn = async (req: ICustomRequestExpress,
+//   res: ICustomResponseExpress,
+//   next: NextFunction,) => {
+//   if (req.cookies.jwt) {
+//     try {
+//       // 1) verify token
+//       const decoded = await util.promisify<string, Secret, VerifyOptions | {}, JwtPayload>(jwt.verify)(
+//         req.cookies.jwt,
+//         process.env.JWT_SECRET!, {}
+//       );
+
+//       // 2) Check if user still exists
+//       const currentUser = await UserModel.findById(decoded._id);
+//       if (!currentUser) {
+//         return next();
+//       }
+
+//       // 3) Check if user changed password after the token was issued
+//       if (currentUser.changePasswordAfter((decoded.iat)!.toString())) {
+//         return next();
+//       }
+
+//       // THERE IS A LOGGED IN USER
+//       res.locals.user = currentUser;
+//       return next();
+//     } catch (err) {
+//       return next();
+//     }
+//   }
+//   next();
+// };
 
 type TSpreadUser = keyof typeof UserRoles
 export const restrictTo = (...roles: Array<TSpreadUser>) => {

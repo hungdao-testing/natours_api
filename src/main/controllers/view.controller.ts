@@ -45,3 +45,15 @@ export const getTour = catchAsync(
       })
   },
 )
+
+export const getLoginForm = (req: ICustomRequestExpress, res: ICustomResponseExpress) => {
+  res.status(200).render('login', {
+    title: 'Log into your account'
+  });
+};
+
+export const getAccount = (req: ICustomRequestExpress, res: ICustomResponseExpress) => {
+  res.status(200).render('account', {
+    title: 'Your account'
+  });
+};
