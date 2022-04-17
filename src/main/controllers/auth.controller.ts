@@ -104,6 +104,15 @@ export const login = catchAsync(
   },
 )
 
+export const logout = (req: Request, res: Response) => {
+  res.cookie('jwt', 'loggedout', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true
+  });
+  res.status(200).json({ status: 'success' });
+};
+
+
 export const protect = catchAsync(
   async (
     req: ICustomRequestExpress,
@@ -117,6 +126,8 @@ export const protect = catchAsync(
       req.headers.authorization.startsWith('Bearer')
     ) {
       token = req.headers.authorization.split(' ')[1]
+    } else if (req.cookies.jwt) {
+      token = req.cookies.jwt;
     }
 
     if (!token) {
@@ -155,37 +166,36 @@ export const protect = catchAsync(
   },
 )
 
-// export const isLoggedIn = async (req: ICustomRequestExpress,
-//   res: ICustomResponseExpress,
-//   next: NextFunction,) => {
-//   if (req.cookies.jwt) {
-//     try {
-//       // 1) verify token
-//       const decoded = await util.promisify<string, Secret, VerifyOptions | {}, JwtPayload>(jwt.verify)(
-//         req.cookies.jwt,
-//         process.env.JWT_SECRET!, {}
-//       );
+export const isLoggedIn = async (req: Request, res: Response,
+  next: NextFunction,) => {
+  if (req.cookies?.jwt) {
+    try {
+      // 1) verify token
+      const decoded = await util.promisify<string, Secret, VerifyOptions | {}, JwtPayload>(jwt.verify)(
+        req.cookies.jwt,
+        process.env.JWT_SECRET!, {}
+      );
 
-//       // 2) Check if user still exists
-//       const currentUser = await UserModel.findById(decoded._id);
-//       if (!currentUser) {
-//         return next();
-//       }
+      // 2) Check if user still exists
+      const currentUser = await UserModel.findById(decoded._id);
+      if (!currentUser) {
+        return next();
+      }
 
-//       // 3) Check if user changed password after the token was issued
-//       if (currentUser.changePasswordAfter((decoded.iat)!.toString())) {
-//         return next();
-//       }
+      // 3) Check if user changed password after the token was issued
+      if (currentUser.changePasswordAfter((decoded.iat)!.toString())) {
+        return next();
+      }
 
-//       // THERE IS A LOGGED IN USER
-//       res.locals.user = currentUser;
-//       return next();
-//     } catch (err) {
-//       return next();
-//     }
-//   }
-//   next();
-// };
+      // THERE IS A LOGGED IN USER
+      res.locals.user = currentUser;
+      return next();
+    } catch (err) {
+      return next();
+    }
+  }
+  next();
+};
 
 type TSpreadUser = keyof typeof UserRoles
 export const restrictTo = (...roles: Array<TSpreadUser>) => {

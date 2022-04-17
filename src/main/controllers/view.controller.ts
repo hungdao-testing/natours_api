@@ -1,9 +1,9 @@
 import {
   ICustomRequestExpress,
   ICustomResponseExpress,
-  ICustomNextFunction,
 } from '../../typing/app.type'
 import { TourModel } from '../models/tour.model'
+import { UserModel } from '../models/user.model'
 import { catchAsync } from '../utils/catchAsync'
 
 export const getOverview = catchAsync(
@@ -57,3 +57,22 @@ export const getAccount = (req: ICustomRequestExpress, res: ICustomResponseExpre
     title: 'Your account'
   });
 };
+
+export const updateUserData = catchAsync(async (req: ICustomRequestExpress, res: ICustomResponseExpress) => {
+  const updatedUser = await UserModel.findByIdAndUpdate(
+    req.user!.id,
+    {
+      name: req.body.name,
+      email: req.body.email
+    },
+    {
+      new: true,
+      runValidators: true
+    }
+  );
+
+  res.status(200).render('account', {
+    title: 'Your account',
+    user: updatedUser
+  });
+});

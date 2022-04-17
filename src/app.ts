@@ -12,6 +12,7 @@ import { rateLimit } from 'express-rate-limit'
 import helmet from 'helmet'
 import mongoSanitize from 'express-mongo-sanitize'
 import path from 'path'
+import cookieParser from 'cookie-parser';
 
 const hpp = require('hpp')
 const xss = require('xss-clean')
@@ -33,14 +34,14 @@ app.use(
     crossOriginEmbedderPolicy: false,
     contentSecurityPolicy: {
       directives: {
-        scriptSrc: ["'self'", 'https://*.mapbox.com'],
+        scriptSrc: ["'self'", 'https://*.mapbox.com', 'http:'],
         workerSrc: ["'self'", 'data:', 'blob:'],
         childSrc: ["'self'", 'blob:'],
         imgSrc: ["'self'", 'data:', 'blob:'],
         connectSrc: [
-          'https://*.tiles.mapbox.com',
-          'https://api.mapbox.com',
-          'https://events.mapbox.com',
+          'https://*.mapbox.com',
+          'https://bundle.js:*',
+          'http://127.0.0.1:*/',
         ],
       },
     },
@@ -73,6 +74,7 @@ app.use('/api', limiter) // apply rate-limit to routes starts-with '/api'
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' })) // not allow data > 10kb to be passed into body
+app.use(cookieParser())
 
 // Data sanitization against NOSQL query
 app.use(mongoSanitize())
@@ -115,7 +117,7 @@ app.use(
   },
 )
 
-// 3) ROUTES
+//3 ROUTES
 app.use('/', viewRouter)
 app.use('/api/v1/tours', tourRouter)
 app.use('/api/v1/users', userRouter)

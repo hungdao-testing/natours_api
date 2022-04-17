@@ -10,6 +10,9 @@
     "build": "npx cross-env NODE_ENV=development tsc",
     "local": "npx cross-env NODE_ENV=local  nodemon ",
     "dev": "npx cross-env NODE_ENV=development  nodemon ",
+    "watch:js:local": "npx cross-env NODE_ENV=local parcel watch --no-hmr ./src/public/js/index.js --out-dir ./src/public/js -o bundle.js --public-url ./",
+    "watch:js:dev": "npx cross-env NODE_ENV=development parcel watch --no-hmr ./src/public/js/index.js --out-dir ./src/public/js -o bundle.js --public-url ./",
+    "build:js": "npx cross-env parcel watch --no-hmr ./src/public/js/index.js --out-dir ./src/public/js --out-file bundle.js",
     "prod": "npx cross-env NODE_ENV=production nodemon",
     "test:local:api": "npx cross-env NODE_ENV=local playwright test --project=api --reporter=list,allure-playwright",
     "report:allure:api": "npx cross-env allure open ./reporters/allure/allure-report"
@@ -19,6 +22,7 @@
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.20.1",
+    "@types/cookie-parser": "^1.4.2",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.13",
     "@types/lodash": "^4.14.180",
@@ -42,6 +46,7 @@
     "jsonschema": "^1.4.0",
     "lodash": "^4.17.21",
     "nodemon": "^2.0.15",
+    "parcel-bundler": "^1.12.3",
     "playwright": "^1.20.0",
     "prettier": "^2.5.1",
     "rimraf": "^3.0.2",
@@ -49,10 +54,13 @@
     "typescript": "^4.5.5"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.12.1",
     "@types/bcryptjs": "^2.4.2",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/pug": "^2.0.6",
+    "axios": "^0.26.1",
     "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
     "cross-env": "^7.0.3",
     "dotenv": "^14.3.0",
     "express": "^4.17.2",
@@ -68,5 +76,8 @@
     "slugify": "^1.6.5",
     "validator": "^13.7.0",
     "xss-clean": "^0.1.1"
+  },
+  "engines": {
+    "node": ">=10.0.0"
   }
 }
