@@ -12,7 +12,7 @@ import { rateLimit } from 'express-rate-limit'
 import helmet from 'helmet'
 import mongoSanitize from 'express-mongo-sanitize'
 import path from 'path'
-import cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser'
 
 const hpp = require('hpp')
 const xss = require('xss-clean')
