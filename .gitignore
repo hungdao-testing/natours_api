@@ -1,3 +1,7 @@
+# Logs
+logs
+*.log
+
 lib-cov
 *.seed
 *.log
@@ -39,6 +43,9 @@ dist/**/*
 
 # ignore yarn.lock
 yarn.lockm
+
+#ignore parcel
+.cache/
 
 # ignore reporter
 reporters/allure/allure-results

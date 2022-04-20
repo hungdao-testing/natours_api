@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { showAlert } from './alerts'
 
-let port;
+let port
 if (process.env.NODE_ENV === 'local') {
   port = 3001
 } else if (process.env.NODE_ENV === 'development') {

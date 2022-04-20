@@ -168,6 +168,7 @@ export const protect = catchAsync(
 
 export const isLoggedIn = async (req: Request, res: Response,
   next: NextFunction,) => {
+
   if (req.cookies?.jwt) {
     try {
       // 1) verify token
@@ -177,7 +178,9 @@ export const isLoggedIn = async (req: Request, res: Response,
       );
 
       // 2) Check if user still exists
-      const currentUser = await UserModel.findById(decoded._id);
+      const currentUser = await UserModel.findById(decoded.id);
+
+
       if (!currentUser) {
         return next();
       }
@@ -189,6 +192,8 @@ export const isLoggedIn = async (req: Request, res: Response,
 
       // THERE IS A LOGGED IN USER
       res.locals.user = currentUser;
+
+
       return next();
     } catch (err) {
       return next();

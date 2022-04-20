@@ -1,3 +1,4 @@
+import { Request, Response } from 'express'
 import {
   ICustomRequestExpress,
   ICustomResponseExpress,
@@ -7,7 +8,7 @@ import { UserModel } from '../models/user.model'
 import { catchAsync } from '../utils/catchAsync'
 
 export const getOverview = catchAsync(
-  async (req: ICustomRequestExpress, res: ICustomResponseExpress) => {
+  async (req: Request, res: Response) => {
     // 1) Get tour data from collection
     const tours = await TourModel.find()
 
