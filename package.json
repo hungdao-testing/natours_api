@@ -8,14 +8,15 @@
     "import-data": "npx cross-env ts-node ./src/main/dev-data/data/import_dev_data.ts --import",
     "format": "prettier --write ./src/**/*.ts",
     "build": "npx cross-env NODE_ENV=development tsc",
-    "local": "npx cross-env NODE_ENV=local  nodemon ",
-    "dev": "npx cross-env NODE_ENV=development  nodemon ",
+    "run:api:local": "npx cross-env NODE_ENV=local  nodemon ",
+    "run:api:dev": "npx cross-env NODE_ENV=development  nodemon ",
     "watch:js:local": "npx cross-env NODE_ENV=local parcel watch --no-hmr ./src/public/js/index.js --out-dir ./src/public/js -o bundle.js --public-url ./",
     "watch:js:dev": "npx cross-env NODE_ENV=development parcel watch --no-hmr ./src/public/js/index.js --out-dir ./src/public/js -o bundle.js --public-url ./",
     "build:js": "npx cross-env parcel watch --no-hmr ./src/public/js/index.js --out-dir ./src/public/js --out-file bundle.js",
     "prod": "npx cross-env NODE_ENV=production nodemon",
     "test:local:api": "npx cross-env NODE_ENV=local playwright test --project=api --reporter=list,allure-playwright",
-    "report:allure:api": "npx cross-env allure open ./reporters/allure/allure-report"
+    "report:allure:api": "npx cross-env allure open ./reporters/allure/allure-report",
+    "build:app:local": "start npm run watch:js:local & start npm run run:api:local"
   },
   "keywords": [],
   "author": "",
