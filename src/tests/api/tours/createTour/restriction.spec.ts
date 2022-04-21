@@ -1,6 +1,6 @@
 import { test, expect } from '../tourFixture'
 
-test.describe.parallel('Create Tour ', () => {
+test.describe.parallel('Create Tour', () => {
   const payload = {
     name: '[QA] Sport Lover',
     duration: 14,
@@ -18,7 +18,7 @@ test.describe.parallel('Create Tour ', () => {
     },
   }
 
-  test('User with role "user" could not create a new tour', async ({
+  test('User with role "user" could not create a new tour @restriction', async ({
     request,
     loginToken,
   }) => {
@@ -34,7 +34,7 @@ test.describe.parallel('Create Tour ', () => {
     expect(tourCreationReq.status()).toBe(403)
   })
 
-  test('User with role "guide" could not create a new tour', async ({
+  test('User with role "guide" could not create a new tour @restriction', async ({
     request,
     loginToken,
   }) => {

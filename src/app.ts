@@ -4,12 +4,15 @@ import { default as globalErrorHandler } from './main/controllers/error.controll
 import tourRouter from './main/routes/tour.routes'
 import userRouter from './main/routes/user.routes'
 import reviewRouter from './main/routes/review.routes'
+import viewRouter from './main/routes/view.routes'
 import testRouter from './dev-data/data/fixture'
 import { ICustomRequestExpress } from './typing/app.type'
 import AppError from './main/utils/appError'
 import { rateLimit } from 'express-rate-limit'
 import helmet from 'helmet'
 import mongoSanitize from 'express-mongo-sanitize'
+import path from 'path'
+import cookieParser from 'cookie-parser'
 
 const hpp = require('hpp')
 const xss = require('xss-clean')
@@ -17,10 +20,33 @@ const xss = require('xss-clean')
 
 const app = express()
 
+app.set('view engine', 'pug')
+app.set('views', path.join(__dirname, 'main', 'views'))
+
 // 1) GLOBAL MIDDLEWARES
 
+// Serving static file
+app.use(express.static(path.join(__dirname, 'public')))
+
 // Set security HTTP Header
-app.use(helmet())
+app.use(
+  helmet({
+    crossOriginEmbedderPolicy: false,
+    contentSecurityPolicy: {
+      directives: {
+        scriptSrc: ["'self'", 'https://*.mapbox.com', 'http:'],
+        workerSrc: ["'self'", 'data:', 'blob:'],
+        childSrc: ["'self'", 'blob:'],
+        imgSrc: ["'self'", 'data:', 'blob:'],
+        connectSrc: [
+          'https://*.mapbox.com',
+          'https://bundle.js:*',
+          'http://127.0.0.1:*/',
+        ],
+      },
+    },
+  }),
+)
 
 // Development logging
 if (process.env.NODE_ENV === 'development') {
@@ -48,6 +74,7 @@ app.use('/api', limiter) // apply rate-limit to routes starts-with '/api'
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' })) // not allow data > 10kb to be passed into body
+app.use(cookieParser())
 
 // Data sanitization against NOSQL query
 app.use(mongoSanitize())
@@ -71,9 +98,6 @@ app.use(
   ),
 ) // e.g. remove duplicated fields in query params
 
-// Serving static file
-app.use(express.static(`${__dirname}/public`))
-
 // TEST middleware
 app.use(
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -93,7 +117,8 @@ app.use(
   },
 )
 
-// 3) ROUTES
+//3 ROUTES
+app.use('/', viewRouter)
 app.use('/api/v1/tours', tourRouter)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/reviews', reviewRouter)

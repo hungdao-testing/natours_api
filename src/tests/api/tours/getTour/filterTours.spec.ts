@@ -3,7 +3,7 @@ import jsonschema, { Schema } from 'jsonschema'
 import {
   filterToursByQueryParam,
   getTourByPagination,
-} from '../../../fixtureHelpers/tourHelper'
+} from '../../../utils/tourHelper'
 import _ from 'lodash'
 import { parseTours } from '../../../../dev-data/data/parseFile'
 
