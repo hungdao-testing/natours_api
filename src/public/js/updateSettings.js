@@ -1,17 +1,9 @@
 /* eslint-disable */
 import axios from 'axios'
 import { showAlert } from './alerts'
+import { getPort } from './env.config'
 
-let port
-if (process.env.NODE_ENV === 'local') {
-  port = 3001
-} else if (process.env.NODE_ENV === 'development') {
-  port = 3000
-} else {
-  port = 3000
-}
-
-// type is either 'password' or 'data'
+const port = getPort()
 export const updateSettings = async (data, type) => {
   try {
     const url =

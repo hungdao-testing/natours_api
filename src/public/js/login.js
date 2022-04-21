@@ -1,15 +1,8 @@
 import axios from 'axios'
 import { showAlert } from './alerts'
+import { getPort } from './env.config'
 
-let port
-if (process.env.NODE_ENV === 'local') {
-  port = 3001
-} else if (process.env.NODE_ENV === 'development') {
-  port = 3000
-} else if (process.env.NODE_ENV === 'production') {
-  port = 3000
-}
-
+const port = getPort()
 export const login = async (email, password) => {
   try {
     const res = await axios({
