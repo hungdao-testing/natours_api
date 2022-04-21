@@ -8,7 +8,7 @@ function handleCastErrorDB(err: mongoose.Error.CastError) {
   return new AppError(message, 400)
 }
 
-function handleDuplicaFieldsDB(error: mongoose.Error) {
+function handleDuplicaFieldsDB(error: mongoose.Error.ValidationError) {
   if (!Object.getPrototypeOf(error).keyValue) {
     return new AppError(error.message, 400)
   }
@@ -54,7 +54,7 @@ const sendErrorDev = (err: AppError, req: Request, res: Response) => {
   })
 }
 
-const sendErrorProd = <T extends mongoose.Error & AppError>(
+const sendErrorProd = <T extends typeof mongoose.Error & AppError>(
   err: T,
   req: Request,
   res: Response,
