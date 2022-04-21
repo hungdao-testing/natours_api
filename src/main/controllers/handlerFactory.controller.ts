@@ -90,7 +90,7 @@ export function getOne<T extends TModels>(
     ) => {
       const collectionName = model.collection.collectionName
 
-      let query: Query<T | null, T> = model.findById(req.params.id)
+      let query: Query<any, T> = model.findById(req.params.id)
       if (populateOpts) query = query!.populate(populateOpts)
 
       const doc = await query

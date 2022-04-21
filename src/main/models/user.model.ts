@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose'
+import mongoose, { Document, Schema, Query } from 'mongoose'
 import validator from 'validator'
 import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
@@ -97,7 +97,7 @@ userSchema.pre('save', async function (this: IUserDocument, next: Function) {
   next()
 })
 
-userSchema.pre(/^find/, { query: true }, function (next: Function) {
+userSchema.pre(/^find/, function (this: Query<any, IUser>, next: Function) {
   //this point to current query
   this.find({ active: { $ne: false } })
   next()

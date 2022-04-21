@@ -1,4 +1,4 @@
-import mongoose, { Model } from 'mongoose'
+import mongoose, { Model, Query } from 'mongoose'
 import slugify from 'slugify'
 import { IUser } from './user.model'
 
@@ -155,7 +155,6 @@ tourSchema.virtual('reviews', {
 //Document middleware: runs before .save() and .create()
 // `save` is a hook
 tourSchema.pre('save', function (next) {
-  // console.log(this); // this -> currently being saved document
   this.slug = slugify(this.name, { lower: true })
   next()
 })
@@ -171,7 +170,7 @@ tourSchema.pre(/^find/, function (next) {
   next()
 })
 
-tourSchema.pre(/^find/, { query: true }, function (next) {
+tourSchema.pre(/^find/, function (this: Query<any, ITour>, next) {
   this.find({ secretTour: { $ne: true } })
   next()
 })

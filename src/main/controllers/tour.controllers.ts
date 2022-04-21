@@ -134,9 +134,12 @@ export const getToursWithin = catchAsync(
     }
 
     const tours = await TourModel.find({
-      startLocation: { $geoWithin: { $centerSphere: [[lng, lat], radius] } },
+      startLocation: {
+        $geoWithin: {
+          $centerSphere: [[parseFloat(lng), parseFloat(lat)], radius],
+        },
+      },
     })
-
     res.status(200).json({
       status: 'success',
       results: tours.length,
@@ -144,6 +147,7 @@ export const getToursWithin = catchAsync(
         data: tours,
       },
     })
+
   },
 )
 

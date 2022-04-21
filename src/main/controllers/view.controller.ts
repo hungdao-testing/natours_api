@@ -31,7 +31,7 @@ export const getTour = catchAsync(
     // 1) get the data, for the requested tour (including reviews and tour guide)
     const tour = await TourModel.findOne({ slug: req.params.slug }).populate({
       path: 'reviews',
-      fields: 'review rating user',
+      select: 'review rating user',
     })
 
     if (!tour) {
