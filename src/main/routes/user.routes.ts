@@ -2,7 +2,6 @@ import express from 'express'
 import * as userController from '../controllers/user.controllers'
 import * as authController from '../controllers/auth.controller'
 
-
 const router = express.Router()
 
 router.post('/signup', authController.signup)
@@ -31,7 +30,12 @@ router.get(
   userController.getUser,
 )
 
-router.patch('/updateMe', userController.uploadUserPhoto, userController.resizeUserPhoto, userController.updateMe)
+router.patch(
+  '/updateMe',
+  userController.uploadUserPhoto,
+  userController.resizeUserPhoto,
+  userController.updateMe,
+)
 
 router.delete('/deleteMe', userController.deleteMe)
 
