@@ -8844,11 +8844,11 @@ exports.getPort = getPort;
 function getPort() {
   var port;
 
-  if ("development" === 'local') {
+  if ("local" === 'local') {
     port = 3000;
-  } else if ("development" === 'development') {
+  } else if ("local" === 'development') {
     port = 3001;
-  } else if ("development" === 'production') {
+  } else if ("local" === 'production') {
     port = 3002;
   }
 
