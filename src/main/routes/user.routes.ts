@@ -1,11 +1,7 @@
 import express from 'express'
 import * as userController from '../controllers/user.controllers'
 import * as authController from '../controllers/auth.controller'
-import multer from 'multer';
-import path from 'path';
 
-
-const upload = multer({dest: path.join(__dirname, '../..', 'public/img/users')})
 
 const router = express.Router()
 
@@ -35,7 +31,7 @@ router.get(
   userController.getUser,
 )
 
-router.patch('/updateMe', upload.single('photo'), userController.updateMe)
+router.patch('/updateMe', userController.uploadUserPhoto, userController.updateMe)
 
 router.delete('/deleteMe', userController.deleteMe)
 

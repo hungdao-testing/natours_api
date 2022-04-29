@@ -7,6 +7,30 @@ import {
 import AppError from '../utils/appError'
 import { catchAsync } from '../utils/catchAsync'
 import * as factory from './handlerFactory.controller'
+import multer from 'multer';
+import path from 'path';
+
+const multerStorage = multer.diskStorage({
+  destination: (req: ICustomRequestExpress, file: Express.Multer.File, cb) => {
+    cb(null, path.join(__dirname, '../..', 'public/img/users'))
+  },
+  filename: (req: ICustomRequestExpress, file, cb) => {
+    const ext = file.mimetype.split("/")[1];
+    cb(null, `user-${req.user?.id}-${Date.now()}.${ext}`)
+  }
+})
+
+const multerFilter = (req: Express.Request, file: Express.Multer.File, cb: Function) => {
+  if (file.mimetype.startsWith("image")) {
+    cb(null, true)
+  } else {
+    cb(new AppError("Not an image, please upload image only", 400), false)
+  }
+}
+
+const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
+
+export const uploadUserPhoto = upload.single('photo');
 
 const filterObj = (
   obj: { [key: string]: unknown },
