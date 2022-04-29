@@ -11,15 +11,7 @@ import multer from 'multer'
 import path from 'path'
 import sharp from 'sharp'
 
-// const multerStorage = multer.diskStorage({
-//   destination: (req: ICustomRequestExpress, file: Express.Multer.File, cb) => {
-//     cb(null, path.join(__dirname, '../..', 'public/img/users'))
-//   },
-//   filename: (req: ICustomRequestExpress, file, cb) => {
-//     const ext = file.mimetype.split("/")[1];
-//     cb(null, `user-${req.user?.id}-${Date.now()}.${ext}`)
-//   }
-// })
+
 
 const multerStorage = multer.memoryStorage()
 
