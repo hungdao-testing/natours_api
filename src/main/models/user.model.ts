@@ -37,7 +37,7 @@ const userSchema = new Schema<IUser>({
     lowercase: true,
     validate: [validator.isEmail, 'Please provide valid email'],
   },
-  photo: { type: String },
+  photo: { type: String, default: "default.jpg" },
   role: {
     type: String,
     enum: {
