@@ -52,6 +52,7 @@ export const createSendToken = (
     email: user.email,
     role: user.role,
     active: user.active,
+    photo: user.photo,
     _id: user._id,
   }
 
