@@ -1,33 +1,60 @@
-import nodemailer from 'nodemailer'
+import nodemailer, { Transporter } from 'nodemailer'
 import Mail from 'nodemailer/lib/mailer'
-import SMTPTransport from 'nodemailer/lib/smtp-transport'
+import pug from 'pug'
+import { htmlToText } from 'html-to-text'
 
-export const sendEmail = async (options: {
-  email: string
-  message: string
-  subject: string
-}) => {
-  // 1. Create a transporter
-  // `transporter` is a service to send email
 
-  const transporterOption: SMTPTransport.Options = {
-    host: process.env.EMAIL_HOST,
-    port: parseInt(process.env.EMAIL_PORT!),
-    auth: {
-      user: process.env.EMAIL_USERNAME,
-      pass: process.env.EMAIL_PASSWORD,
-    },
-  }
-  const transporter = nodemailer.createTransport(transporterOption)
+export default class Email {
+  private readonly url: string
+  private to: string
+  private from: string
+  private firstName: string
 
-  // 2. Define the email option
-  const mailOptions: Mail.Options = {
-    from: 'Naruto Dev One <naruto.dev.one@gmail.com>',
-    to: options.email,
-    subject: options.subject,
-    text: options.message,
+  constructor(url: string, user: { email: string; name: string }) {
+    this.url = url
+    this.from = `NATOUR CONTACT CENTER <${process.env.EMAIL_FROM}>`
+    this.to = user.email
+    this.firstName = user.name.split(' ')[0]
   }
 
-  //3. Actually send the email
-  await transporter.sendMail(mailOptions)
+  newTransport() {
+    if (process.env.NODE_ENV === 'production') {
+      //Sendgrid
+      return 1
+    }
+
+    return nodemailer.createTransport({
+      host: process.env.EMAIL_HOST,
+      port: parseInt(process.env.EMAIL_PORT!),
+      auth: {
+        user: process.env.EMAIL_USERNAME,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    })
+  }
+
+  private async _send(template: string, subject: string) {
+    // 1) Render HTML base on the pug template
+    const html = pug.renderFile(
+      `${__dirname}/../views/emails/${template}.pug`,
+      { firstName: this.firstName, url: this.url, subject },
+    )
+
+    // 2) Define email option
+    const mailOptions: Mail.Options = {
+      from: this.from,
+      to: this.to,
+      subject,
+      html,
+      text: htmlToText(html),
+    }
+
+    // 3) Create transport and send email
+    await (this.newTransport() as Transporter).sendMail(mailOptions);
+  }
+
+  async sendWelcome() {
+    await this._send('Welcome', 'Welcome to the Natours Tour')
+  }
 }
+
