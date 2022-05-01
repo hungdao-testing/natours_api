@@ -2,6 +2,7 @@ import nodemailer, { Transporter } from 'nodemailer'
 import Mail from 'nodemailer/lib/mailer'
 import pug from 'pug'
 import { htmlToText } from 'html-to-text'
+import path from 'path'
 
 
 export default class Email {
@@ -35,8 +36,8 @@ export default class Email {
 
   private async _send(template: string, subject: string) {
     // 1) Render HTML base on the pug template
-    const html = pug.renderFile(
-      `${__dirname}/../views/emails/${template}.pug`,
+    const html = pug.renderFile(path.join(
+      __dirname, "..", `views/email/${template}.pug`),
       { firstName: this.firstName, url: this.url, subject },
     )
 
@@ -54,7 +55,7 @@ export default class Email {
   }
 
   async sendWelcome() {
-    await this._send('Welcome', 'Welcome to the Natours Tour')
+    await this._send('welcome', 'Welcome to the Natours Tour')
   }
 }
 
