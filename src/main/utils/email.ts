@@ -4,7 +4,6 @@ import pug from 'pug'
 import { htmlToText } from 'html-to-text'
 import path from 'path'
 
-
 export default class Email {
   private readonly url: string
   private to: string
@@ -36,8 +35,8 @@ export default class Email {
 
   private async _send(template: string, subject: string) {
     // 1) Render HTML base on the pug template
-    const html = pug.renderFile(path.join(
-      __dirname, "..", `views/email/${template}.pug`),
+    const html = pug.renderFile(
+      path.join(__dirname, '..', `views/email/${template}.pug`),
       { firstName: this.firstName, url: this.url, subject },
     )
 
@@ -51,11 +50,17 @@ export default class Email {
     }
 
     // 3) Create transport and send email
-    await (this.newTransport() as Transporter).sendMail(mailOptions);
+    await (this.newTransport() as Transporter).sendMail(mailOptions)
   }
 
   async sendWelcome() {
     await this._send('welcome', 'Welcome to the Natours Tour')
   }
-}
 
+  async sendPasswordReset() {
+    await this._send(
+      'passwordReset',
+      'Your password reset token (valid for only 10 mins)',
+    )
+  }
+}
