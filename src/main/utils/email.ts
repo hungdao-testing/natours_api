@@ -19,8 +19,21 @@ export default class Email {
 
   newTransport() {
     if (process.env.NODE_ENV === 'production') {
-      //Sendgrid
-      return 1
+      return nodemailer.createTransport({
+        service: 'Mailjet',
+        port: 587,
+        secure: false,
+        // auth: {
+        //   credentials: {
+        //     user: process.env.MAILJET_APIKEY,
+        //     pass: process.env.MAILJET_SECRETKEY,
+        //   }
+        // }
+        auth: {
+          user: process.env.MAILJET_APIKEY,
+          pass: process.env.MAILJET_SECRETKEY,
+        },
+      })
     }
 
     return nodemailer.createTransport({
