@@ -37,6 +37,7 @@ const bookingSchema = new mongoose.Schema<IBooking, IBookingModel>({
 bookingSchema.pre(/^find/, function (next) {
     this.populate([{
         path: 'user',
+        select: '-passwordChangedAt -role'
     },
     {
         path: 'tour',
