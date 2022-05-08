@@ -33,9 +33,8 @@ interface ITourDocument extends mongoose.Document {
   guides: (IUser | null)[]
 }
 
-export interface ITour extends ITourDocument { }
-interface ITourModel extends Model<ITour> {
-}
+export interface ITour extends ITourDocument {}
+interface ITourModel extends Model<ITour> {}
 
 const tourSchema = new mongoose.Schema<ITour, ITourModel>(
   {

@@ -35,10 +35,29 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         'default-src': ['self'],
-        scriptSrc: ["'self'", 'https://*.mapbox.com', 'http:', 'https://js.stripe.com', 'https://bundle.js:*',],
-        workerSrc: ["'self'", 'data:', 'blob:', 'https://*.mapbox.com', 'https://bundle.js:*',],
+        scriptSrc: [
+          "'self'",
+          'https://*.mapbox.com',
+          'http:',
+          'https://js.stripe.com',
+          'https://bundle.js:*',
+        ],
+        workerSrc: [
+          "'self'",
+          'data:',
+          'blob:',
+          'https://*.mapbox.com',
+          'https://bundle.js:*',
+        ],
         childSrc: ["'self'", 'blob:'],
-        imgSrc: ["'self'", 'data:', 'blob:', 'https://*.mapbox.com', 'https://*.stripe.com', 'https://bundle.js:*',],
+        imgSrc: [
+          "'self'",
+          'data:',
+          'blob:',
+          'https://*.mapbox.com',
+          'https://*.stripe.com',
+          'https://bundle.js:*',
+        ],
         'frame-src': [
           'self',
           'unsafe-inline',

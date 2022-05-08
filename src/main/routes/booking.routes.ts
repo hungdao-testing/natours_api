@@ -10,14 +10,14 @@ router.get('/checkout-session/:tourId', bookingController.getCheckoutSession)
 router.use(authController.restrictTo('ADMIN', 'LEAD_GUIDE'))
 
 router
-    .route('/')
-    .get(bookingController.getAllBookings)
-    .post(bookingController.createBooking)
+  .route('/')
+  .get(bookingController.getAllBookings)
+  .post(bookingController.createBooking)
 
 router
-    .route('/:id')
-    .get(bookingController.getBooking)
-    .patch(bookingController.updateBooking)
-    .delete(bookingController.deleteBooking)
+  .route('/:id')
+  .get(bookingController.getBooking)
+  .patch(bookingController.updateBooking)
+  .delete(bookingController.deleteBooking)
 
 export default router

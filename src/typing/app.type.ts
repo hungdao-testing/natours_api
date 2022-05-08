@@ -9,9 +9,9 @@ export interface ICustomRequestExpress extends Request {
   user?: IUser
 }
 
-export interface ICustomResponseExpress extends Response { }
+export interface ICustomResponseExpress extends Response {}
 
-export interface ICustomNextFunction extends NextFunction { }
+export interface ICustomNextFunction extends NextFunction {}
 
 export type TModels = ITour | IReview | IUser | IBooking
 

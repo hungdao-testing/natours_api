@@ -104,7 +104,7 @@ export const getMyTours = catchAsync(
 
     res.status(200).render('overview', {
       title: 'My tours',
-      tours
+      tours,
     })
   },
 )
