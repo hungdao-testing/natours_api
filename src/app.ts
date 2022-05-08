@@ -5,6 +5,7 @@ import tourRouter from './main/routes/tour.routes'
 import userRouter from './main/routes/user.routes'
 import reviewRouter from './main/routes/review.routes'
 import viewRouter from './main/routes/view.routes'
+import bookingRouter from './main/routes/booking.routes'
 import testRouter from './dev-data/data/fixture'
 import { ICustomRequestExpress } from './typing/app.type'
 import AppError from './main/utils/appError'
@@ -121,6 +122,8 @@ app.use('/', viewRouter)
 app.use('/api/v1/tours', tourRouter)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/reviews', reviewRouter)
+app.use('/api/v1/bookings', bookingRouter)
+
 app.use('/api/v1/test-data', testRouter)
 
 app.all(
