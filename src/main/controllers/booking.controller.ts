@@ -1,5 +1,6 @@
 
 import { TourModel } from "../models/tour.model";
+import { BookingModel } from "../models/booking.model";
 import { catchAsync } from "../utils/catchAsync";
 import Stripe from 'stripe'
 import { ICustomRequestExpress, ICustomResponseExpress, ICustomNextFunction } from "../../typing/app.type";
@@ -14,7 +15,7 @@ export const getCheckoutSession = catchAsync(async (req: ICustomRequestExpress, 
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2020-08-27' });
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
-        success_url: `${req.protocol}://${req.get("host")}/`,
+        success_url: `${req.protocol}://${req.get("host")}/?tour=${req.params.tourId}&user=${req.user!.id}&price=${tour!.price}`,
         cancel_url: `${req.protocol}://${req.get("host")}/tour/${tour!.slug}`,
         customer_email: req.user!.email,
         client_reference_id: req.params.tourId,
@@ -22,7 +23,7 @@ export const getCheckoutSession = catchAsync(async (req: ICustomRequestExpress, 
             {
                 name: `${tour!.name} Tour`,
                 description: `${tour!.summary}`,
-                images: [`${req.protocol}://${req.get("host")}/img/tours/${tour?.imageCover}`],
+                images: [`${req.protocol}://${req.get("host")}/img/tours/${tour!.imageCover}`],
                 amount: tour!.price * 100,
                 currency: 'usd',
                 quantity: 1
@@ -34,4 +35,15 @@ export const getCheckoutSession = catchAsync(async (req: ICustomRequestExpress, 
         status: 'success',
         session
     })
+})
+
+export const createBookingCheckout = catchAsync(async (req: ICustomRequestExpress, res: ICustomResponseExpress, next: ICustomNextFunction) => {
+
+    // this is only TEMPORARY, because it's UNSECURE: everyone can makes booking without payment
+    const { tour, user, price } = req.query;
+    if (!tour && !user && !price) return next()
+
+    await BookingModel.create({ tour, user, price });
+
+    res.redirect(req.originalUrl.split('?')[0])
 })
