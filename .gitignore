@@ -18,8 +18,6 @@ results
 tmp
 
 # Build
-src/public/js/bundle.js
-src/public/js/bundle.js.map
 
 # Coverage reports
 coverage
