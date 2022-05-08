@@ -3,7 +3,7 @@ import { IUser, UserModel } from '../models/user.model'
 import { catchAsync } from '../utils/catchAsync'
 import jwt, { Jwt, JwtPayload, Secret, VerifyOptions } from 'jsonwebtoken'
 import AppError from '../utils/appError'
-import { sendEmail } from '../utils/email'
+import Email from '../utils/email'
 import {
   ICustomRequestExpress,
   ICustomResponseExpress,
@@ -52,6 +52,7 @@ export const createSendToken = (
     email: user.email,
     role: user.role,
     active: user.active,
+    photo: user.photo,
     _id: user._id,
   }
 
@@ -74,7 +75,11 @@ export const signup = catchAsync(
       passwordChangedAt: req.body.passwordChangedAt,
       role: req.body.role,
     })
-
+    const url = `${req.protocol}://${req.get('host')}/me`
+    await new Email(url, {
+      email: newUser.email,
+      name: newUser.name,
+    }).sendWelcome()
     createSendToken(newUser, 201, res)
   },
 )
@@ -237,18 +242,15 @@ export const forgotPassword = catchAsync(
     await user.save({ validateBeforeSave: false })
 
     // 3. Send token (plain version) to user's email
-    const resetURL = `${req.protocol}://${req.get(
-      'host',
-    )}/api/v1/users/resetPassword/${resetToken}`
-
-    const message = `Forgot your password? Submit a PATCH request witho your new password and passwordConfirm to: ${resetURL}.\n If you didnot forget your password, please ignore this email`
 
     try {
-      await sendEmail({
+      const resetURL = `${req.protocol}://${req.get(
+        'host',
+      )}/api/v1/users/resetPassword/${resetToken}`
+      await new Email(resetURL, {
         email: user.email,
-        subject: 'Your password reset token (valid for 10 mins)',
-        message,
-      })
+        name: user.name,
+      }).sendPasswordReset()
 
       res.status(200).json({
         status: 'success',

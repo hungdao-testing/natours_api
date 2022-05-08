@@ -5,6 +5,7 @@ import tourRouter from './main/routes/tour.routes'
 import userRouter from './main/routes/user.routes'
 import reviewRouter from './main/routes/review.routes'
 import viewRouter from './main/routes/view.routes'
+import bookingRouter from './main/routes/booking.routes'
 import testRouter from './dev-data/data/fixture'
 import { ICustomRequestExpress } from './typing/app.type'
 import AppError from './main/utils/appError'
@@ -16,7 +17,6 @@ import cookieParser from 'cookie-parser'
 
 const hpp = require('hpp')
 const xss = require('xss-clean')
-// import xss from 'xss-clean';
 
 const app = express()
 
@@ -34,14 +34,46 @@ app.use(
     crossOriginEmbedderPolicy: false,
     contentSecurityPolicy: {
       directives: {
-        scriptSrc: ["'self'", 'https://*.mapbox.com', 'http:'],
-        workerSrc: ["'self'", 'data:', 'blob:'],
+        'default-src': ['self'],
+        scriptSrc: [
+          "'self'",
+          'https://*.mapbox.com',
+          'http:',
+          'https://js.stripe.com',
+          'https://bundle.js:*',
+        ],
+        workerSrc: [
+          "'self'",
+          'data:',
+          'blob:',
+          'https://*.mapbox.com',
+          'https://bundle.js:*',
+        ],
         childSrc: ["'self'", 'blob:'],
-        imgSrc: ["'self'", 'data:', 'blob:'],
+        imgSrc: [
+          "'self'",
+          'data:',
+          'blob:',
+          'https://*.mapbox.com',
+          'https://*.stripe.com',
+          'https://bundle.js:*',
+        ],
+        'frame-src': [
+          'self',
+          'unsafe-inline',
+          'data:',
+          'blob:',
+          'https://*.stripe.com',
+          'https://*.mapbox.com',
+          'https://*.cloudflare.com/',
+          'https://bundle.js:*',
+          'ws://localhost:*/',
+        ],
         connectSrc: [
           'https://*.mapbox.com',
           'https://bundle.js:*',
           'http://127.0.0.1:*/',
+          'https://*.stripe.com',
         ],
       },
     },
@@ -122,6 +154,8 @@ app.use('/', viewRouter)
 app.use('/api/v1/tours', tourRouter)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/reviews', reviewRouter)
+app.use('/api/v1/bookings', bookingRouter)
+
 app.use('/api/v1/test-data', testRouter)
 
 app.all(

@@ -3,6 +3,7 @@ import {
   ICustomRequestExpress,
   ICustomResponseExpress,
 } from '../../typing/app.type'
+import { BookingModel } from '../models/booking.model'
 import { TourModel } from '../models/tour.model'
 import { UserModel } from '../models/user.model'
 import AppError from '../utils/appError'
@@ -88,6 +89,22 @@ export const updateUserData = catchAsync(
     res.status(200).render('account', {
       title: 'Your account',
       user: updatedUser,
+    })
+  },
+)
+
+export const getMyTours = catchAsync(
+  async (req: ICustomRequestExpress, res: ICustomResponseExpress) => {
+    //1) Find all bookings,
+    const bookings = await BookingModel.find({ user: req.user?.id })
+
+    //2) Find tours with the returned IDs
+    const tourIds = bookings.map((el) => el.tour)
+    const tours = await TourModel.find({ _id: { $in: tourIds } })
+
+    res.status(200).render('overview', {
+      title: 'My tours',
+      tours,
     })
   },
 )

@@ -7,6 +7,77 @@ import { TourModel as model, TourModel } from '../models/tour.model'
 import { catchAsync } from '../utils/catchAsync'
 import * as factory from './handlerFactory.controller'
 import AppError from '../utils/appError'
+import multer from 'multer'
+import path from 'path'
+import sharp from 'sharp'
+
+const multerStorage = multer.memoryStorage()
+
+const multerFilter = (
+  req: Express.Request,
+  file: Express.Multer.File,
+  cb: Function,
+) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true)
+  } else {
+    cb(new AppError('Not an image, please upload image only', 400), false)
+  }
+}
+
+const upload = multer({ storage: multerStorage, fileFilter: multerFilter })
+export const uploadTourImages = upload.fields([
+  { name: 'imageCover', maxCount: 1 },
+  { name: 'images', maxCount: 3 },
+])
+
+export const resizeTourImages = catchAsync(
+  async (
+    req: ICustomRequestExpress,
+    res: ICustomResponseExpress,
+    next: ICustomNextFunction,
+  ) => {
+    let files = req.files as { [fieldname: string]: Express.Multer.File[] }
+
+    if (!files.images || !files.imageCover) return next()
+
+    console.log('Files inside tourController: ', files)
+
+    // 1) Cover image
+    req.body.imageCover = `tour-${req.params.id}-${Date.now()}-cover.jpeg`
+
+    await sharp(files.imageCover[0].buffer)
+      .resize(2000, 1333)
+      .toFormat('jpeg')
+      .jpeg({ quality: 90 })
+      .toFile(
+        path.join(
+          __dirname,
+          '../..',
+          `public/img/tours/${req.body.imageCover}`,
+        ),
+      )
+
+    // 2) Images
+    req.body.images = []
+
+    await Promise.all(
+      files.images.map(async (file, i) => {
+        const filename = `tour-${req.params.id}-${Date.now()}-${i + 1}.jpeg`
+
+        await sharp(file.buffer)
+          .resize(2000, 1333)
+          .toFormat('jpeg')
+          .jpeg({ quality: 90 })
+          .toFile(path.join(__dirname, '../..', `public/img/tours/${filename}`))
+
+        req.body.images.push(filename)
+      }),
+    )
+
+    next()
+  },
+)
 
 export const aliasTopTour = async (
   req: ICustomRequestExpress,
@@ -147,7 +218,6 @@ export const getToursWithin = catchAsync(
         data: tours,
       },
     })
-
   },
 )
 
