@@ -3,7 +3,7 @@ import {cp} from 'shelljs'
 const buildFolder = './dist/';
 
 // const files = new Set(['.env', 'LICENSE', 'README.md', 'package.json', 'package-lock.json']);
-const folders = new Set(['./data']);
+const folders = new Set(['./data', './config']);
 
 // Copy Files
 // files.forEach((file) => {

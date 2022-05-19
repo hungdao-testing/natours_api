@@ -9,6 +9,8 @@ const parseURI = () => {
     dotenv.config({ path: appConfig.local_env })
   } else if (process.env.NODE_ENV === 'production') {
     dotenv.config({ path: appConfig.prod_env })
+  }else{
+    dotenv.config({ path: appConfig.dev_env })
   }
 
   const DB_URI = process.env.DB_CONN_STRING!.replace(
