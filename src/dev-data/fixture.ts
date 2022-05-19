@@ -1,14 +1,13 @@
 import { parseTours, parseUsers, parseReviews } from './parseFile'
-import { TourModel } from '../../main/models/tour.model'
-import { ReviewModel } from '../../main/models/review.model'
-import { UserModel } from '../../main/models/user.model'
+
 import express from 'express'
-import { catchAsync } from '../../main/utils/catchAsync'
-import {
-  ICustomNextFunction,
-  ICustomRequestExpress,
-  ICustomResponseExpress,
-} from '../../typing/app.type'
+import { ICustomNextFunction, ICustomRequestExpress, ICustomResponseExpress } from '../typing/app.type'
+import { TourModel } from '../main/models/tour.model'
+import { catchAsync } from '../main/utils/catchAsync'
+import { ReviewModel } from '../main/models/review.model'
+import { UserModel } from '../main/models/user.model'
+
+
 
 const router = express.Router()
 
