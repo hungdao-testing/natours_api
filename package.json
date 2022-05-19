@@ -2,6 +2,7 @@
   "name": "natours_api",
   "version": "1.0.0",
   "description": "",
+  "main": "server.js",
   "scripts": {
     "clean": "npx rimraf ./dist/",
     "prebuild": "npm run clean",

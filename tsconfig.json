@@ -6,7 +6,7 @@
 
     /* Modules */
     "module": "commonjs",
-
+    "baseUrl": "./",
     "esModuleInterop": true,
     "noEmitOnError": true,
     "resolveJsonModule": true,
