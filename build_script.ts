@@ -1,13 +1,25 @@
-import {cp} from 'shelljs'
+import { cp } from 'shelljs'
 
-const buildFolder = './dist/';
 
-const featureFolders = new Set(['./data', './config', './src/public', './src/main']);
+const folderMapping = [
+  {
+    source: './data',
+    dest: './dist/',
+  },
+  {
+    source: './config',
+    dest: './dist/',
+  },
+  {
+    source: './src/public',
+    dest: './dist/src/',
+  },
+  {
+    source: './src/main/views',
+    dest: './dist/src/main',
+  },
+]
 
-// Copy Folders
-featureFolders.forEach((folder) => {
-  cp('-R', folder, buildFolder);
-});
-
-const viewsFolder = './src/main/views/'
-cp('-R', viewsFolder, './dist/src/main')
+folderMapping.forEach(folderMap => {
+  cp('-R', folderMap.source, folderMap.dest)
+})
