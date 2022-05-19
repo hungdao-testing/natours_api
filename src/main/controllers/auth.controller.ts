@@ -1,7 +1,7 @@
 import { CookieOptions, NextFunction, Request, Response } from 'express'
 import { IUser, UserModel } from '../models/user.model'
 import { catchAsync } from '../utils/catchAsync'
-import jwt, { Jwt, JwtPayload, Secret, VerifyOptions } from 'jsonwebtoken'
+import jwt, { JwtPayload, Secret, VerifyOptions } from 'jsonwebtoken'
 import AppError from '../utils/appError'
 import Email from '../utils/email'
 import {
@@ -11,6 +11,7 @@ import {
 } from '../../typing/app.type'
 import crypto from 'crypto'
 import util from 'util'
+import { request } from 'http'
 
 const verifyToken = (token: string, secret: string): Promise<JwtPayload> => {
   return new Promise((resolve, reject) => {
@@ -30,6 +31,7 @@ const signToken = (id: string) => {
 export const createSendToken = (
   user: IUser,
   statusCode: number,
+  req: Request,
   res: Response,
 ) => {
   const token = signToken(user._id)
@@ -40,9 +42,10 @@ export const createSendToken = (
         parseInt(process.env.JWT_COOKIE_EXPIRES_IN!) * 24 * 60 * 60 * 1000,
     ),
     httpOnly: true,
+    secure: req.secure || req.headers['x-forwared-proto'] === 'https'
   }
 
-  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true
+ 
 
   res.cookie('jwt', token, cookieOptions)
 
@@ -80,7 +83,7 @@ export const signup = catchAsync(
       email: newUser.email,
       name: newUser.name,
     }).sendWelcome()
-    createSendToken(newUser, 201, res)
+    createSendToken(newUser, 201, req, res)
   },
 )
 
@@ -105,7 +108,7 @@ export const login = catchAsync(
     }
 
     // 3) send token
-    createSendToken(user, 200, res)
+    createSendToken(user, 200, req, res)
   },
 )
 
@@ -297,7 +300,7 @@ export const resetPassword = catchAsync(
     // 3. Update changePasswordAt property for user
 
     // 4. Log the user in => send JWT
-    createSendToken(user, 200, res)
+    createSendToken(user, 200, req, res)
   },
 )
 
@@ -329,6 +332,6 @@ export const updatePassword = catchAsync(
     await currentUser.save()
 
     //4. Log user in, send JWT
-    createSendToken(currentUser, 200, res)
+    createSendToken(currentUser, 200, req, res)
   },
 )

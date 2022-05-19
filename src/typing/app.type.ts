@@ -16,3 +16,4 @@ export interface ICustomNextFunction extends NextFunction {}
 export type TModels = ITour | IReview | IUser | IBooking
 
 export { UserRoles } from '../main/models/user.model'
+

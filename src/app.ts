@@ -16,10 +16,13 @@ import path from 'path'
 import cookieParser from 'cookie-parser'
 import compression from 'compression'
 
+
 const hpp = require('hpp')
 const xss = require('xss-clean')
 
 const app = express()
+
+app.enable('trust proxy')
 
 app.set('view engine', 'pug')
 app.set('views', path.join(__dirname, 'main', 'views'))
@@ -75,6 +78,7 @@ app.use(
           'https://bundle.js:*',
           'http://127.0.0.1:*/',
           'https://*.stripe.com',
+          'https://*.herokuapp.com'
         ],
       },
     },
