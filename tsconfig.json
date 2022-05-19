@@ -18,5 +18,5 @@
     "outDir": "./dist",
     "sourceMap": true,
   },
-  "exclude": ["node_modules", "types"],
+  "exclude": ["node_modules", "types", "build_script.ts"],
 }
