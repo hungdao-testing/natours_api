@@ -1,4 +1,5 @@
-import { parseTours, parseUsers } from '../../dev-data/data/parseFile'
+
+import { parseTours, parseUsers } from '../../dev-data/parseFile'
 import { UserRoles } from '../../typing/app.type'
 
 export function getUserByRole(role: keyof typeof UserRoles) {
