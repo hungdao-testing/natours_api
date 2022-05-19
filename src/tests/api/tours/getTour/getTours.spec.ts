@@ -6,8 +6,9 @@ import {
   getTourByPagination,
 } from '../../../utils/tourHelper'
 import _ from 'lodash'
-import { parseTours } from '../../../../dev-data/data/parseFile'
+
 import path from 'path'
+import { parseTours } from '../../../../dev-data/parseFile'
 
 const schemaValidator = new jsonschema.Validator()
 const tourSchema = JSON.parse(

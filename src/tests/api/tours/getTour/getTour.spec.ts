@@ -4,7 +4,7 @@ import fs from 'fs'
 import _ from 'lodash'
 
 import path from 'path'
-import { parseTours } from '../../../../dev-data/data/parseFile'
+import { parseTours } from '../../../../dev-data/parseFile'
 
 const schemaValidator = new jsonschema.Validator()
 const tourSchema = JSON.parse(

@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test'
 import jsonschema, { Schema } from 'jsonschema'
 import _ from 'lodash'
-import { parseTours } from '../../../../dev-data/data/parseFile'
+import { parseTours } from '../../../../dev-data/parseFile'
+
 
 const schemaValidator = new jsonschema.Validator()
 

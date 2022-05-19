@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { parseTours } from '../../dev-data/data/parseFile'
+import { parseTours } from '../../dev-data/parseFile'
 import { deleteOne } from '../../main/controllers/handlerFactory.controller'
 import { ITour, TourModel } from '../../main/models/tour.model'
 
