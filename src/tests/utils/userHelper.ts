@@ -1,4 +1,3 @@
-
 import { parseTours, parseUsers } from '../../dev-data/parseFile'
 import { UserRoles } from '../../typing/app.type'
 

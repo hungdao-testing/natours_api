@@ -7,7 +7,6 @@ import {
 import _ from 'lodash'
 import { parseTours } from '../../../../dev-data/parseFile'
 
-
 const schemaValidator = new jsonschema.Validator()
 
 test.describe('Get Tours', () => {

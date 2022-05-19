@@ -16,7 +16,6 @@ import path from 'path'
 import cookieParser from 'cookie-parser'
 import compression from 'compression'
 
-
 const hpp = require('hpp')
 const xss = require('xss-clean')
 
@@ -78,7 +77,7 @@ app.use(
           'https://bundle.js:*',
           'http://127.0.0.1:*/',
           'https://*.stripe.com',
-          'https://*.herokuapp.com'
+          'https://*.herokuapp.com',
         ],
       },
     },

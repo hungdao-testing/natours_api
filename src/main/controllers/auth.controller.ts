@@ -42,10 +42,8 @@ export const createSendToken = (
         parseInt(process.env.JWT_COOKIE_EXPIRES_IN!) * 24 * 60 * 60 * 1000,
     ),
     httpOnly: true,
-    secure: req.secure || req.headers['x-forwared-proto'] === 'https'
+    secure: req.secure || req.headers['x-forwared-proto'] === 'https',
   }
-
- 
 
   res.cookie('jwt', token, cookieOptions)
 
