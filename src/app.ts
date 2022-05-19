@@ -14,6 +14,7 @@ import helmet from 'helmet'
 import mongoSanitize from 'express-mongo-sanitize'
 import path from 'path'
 import cookieParser from 'cookie-parser'
+import compression from 'compression'
 
 const hpp = require('hpp')
 const xss = require('xss-clean')
@@ -130,13 +131,7 @@ app.use(
   ),
 ) // e.g. remove duplicated fields in query params
 
-// TEST middleware
-app.use(
-  (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    console.log('Hello from the middleware 👋')
-    next()
-  },
-)
+app.use(compression())
 
 app.use(
   (
