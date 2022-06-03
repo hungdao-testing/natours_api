@@ -15,6 +15,7 @@ import mongoSanitize from 'express-mongo-sanitize'
 import path from 'path'
 import cookieParser from 'cookie-parser'
 import compression from 'compression'
+import cors from 'cors'
 
 const hpp = require('hpp')
 const xss = require('xss-clean')
@@ -27,6 +28,9 @@ app.set('view engine', 'pug')
 app.set('views', path.join(__dirname, 'main', 'views'))
 
 // 1) GLOBAL MIDDLEWARES
+
+// Implement CORS
+app.use(cors());
 
 // Serving static file
 app.use(express.static(path.join(__dirname, 'public')))

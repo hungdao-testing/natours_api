@@ -1,7 +1,7 @@
 import { cp } from 'shelljs'
 
 
-const folderMapping = [
+const folderMapping: {source: string, dest: string}[] = [
   {
     source: './data',
     dest: './dist/',
