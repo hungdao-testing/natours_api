@@ -8,6 +8,11 @@ import {
   ICustomNextFunction,
 } from '../../typing/app.type'
 import * as factory from './handlerFactory.controller'
+import { UserModel } from '../models/user.model'
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2020-08-27',
+})
 
 export const getCheckoutSession = catchAsync(
   async (
@@ -19,14 +24,10 @@ export const getCheckoutSession = catchAsync(
     const tour = await TourModel.findById(req.params.tourId)
 
     // 2) Create the checkout session
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-      apiVersion: '2020-08-27',
-    })
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
-      success_url: `${req.protocol}://${req.get('host')}/?tour=${
-        req.params.tourId
-      }&user=${req.user!.id}&price=${tour!.price}`,
+      success_url: `${req.protocol}://${req.get('host')}/my-tours`,
       cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour!.slug}`,
       customer_email: req.user!.email,
       client_reference_id: req.params.tourId,
@@ -53,19 +54,36 @@ export const getCheckoutSession = catchAsync(
   },
 )
 
-export const createBookingCheckout = catchAsync(
+export const createBookingCheckout =  async (session: Stripe.Response<Stripe.Checkout.Session>) => {
+  const tour = session.client_reference_id;
+  const user = (await UserModel.findOne({email: session.customer_email}))?.id;
+  const price = session.line_items!.data[0].amount_total / 100;
+  await BookingModel.create({tour, user, price })
+}
+
+export const webhokCheckout = catchAsync(
   async (
     req: ICustomRequestExpress,
     res: ICustomResponseExpress,
     next: ICustomNextFunction,
   ) => {
-    // this is only TEMPORARY, because it's UNSECURE: everyone can makes booking without payment
-    const { tour, user, price } = req.query
-    if (!tour && !user && !price) return next()
+    const signature = req.headers['stripe-signature']
+    let event: Stripe.Event;
+    try {
+      event = stripe.webhooks.constructEvent(
+        req.body,
+        signature!,
+        process.env.STRIPE_WEBHOOK_SECRET!,
+      )
+    } catch (error) {
+      return res.status(400).send(`Webhook error: ${(error as Error).message}`)
+    }
 
-    await BookingModel.create({ tour, user, price })
+    if(event.type === 'checkout.session.completed'){
+      createBookingCheckout(event.data.object)
+    }
 
-    res.redirect(req.originalUrl.split('?')[0])
+    res.status(200).json({received: true})
   },
 )
 

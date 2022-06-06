@@ -6,6 +6,7 @@ import userRouter from './main/routes/user.routes'
 import reviewRouter from './main/routes/review.routes'
 import viewRouter from './main/routes/view.routes'
 import bookingRouter from './main/routes/booking.routes'
+import * as bookingController from './main/controllers/booking.controller';
 import testRouter from './dev-data/fixture'
 import { ICustomRequestExpress } from './typing/app.type'
 import AppError from './main/utils/appError'
@@ -111,6 +112,12 @@ if (process.env.NODE_ENV === 'local') {
   })
 }
 app.use('/api', limiter) // apply rate-limit to routes starts-with '/api'
+
+// the body of stripe checkout could not work on non-raw format.
+// so we don't place this route after the `json()` middleware nor on a specific route file 
+// and it must be in raw format => express.raw()
+app.post('/webhook-checkout', express.raw({ type: 'application/json' }), bookingController.webhokCheckout)
+
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' })) // not allow data > 10kb to be passed into body

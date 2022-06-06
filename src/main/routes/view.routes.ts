@@ -9,7 +9,6 @@ router.use(authController.isLoggedIn)
 
 router.get(
   '/',
-  bookingController.createBookingCheckout,
   authController.isLoggedIn,
   viewsController.getOverview,
 )
