@@ -54,10 +54,10 @@ export const getCheckoutSession = catchAsync(
   },
 )
 
-export const createBookingCheckout =  async (session: Stripe.Response<Stripe.Checkout.Session>) => {
+export const createBookingCheckout =  async (session: Stripe.Checkout.Session) => {
   const tour = session.client_reference_id;
-  const user = (await UserModel.findOne({email: session.customer_email}))?.id;
-  const price = session.line_items!.data[0].amount_total / 100;
+  const user = (await UserModel.findOne({email: session.customer_email}))?._id;
+  const price = session.amount_total! / 100
   await BookingModel.create({tour, user, price })
 }
 
@@ -80,7 +80,7 @@ export const webhokCheckout = catchAsync(
     }
 
     if(event.type === 'checkout.session.completed'){
-      createBookingCheckout(event.data.object)
+      createBookingCheckout(event.data.object as Stripe.Checkout.Session)
     }
 
     res.status(200).json({received: true})
