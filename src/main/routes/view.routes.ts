@@ -1,9 +1,12 @@
 import express from 'express'
 import * as viewsController from '../controllers/view.controller'
 import * as authController from '../controllers/auth.controller'
-import * as bookingController from '../controllers/booking.controller'
+
 
 const router = express.Router()
+
+
+router.use(viewsController.alerts);
 
 router.use(authController.isLoggedIn)
 

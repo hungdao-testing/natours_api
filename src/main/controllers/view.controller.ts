@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import {
+  ICustomNextFunction,
   ICustomRequestExpress,
   ICustomResponseExpress,
 } from '../../typing/app.type'
@@ -108,3 +109,16 @@ export const getMyTours = catchAsync(
     })
   },
 )
+
+export const alerts = (
+  req: ICustomRequestExpress,
+  res: ICustomResponseExpress,
+  next: ICustomNextFunction
+) => {
+  const { alert } = req.query
+  if (alert === 'booking')
+    res.locals.alert =
+      "Your booking was successful! Please check your email for a confirmation. If your booking doesn't show up here immediately, please come back later"
+  
+  next()
+}
