@@ -13,7 +13,7 @@
       "@routes/*": ["src/routes/*"],
       "@views/*": ["src/views/*"],
       "@utils/*": ["src/utils/*"],
-      "@app_type": ["src/typing/app.type.ts"]
+      "@app_type": ["typing/app.type.ts"]
     },
     /* Modules */
     "module": "commonjs",
@@ -24,7 +24,7 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "typeRoots": ["./src/typing", "./node_modules/@types"],
+    "typeRoots": ["typing", "./node_modules/@types"],
     "rootDirs": ["./src", "./config"],
     "outDir": "./dist",
     "sourceMap": true

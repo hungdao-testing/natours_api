@@ -8,7 +8,7 @@ import {
   IRequest,
   IResponse,
   UserRoles,
-} from '../typing/app.type'
+} from '../../typing/app.type'
 import crypto from 'crypto'
 import util from 'util'
 

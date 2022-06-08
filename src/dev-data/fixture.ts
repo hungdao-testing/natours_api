@@ -5,7 +5,7 @@ import {
   INextFunc,
   IRequest,
   IResponse,
-} from '../typing/app.type'
+} from '../../typing/app.type'
 import { TourModel } from '@models/tour.model'
 import { catchAsync } from '@utils/catchAsync'
 import { ReviewModel } from '@models/review.model'

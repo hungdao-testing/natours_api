@@ -8,7 +8,7 @@ import bookingRouter from '@routes/booking.routes'
 import { default as globalErrorHandler } from '@controllers/error.controller'
 import { webhokCheckout } from '@controllers/booking.controller';
 import testRouter from './dev-data/fixture'
-import { INextFunc, IRequest, IResponse } from '@app_type'
+import { INextFunc, IRequest, IResponse } from 'typing/app.type'
 import AppError from '@utils/appError'
 import { rateLimit } from 'express-rate-limit'
 import helmet from 'helmet'
@@ -26,7 +26,7 @@ const app = express()
 app.enable('trust proxy')
 
 app.set('view engine', 'pug')
-app.set('views', path.join(__dirname, 'main', 'views'))
+app.set('views', path.join(__dirname, 'views'))
 
 // 1) GLOBAL MIDDLEWARES
 

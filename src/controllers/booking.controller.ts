@@ -6,7 +6,7 @@ import {
   IRequest,
   IResponse,
   INextFunc,
-} from '../typing/app.type'
+} from '../../typing/app.type'
 import * as factory from './handlerFactory.controller'
 import { UserModel } from '@models/user.model'
 
