@@ -45,6 +45,7 @@ yarn.lockm
 
 #ignore parcel
 .cache/
+.parcel-cache/
 
 # ignore reporter
 reporters/allure/allure-results
