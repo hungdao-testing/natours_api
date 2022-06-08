@@ -54,7 +54,7 @@ export const createSendToken = (
     role: user.role,
     active: user.active,
     photo: user.photo,
-    _id: user._id,
+    id: user._id,
   }
 
   res.status(statusCode).json({
@@ -305,7 +305,7 @@ export const resetPassword = catchAsync(
 export const updatePassword = catchAsync(
   async (req: ICustomRequestExpress, res: Response, next: NextFunction) => {
     // 1. Get user from collection
-    const user = await UserModel.findById(req.user!._id).select('+password')
+    const user = await UserModel.findById(req.user!.id).select('+password')
 
     // 2. check if POSTed current password is correct
     let currentUser: IUser

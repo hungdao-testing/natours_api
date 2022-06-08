@@ -9,7 +9,7 @@ type Location = {
   description: string
 }
 //Ref: https://mongoosejs.com/docs/typescript/schemas.html
-interface ITourDocument extends mongoose.Document {
+interface ITourDocument {
   id: number
   name: string
   slug: string
