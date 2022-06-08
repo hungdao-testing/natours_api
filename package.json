@@ -105,6 +105,7 @@
   },
   "targets": {
     "default": {
+      "includeNodeModules": true,
       "source": "./src/public/js/index.ts",
       "distDir": "./src/public/js/bundle"
     }
