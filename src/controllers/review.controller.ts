@@ -1,9 +1,5 @@
 import { ReviewModel as model } from '@models/review.model'
-import {
-  IRequest,
-  IResponse,
-  INextFunc,
-} from '../../typing/app.type'
+import { IRequest, IResponse, INextFunc } from '../../typing/app.type'
 import * as factory from './handlerFactory.controller'
 
 export const setTourUserIds = (

@@ -4,7 +4,6 @@ import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
 import { UserRoles } from 'typing/app.type'
 
-
 interface IUserDocument extends Document {
   name: string
   email: string

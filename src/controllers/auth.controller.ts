@@ -4,14 +4,9 @@ import { catchAsync } from '@utils/catchAsync'
 import AppError from '@utils/appError'
 import jwt, { JwtPayload, Secret, VerifyOptions } from 'jsonwebtoken'
 import Email from '@utils/email'
-import {
-  IRequest,
-  IResponse,
-  UserRoles,
-} from '../../typing/app.type'
+import { IRequest, IResponse, UserRoles } from '../../typing/app.type'
 import crypto from 'crypto'
 import util from 'util'
-
 
 const verifyToken = (token: string, secret: string): Promise<JwtPayload> => {
   return new Promise((resolve, reject) => {
@@ -39,7 +34,7 @@ export const createSendToken = (
   const cookieOptions: CookieOptions = {
     expires: new Date(
       Date.now() +
-      parseInt(process.env.JWT_COOKIE_EXPIRES_IN!) * 24 * 60 * 60 * 1000,
+        parseInt(process.env.JWT_COOKIE_EXPIRES_IN!) * 24 * 60 * 60 * 1000,
     ),
     httpOnly: true,
     secure: req.secure || req.headers['x-forwared-proto'] === 'https',
@@ -86,11 +81,7 @@ export const signup = catchAsync(
 )
 
 export const login = catchAsync(
-  async (
-    req: IRequest,
-    res: IResponse,
-    next: NextFunction,
-  ) => {
+  async (req: IRequest, res: IResponse, next: NextFunction) => {
     const { email, password } = req.body
 
     // 1) Check email or password is existed in request body
@@ -119,11 +110,7 @@ export const logout = (req: Request, res: Response) => {
 }
 
 export const protect = catchAsync(
-  async (
-    req: IRequest,
-    res: IResponse,
-    next: NextFunction,
-  ) => {
+  async (req: IRequest, res: IResponse, next: NextFunction) => {
     // 1. Getting token and check of it's existed
     let token: string = ''
     if (
