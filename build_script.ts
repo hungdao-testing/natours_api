@@ -11,8 +11,24 @@ const folderMapping: {source: string, dest: string}[] = [
     dest: './dist/',
   },
   {
-    source: './src/public',
-    dest: './dist/src/',
+    source: './src/public/css',
+    dest: './dist/src/public',
+  },
+  {
+    source: './src/public/img',
+    dest: './dist/src/public',
+  },
+  {
+    source: './src/public/overview.html',
+    dest: './dist/src/public',
+  },
+  {
+    source: './src/public/js/bundle',
+    dest: './dist/src/public',
+  },
+  {
+    source: './src/public/tour.html',
+    dest: './dist/src/public',
   },
   {
     source: './src/main/views',

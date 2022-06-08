@@ -1,8 +1,8 @@
-import mongoose, { Model, Schema } from 'mongoose'
+import mongoose, { Model, Schema, Types} from 'mongoose'
 
-interface IBookingDocument extends mongoose.Document {
-  tour: string
-  user: string
+interface IBookingDocument {
+  tour: Types.ObjectId
+  user: Types.ObjectId
   price: number
   createdAt: Date
   paid: true
@@ -12,7 +12,7 @@ export interface IBooking extends IBookingDocument {}
 
 interface IBookingModel extends Model<IBooking> {}
 
-const bookingSchema = new mongoose.Schema<IBooking, IBookingModel>({
+const bookingSchema = new Schema<IBooking, IBookingModel>({
   tour: {
     type: Schema.Types.ObjectId,
     ref: 'Tour',

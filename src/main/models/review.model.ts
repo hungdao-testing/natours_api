@@ -2,7 +2,7 @@ import mongoose, { Model, Schema } from 'mongoose'
 import { TourModel } from './tour.model'
 import { IUser } from './user.model'
 
-interface IReviewDocument extends mongoose.Document {
+interface IReviewDocument {
   review: String
   rating: number
   createdAt: Date
