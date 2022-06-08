@@ -1,7 +1,7 @@
 import { cp } from 'shelljs'
 
 
-const folderMapping: {source: string, dest: string}[] = [
+const folderMapping: { source: string, dest: string }[] = [
   {
     source: './data',
     dest: './dist/',
@@ -12,7 +12,7 @@ const folderMapping: {source: string, dest: string}[] = [
   },
   {
     source: './src/public/css',
-    dest: './dist/src/public',
+    dest: './dist/src/public/css',
   },
   {
     source: './src/public/img',
@@ -20,10 +20,6 @@ const folderMapping: {source: string, dest: string}[] = [
   },
   {
     source: './src/public/overview.html',
-    dest: './dist/src/public',
-  },
-  {
-    source: './src/public/js/bundle',
     dest: './dist/src/public',
   },
   {
