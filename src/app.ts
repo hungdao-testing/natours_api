@@ -1,15 +1,15 @@
 import express from 'express'
 import morgan from 'morgan'
-import { default as globalErrorHandler } from './main/controllers/error.controller'
-import tourRouter from './main/routes/tour.routes'
-import userRouter from './main/routes/user.routes'
-import reviewRouter from './main/routes/review.routes'
-import viewRouter from './main/routes/view.routes'
-import bookingRouter from './main/routes/booking.routes'
-import * as bookingController from './main/controllers/booking.controller';
+import tourRouter from '@routes/tour.routes'
+import userRouter from '@routes/user.routes'
+import reviewRouter from '@routes/review.routes'
+import viewRouter from '@routes/view.routes'
+import bookingRouter from '@routes/booking.routes'
+import { default as globalErrorHandler } from '@controllers/error.controller'
+import { webhokCheckout } from '@controllers/booking.controller'
 import testRouter from './dev-data/fixture'
-import { ICustomRequestExpress } from './typing/app.type'
-import AppError from './main/utils/appError'
+import { INextFunc, IRequest, IResponse } from 'typing/app.type'
+import AppError from '@utils/appError'
 import { rateLimit } from 'express-rate-limit'
 import helmet from 'helmet'
 import mongoSanitize from 'express-mongo-sanitize'
@@ -17,21 +17,20 @@ import path from 'path'
 import cookieParser from 'cookie-parser'
 import compression from 'compression'
 import cors from 'cors'
-
-const hpp = require('hpp')
-const xss = require('xss-clean')
+import hpp from 'hpp'
+import xss from 'xss-clean'
 
 const app = express()
 
 app.enable('trust proxy')
 
 app.set('view engine', 'pug')
-app.set('views', path.join(__dirname, 'main', 'views'))
+app.set('views', path.join(__dirname, 'views'))
 
 // 1) GLOBAL MIDDLEWARES
 
 // Implement CORS
-app.use(cors());
+app.use(cors())
 
 // Serving static file
 app.use(express.static(path.join(__dirname, 'public')))
@@ -114,10 +113,13 @@ if (process.env.NODE_ENV === 'local') {
 app.use('/api', limiter) // apply rate-limit to routes starts-with '/api'
 
 // the body of stripe checkout could not work on non-raw format.
-// so we don't place this route after the `json()` middleware nor on a specific route file 
+// so we don't place this route after the `json()` middleware nor on a specific route file
 // and it must be in raw format => express.raw()
-app.post('/webhook-checkout', express.raw({ type: 'application/json' }), bookingController.webhokCheckout)
-
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }),
+  webhokCheckout,
+)
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' })) // not allow data > 10kb to be passed into body
@@ -147,16 +149,10 @@ app.use(
 
 app.use(compression())
 
-app.use(
-  (
-    req: ICustomRequestExpress,
-    res: express.Response,
-    next: express.NextFunction,
-  ) => {
-    req.requestTime = new Date().toISOString()
-    next()
-  },
-)
+app.use((req: IRequest, res: IResponse, next: INextFunc) => {
+  req.requestTime = new Date().toISOString()
+  next()
+})
 
 //3 ROUTES
 app.use('/', viewRouter)
@@ -167,16 +163,13 @@ app.use('/api/v1/bookings', bookingRouter)
 
 app.use('/api/v1/test-data', testRouter)
 
-app.all(
-  '*',
-  (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const err = new AppError(
-      `Could not find ${req.originalUrl} on this server !`,
-      404,
-    )
-    next(err)
-  },
-)
+app.all('*', (req: IRequest, res: IResponse, next: INextFunc) => {
+  const err = new AppError(
+    `Could not find ${req.originalUrl} on this server !`,
+    404,
+  )
+  next(err)
+})
 
 app.use(globalErrorHandler)
 

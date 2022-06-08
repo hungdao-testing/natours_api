@@ -27,8 +27,8 @@ const folderMapping: { source: string, dest: string }[] = [
     dest: './dist/src/public',
   },
   {
-    source: './src/main/views',
-    dest: './dist/src/main',
+    source: './src/views',
+    dest: './dist/src',
   },
 ]
 

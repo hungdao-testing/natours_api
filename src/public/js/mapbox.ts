@@ -1,9 +1,9 @@
-import mapboxgl from 'mapbox-gl';
+import mapboxgl from 'mapbox-gl'
 
 type Location = {
   type: string
   coordinates: [number, number]
-  day: string,
+  day: string
   description: string
 }
 

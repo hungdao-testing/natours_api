@@ -1,14 +1,10 @@
 import { NextFunction, Request, Response } from 'express'
-import {
-  ICustomNextFunction,
-  ICustomRequestExpress,
-  ICustomResponseExpress,
-} from '../../typing/app.type'
-import { BookingModel } from '../models/booking.model'
-import { TourModel } from '../models/tour.model'
-import { UserModel } from '../models/user.model'
-import AppError from '../utils/appError'
-import { catchAsync } from '../utils/catchAsync'
+import { INextFunc, IRequest, IResponse } from '../../typing/app.type'
+import { BookingModel } from '@models/booking.model'
+import { TourModel } from '@models/tour.model'
+import { UserModel } from '@models/user.model'
+import AppError from '@utils/appError'
+import { catchAsync } from '@utils/catchAsync'
 
 export const getOverview = catchAsync(async (req: Request, res: Response) => {
   // 1) Get tour data from collection
@@ -25,11 +21,7 @@ export const getOverview = catchAsync(async (req: Request, res: Response) => {
 })
 
 export const getTour = catchAsync(
-  async (
-    req: ICustomRequestExpress,
-    res: ICustomResponseExpress,
-    next: NextFunction,
-  ) => {
+  async (req: IRequest, res: IResponse, next: NextFunction) => {
     // 1) get the data, for the requested tour (including reviews and tour guide)
     const tour = await TourModel.findOne({ slug: req.params.slug }).populate({
       path: 'reviews',
@@ -55,26 +47,20 @@ export const getTour = catchAsync(
   },
 )
 
-export const getLoginForm = (
-  req: ICustomRequestExpress,
-  res: ICustomResponseExpress,
-) => {
+export const getLoginForm = (req: IRequest, res: IResponse) => {
   res.status(200).render('login', {
     title: 'Log into your account',
   })
 }
 
-export const getAccount = (
-  req: ICustomRequestExpress,
-  res: ICustomResponseExpress,
-) => {
+export const getAccount = (req: IRequest, res: IResponse) => {
   res.status(200).render('account', {
     title: 'Your account',
   })
 }
 
 export const updateUserData = catchAsync(
-  async (req: ICustomRequestExpress, res: ICustomResponseExpress) => {
+  async (req: IRequest, res: IResponse) => {
     const updatedUser = await UserModel.findByIdAndUpdate(
       req.user!.id,
       {
@@ -94,31 +80,25 @@ export const updateUserData = catchAsync(
   },
 )
 
-export const getMyTours = catchAsync(
-  async (req: ICustomRequestExpress, res: ICustomResponseExpress) => {
-    //1) Find all bookings,
-    const bookings = await BookingModel.find({ user: req.user?.id })
+export const getMyTours = catchAsync(async (req: IRequest, res: IResponse) => {
+  //1) Find all bookings,
+  const bookings = await BookingModel.find({ user: req.user?.id })
 
-    //2) Find tours with the returned IDs
-    const tourIds = bookings.map((el) => el.tour)
-    const tours = await TourModel.find({ _id: { $in: tourIds } })
+  //2) Find tours with the returned IDs
+  const tourIds = bookings.map((el) => el.tour)
+  const tours = await TourModel.find({ _id: { $in: tourIds } })
 
-    res.status(200).render('overview', {
-      title: 'My tours',
-      tours,
-    })
-  },
-)
+  res.status(200).render('overview', {
+    title: 'My tours',
+    tours,
+  })
+})
 
-export const alerts = (
-  req: ICustomRequestExpress,
-  res: ICustomResponseExpress,
-  next: ICustomNextFunction
-) => {
+export const alerts = (req: IRequest, res: IResponse, next: INextFunc) => {
   const { alert } = req.query
   if (alert === 'booking')
     res.locals.alert =
       "Your booking was successful! Please check your email for a confirmation. If your booking doesn't show up here immediately, please come back later"
-  
+
   next()
 }

@@ -1,17 +1,12 @@
 import { CookieOptions, NextFunction, Request, Response } from 'express'
-import { IUser, UserModel } from '../models/user.model'
-import { catchAsync } from '../utils/catchAsync'
+import { IUser, UserModel } from '@models/user.model'
+import { catchAsync } from '@utils/catchAsync'
+import AppError from '@utils/appError'
 import jwt, { JwtPayload, Secret, VerifyOptions } from 'jsonwebtoken'
-import AppError from '../utils/appError'
-import Email from '../utils/email'
-import {
-  ICustomRequestExpress,
-  ICustomResponseExpress,
-  UserRoles,
-} from '../../typing/app.type'
+import Email from '@utils/email'
+import { IRequest, IResponse, UserRoles } from '../../typing/app.type'
 import crypto from 'crypto'
 import util from 'util'
-import { request } from 'http'
 
 const verifyToken = (token: string, secret: string): Promise<JwtPayload> => {
   return new Promise((resolve, reject) => {
@@ -86,11 +81,7 @@ export const signup = catchAsync(
 )
 
 export const login = catchAsync(
-  async (
-    req: ICustomRequestExpress,
-    res: ICustomResponseExpress,
-    next: NextFunction,
-  ) => {
+  async (req: IRequest, res: IResponse, next: NextFunction) => {
     const { email, password } = req.body
 
     // 1) Check email or password is existed in request body
@@ -119,11 +110,7 @@ export const logout = (req: Request, res: Response) => {
 }
 
 export const protect = catchAsync(
-  async (
-    req: ICustomRequestExpress,
-    res: ICustomResponseExpress,
-    next: NextFunction,
-  ) => {
+  async (req: IRequest, res: IResponse, next: NextFunction) => {
     // 1. Getting token and check of it's existed
     let token: string = ''
     if (
@@ -212,7 +199,7 @@ export const isLoggedIn = async (
 type TSpreadUser = keyof typeof UserRoles
 export const restrictTo = (...roles: Array<TSpreadUser>) => {
   return catchAsync(
-    async (req: ICustomRequestExpress, res: Response, next: NextFunction) => {
+    async (req: IRequest, res: Response, next: NextFunction) => {
       let reqRole = req.user?.role.toUpperCase()
       if (reqRole === 'LEAD-GUIDE') {
         reqRole = 'LEAD_GUIDE'
@@ -270,7 +257,7 @@ export const forgotPassword = catchAsync(
 )
 
 export const resetPassword = catchAsync(
-  async (req: ICustomRequestExpress, res: Response, next: NextFunction) => {
+  async (req: IRequest, res: Response, next: NextFunction) => {
     // 1. Get user based token: get token (sent via email in plain text), then encrypted => compare to the saved one on DB
 
     const hasedToken = crypto
@@ -303,7 +290,7 @@ export const resetPassword = catchAsync(
 )
 
 export const updatePassword = catchAsync(
-  async (req: ICustomRequestExpress, res: Response, next: NextFunction) => {
+  async (req: IRequest, res: Response, next: NextFunction) => {
     // 1. Get user from collection
     const user = await UserModel.findById(req.user!.id).select('+password')
 

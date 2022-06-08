@@ -1,9 +1,20 @@
 {
+  //https://stackoverflow.com/questions/70515063/ts-config-path-error-error-cannot-find-module-models-userschema
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  },
   "compilerOptions": {
     /* Language and Environment */
     "target": "es5",
     "lib": ["ES2015", "DOM"],
-
+    "paths": {
+      "@models/*": ["src/models/*"],
+      "@controllers/*": ["src/controllers/*"],
+      "@routes/*": ["src/routes/*"],
+      "@views/*": ["src/views/*"],
+      "@utils/*": ["src/utils/*"],
+      "@app_type": ["typing/app.type.ts"]
+    },
     /* Modules */
     "module": "commonjs",
     "baseUrl": "./",
@@ -13,7 +24,7 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "typeRoots": ["./types", "./node_modules/@types"],
+    "typeRoots": ["typing", "./node_modules/@types"],
     "rootDirs": ["./src", "./config"],
     "outDir": "./dist",
     "sourceMap": true

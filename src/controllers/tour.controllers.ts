@@ -1,12 +1,8 @@
-import {
-  ICustomRequestExpress,
-  ICustomResponseExpress,
-  ICustomNextFunction,
-} from '../../typing/app.type'
-import { TourModel as model, TourModel } from '../models/tour.model'
-import { catchAsync } from '../utils/catchAsync'
+import { IRequest, IResponse, INextFunc } from '../../typing/app.type'
+import { TourModel as model, TourModel } from '@models/tour.model'
+import { catchAsync } from '@utils/catchAsync'
 import * as factory from './handlerFactory.controller'
-import AppError from '../utils/appError'
+import AppError from '@utils/appError'
 import multer from 'multer'
 import path from 'path'
 import sharp from 'sharp'
@@ -32,11 +28,7 @@ export const uploadTourImages = upload.fields([
 ])
 
 export const resizeTourImages = catchAsync(
-  async (
-    req: ICustomRequestExpress,
-    res: ICustomResponseExpress,
-    next: ICustomNextFunction,
-  ) => {
+  async (req: IRequest, res: IResponse, next: INextFunc) => {
     let files = req.files as { [fieldname: string]: Express.Multer.File[] }
 
     if (!files.images || !files.imageCover) return next()
@@ -80,9 +72,9 @@ export const resizeTourImages = catchAsync(
 )
 
 export const aliasTopTour = async (
-  req: ICustomRequestExpress,
-  res: ICustomResponseExpress,
-  next: ICustomNextFunction,
+  req: IRequest,
+  res: IResponse,
+  next: INextFunc,
 ) => {
   req.query.limit = '5'
   req.query.sort = '-ratingsAverage,price'
@@ -101,11 +93,7 @@ export const updateTour = factory.updateOne(model)
 export const deleteTour = factory.deleteOne(model)
 
 export const getTourStats = catchAsync(
-  async (
-    req: ICustomRequestExpress,
-    res: ICustomResponseExpress,
-    next: ICustomNextFunction,
-  ) => {
+  async (req: IRequest, res: IResponse, next: INextFunc) => {
     const stats = await model.aggregate([
       {
         $match: { ratingsAverage: { $gte: 4.5 } },
@@ -133,11 +121,7 @@ export const getTourStats = catchAsync(
 )
 
 export const getMonthlyPlan = catchAsync(
-  async (
-    req: ICustomRequestExpress,
-    res: ICustomResponseExpress,
-    next: ICustomNextFunction,
-  ) => {
+  async (req: IRequest, res: IResponse, next: INextFunc) => {
     const year = req.params.year ? parseInt(req.params.year) : 1
     const plan = await model.aggregate([
       {
@@ -182,11 +166,7 @@ export const getMonthlyPlan = catchAsync(
 )
 
 export const getToursWithin = catchAsync(
-  async (
-    req: ICustomRequestExpress,
-    res: ICustomResponseExpress,
-    next: ICustomNextFunction,
-  ) => {
+  async (req: IRequest, res: IResponse, next: INextFunc) => {
     const { distance, latlng, unit } = req.params
     const [lat, lng] = latlng.split(',')
 
@@ -222,11 +202,7 @@ export const getToursWithin = catchAsync(
 )
 
 export const getDistances = catchAsync(
-  async (
-    req: ICustomRequestExpress,
-    res: ICustomResponseExpress,
-    next: ICustomNextFunction,
-  ) => {
+  async (req: IRequest, res: IResponse, next: INextFunc) => {
     const { latlng, unit } = req.params
     const [lat, lng] = latlng.split(',')
 

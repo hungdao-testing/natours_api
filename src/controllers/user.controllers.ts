@@ -1,11 +1,7 @@
-import { UserModel as model } from '../models/user.model'
-import {
-  ICustomRequestExpress,
-  ICustomResponseExpress,
-  ICustomNextFunction,
-} from '../../typing/app.type'
-import AppError from '../utils/appError'
-import { catchAsync } from '../utils/catchAsync'
+import { UserModel as model } from '@models/user.model'
+import { IRequest, IResponse, INextFunc } from '../../typing/app.type'
+import AppError from '@utils/appError'
+import { catchAsync } from '@utils/catchAsync'
 import * as factory from './handlerFactory.controller'
 import multer from 'multer'
 import path from 'path'
@@ -30,11 +26,7 @@ const upload = multer({ storage: multerStorage, fileFilter: multerFilter })
 export const uploadUserPhoto = upload.single('photo')
 
 export const resizeUserPhoto = catchAsync(
-  async (
-    req: ICustomRequestExpress,
-    res: ICustomResponseExpress,
-    next: ICustomNextFunction,
-  ) => {
+  async (req: IRequest, res: IResponse, next: INextFunc) => {
     if (!req.file) return next()
     req.file.filename = `user-${req.user?.id}-${Date.now()}.jpeg`
 
@@ -63,22 +55,14 @@ const filterObj = (
 
 export const getAllUsers = factory.getAll(model)
 
-export const getMe = (
-  req: ICustomRequestExpress,
-  res: ICustomResponseExpress,
-  next: ICustomNextFunction,
-) => {
+export const getMe = (req: IRequest, res: IResponse, next: INextFunc) => {
   req.params.id = req.user?.id
   next()
 }
 
 // users update theif info by themselves
 export const updateMe = catchAsync(
-  async (
-    req: ICustomRequestExpress,
-    res: ICustomResponseExpress,
-    next: ICustomNextFunction,
-  ) => {
+  async (req: IRequest, res: IResponse, next: INextFunc) => {
     // 1. Create error if user POSTs password data
     if (req.body.password || req.body.passwordConfirm) {
       return next(
@@ -110,11 +94,7 @@ export const updateMe = catchAsync(
 )
 
 export const deleteMe = catchAsync(
-  async (
-    req: ICustomRequestExpress,
-    res: ICustomResponseExpress,
-    next: ICustomNextFunction,
-  ) => {
+  async (req: IRequest, res: IResponse, next: INextFunc) => {
     await model.findByIdAndUpdate(req.user!.id, { active: false })
 
     res.status(204).json({
@@ -124,11 +104,7 @@ export const deleteMe = catchAsync(
   },
 )
 
-export const createUser = (
-  req: ICustomRequestExpress,
-  res: ICustomResponseExpress,
-  next: ICustomNextFunction,
-) => {
+export const createUser = (req: IRequest, res: IResponse, next: INextFunc) => {
   res.status(500).json({
     status: 'error',
     message: 'This route is not yet defined! Please use /signup instead',
