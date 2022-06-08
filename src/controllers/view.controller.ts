@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
 import {
-  ICustomNextFunction,
-  ICustomRequestExpress,
-  ICustomResponseExpress,
+  INextFunc,
+  IRequest,
+  IResponse,
 } from '../typing/app.type'
 import { BookingModel } from '@models/booking.model'
 import { TourModel } from '@models/tour.model'
@@ -26,8 +26,8 @@ export const getOverview = catchAsync(async (req: Request, res: Response) => {
 
 export const getTour = catchAsync(
   async (
-    req: ICustomRequestExpress,
-    res: ICustomResponseExpress,
+    req: IRequest,
+    res: IResponse,
     next: NextFunction,
   ) => {
     // 1) get the data, for the requested tour (including reviews and tour guide)
@@ -56,8 +56,8 @@ export const getTour = catchAsync(
 )
 
 export const getLoginForm = (
-  req: ICustomRequestExpress,
-  res: ICustomResponseExpress,
+  req: IRequest,
+  res: IResponse,
 ) => {
   res.status(200).render('login', {
     title: 'Log into your account',
@@ -65,8 +65,8 @@ export const getLoginForm = (
 }
 
 export const getAccount = (
-  req: ICustomRequestExpress,
-  res: ICustomResponseExpress,
+  req: IRequest,
+  res: IResponse,
 ) => {
   res.status(200).render('account', {
     title: 'Your account',
@@ -74,7 +74,7 @@ export const getAccount = (
 }
 
 export const updateUserData = catchAsync(
-  async (req: ICustomRequestExpress, res: ICustomResponseExpress) => {
+  async (req: IRequest, res: IResponse) => {
     const updatedUser = await UserModel.findByIdAndUpdate(
       req.user!.id,
       {
@@ -95,7 +95,7 @@ export const updateUserData = catchAsync(
 )
 
 export const getMyTours = catchAsync(
-  async (req: ICustomRequestExpress, res: ICustomResponseExpress) => {
+  async (req: IRequest, res: IResponse) => {
     //1) Find all bookings,
     const bookings = await BookingModel.find({ user: req.user?.id })
 
@@ -111,14 +111,14 @@ export const getMyTours = catchAsync(
 )
 
 export const alerts = (
-  req: ICustomRequestExpress,
-  res: ICustomResponseExpress,
-  next: ICustomNextFunction
+  req: IRequest,
+  res: IResponse,
+  next: INextFunc
 ) => {
   const { alert } = req.query
   if (alert === 'booking')
     res.locals.alert =
       "Your booking was successful! Please check your email for a confirmation. If your booking doesn't show up here immediately, please come back later"
-  
+
   next()
 }

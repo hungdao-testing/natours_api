@@ -1,6 +1,6 @@
 import mongoose, { Model, Schema } from 'mongoose'
-import { TourModel } from './tour.model'
-import { IUser } from './user.model'
+import { TourModel } from '@models/tour.model'
+import { IUser } from '@models/user.model'
 
 interface IReviewDocument {
   review: String

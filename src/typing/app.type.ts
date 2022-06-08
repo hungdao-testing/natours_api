@@ -4,15 +4,23 @@ import { IReview } from '@models/review.model'
 import { ITour } from '@models/tour.model'
 import { IUser } from '@models/user.model'
 
-export interface ICustomRequestExpress extends Request {
+export enum UserRoles {
+  ADMIN = 'admin',
+  GUIDE = 'guide',
+  LEAD_GUIDE = 'lead-guide',
+  USER = 'user',
+}
+export interface IRequest extends Request {
   requestTime?: string | undefined
   user?: IUser
 }
 
-export interface ICustomResponseExpress extends Response {}
+export interface IResponse extends Response { }
 
-export interface ICustomNextFunction extends NextFunction {}
+export interface INextFunc extends NextFunction { }
 
 export type TModels = ITour | IReview | IUser | IBooking
 
-export { UserRoles } from '@models/user.model'
+
+
+

@@ -5,8 +5,8 @@ import AppError from '@utils/appError'
 import jwt, { JwtPayload, Secret, VerifyOptions } from 'jsonwebtoken'
 import Email from '@utils/email'
 import {
-  ICustomRequestExpress,
-  ICustomResponseExpress,
+  IRequest,
+  IResponse,
   UserRoles,
 } from '../typing/app.type'
 import crypto from 'crypto'
@@ -39,7 +39,7 @@ export const createSendToken = (
   const cookieOptions: CookieOptions = {
     expires: new Date(
       Date.now() +
-        parseInt(process.env.JWT_COOKIE_EXPIRES_IN!) * 24 * 60 * 60 * 1000,
+      parseInt(process.env.JWT_COOKIE_EXPIRES_IN!) * 24 * 60 * 60 * 1000,
     ),
     httpOnly: true,
     secure: req.secure || req.headers['x-forwared-proto'] === 'https',
@@ -87,8 +87,8 @@ export const signup = catchAsync(
 
 export const login = catchAsync(
   async (
-    req: ICustomRequestExpress,
-    res: ICustomResponseExpress,
+    req: IRequest,
+    res: IResponse,
     next: NextFunction,
   ) => {
     const { email, password } = req.body
@@ -120,8 +120,8 @@ export const logout = (req: Request, res: Response) => {
 
 export const protect = catchAsync(
   async (
-    req: ICustomRequestExpress,
-    res: ICustomResponseExpress,
+    req: IRequest,
+    res: IResponse,
     next: NextFunction,
   ) => {
     // 1. Getting token and check of it's existed
@@ -212,7 +212,7 @@ export const isLoggedIn = async (
 type TSpreadUser = keyof typeof UserRoles
 export const restrictTo = (...roles: Array<TSpreadUser>) => {
   return catchAsync(
-    async (req: ICustomRequestExpress, res: Response, next: NextFunction) => {
+    async (req: IRequest, res: Response, next: NextFunction) => {
       let reqRole = req.user?.role.toUpperCase()
       if (reqRole === 'LEAD-GUIDE') {
         reqRole = 'LEAD_GUIDE'
@@ -270,7 +270,7 @@ export const forgotPassword = catchAsync(
 )
 
 export const resetPassword = catchAsync(
-  async (req: ICustomRequestExpress, res: Response, next: NextFunction) => {
+  async (req: IRequest, res: Response, next: NextFunction) => {
     // 1. Get user based token: get token (sent via email in plain text), then encrypted => compare to the saved one on DB
 
     const hasedToken = crypto
@@ -303,7 +303,7 @@ export const resetPassword = catchAsync(
 )
 
 export const updatePassword = catchAsync(
-  async (req: ICustomRequestExpress, res: Response, next: NextFunction) => {
+  async (req: IRequest, res: Response, next: NextFunction) => {
     // 1. Get user from collection
     const user = await UserModel.findById(req.user!.id).select('+password')
 

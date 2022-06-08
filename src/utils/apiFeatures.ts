@@ -1,5 +1,5 @@
 import { Query } from 'mongoose'
-import { TModels } from '../../typing/app.type'
+import { TModels } from '@app_type'
 
 export default class APIFeatures<T extends TModels> {
   public query: Query<T[], T>

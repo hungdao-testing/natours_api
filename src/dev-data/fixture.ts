@@ -2,22 +2,22 @@ import { parseTours, parseUsers, parseReviews } from './parseFile'
 
 import express from 'express'
 import {
-  ICustomNextFunction,
-  ICustomRequestExpress,
-  ICustomResponseExpress,
+  INextFunc,
+  IRequest,
+  IResponse,
 } from '../typing/app.type'
-import { TourModel } from '../main/models/tour.model'
-import { catchAsync } from '../main/utils/catchAsync'
-import { ReviewModel } from '../main/models/review.model'
-import { UserModel } from '../main/models/user.model'
+import { TourModel } from '@models/tour.model'
+import { catchAsync } from '@utils/catchAsync'
+import { ReviewModel } from '@models/review.model'
+import { UserModel } from '@models/user.model'
 
 const router = express.Router()
 
 // Import data
 const importData = catchAsync(async function (
-  req: ICustomRequestExpress,
-  res: ICustomResponseExpress,
-  next: ICustomNextFunction,
+  req: IRequest,
+  res: IResponse,
+  next: INextFunc,
 ) {
   try {
     await Promise.all([
@@ -36,9 +36,9 @@ const importData = catchAsync(async function (
 
 // Delete data
 const deleteData = catchAsync(async function (
-  req: ICustomRequestExpress,
-  res: ICustomResponseExpress,
-  next: ICustomNextFunction,
+  req: IRequest,
+  res: IResponse,
+  next: INextFunc,
 ) {
   try {
     await Promise.all([

@@ -1,8 +1,8 @@
 import fs from 'fs'
 import path from 'path'
-import { IReview } from '../main/models/review.model'
-import { ITour } from '../main/models/tour.model'
-import { IUser } from '../main/models/user.model'
+import { IReview } from '@models/review.model'
+import { ITour } from '@models/tour.model'
+import { IUser } from '@models/user.model'
 
 export const parseTours: ITour[] = JSON.parse(
   fs.readFileSync(path.join(__dirname, '../..', 'data', 'tours.json'), 'utf-8'),

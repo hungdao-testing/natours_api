@@ -1,6 +1,6 @@
 import mongoose, { Model, Query } from 'mongoose'
 import slugify from 'slugify'
-import { IUser } from './user.model'
+import { IUser } from '@models/user.model'
 
 type Location = {
   type: string

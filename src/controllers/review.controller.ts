@@ -1,15 +1,15 @@
 import { ReviewModel as model } from '@models/review.model'
 import {
-  ICustomRequestExpress,
-  ICustomResponseExpress,
-  ICustomNextFunction,
+  IRequest,
+  IResponse,
+  INextFunc,
 } from '../typing/app.type'
 import * as factory from './handlerFactory.controller'
 
 export const setTourUserIds = (
-  req: ICustomRequestExpress,
-  res: ICustomResponseExpress,
-  next: ICustomNextFunction,
+  req: IRequest,
+  res: IResponse,
+  next: INextFunc,
 ) => {
   if (!req.body.tour) req.body.tour = req.params.tourId
   if (!req.body.user) req.body.user = req.user!.id

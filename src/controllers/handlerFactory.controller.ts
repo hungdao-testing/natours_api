@@ -1,8 +1,8 @@
 import { FilterQuery, Model, PopulateOptions, Query } from 'mongoose'
 import {
-  ICustomRequestExpress,
-  ICustomResponseExpress,
-  ICustomNextFunction,
+  IRequest,
+  IResponse,
+  INextFunc,
   TModels,
 } from '../typing/app.type'
 import APIFeatures from '@utils/apiFeatures'
@@ -12,9 +12,9 @@ import { catchAsync } from '@utils/catchAsync'
 export function deleteOne<T extends TModels>(model: Model<T>) {
   return catchAsync(
     async (
-      req: ICustomRequestExpress,
-      res: ICustomResponseExpress,
-      next: ICustomNextFunction,
+      req: IRequest,
+      res: IResponse,
+      next: INextFunc,
     ) => {
       const doc = await model.findByIdAndDelete(req.params.id)
 
@@ -38,9 +38,9 @@ export function deleteOne<T extends TModels>(model: Model<T>) {
 export function updateOne<T extends TModels>(model: Model<T>) {
   return catchAsync(
     async (
-      req: ICustomRequestExpress,
-      res: ICustomResponseExpress,
-      next: ICustomNextFunction,
+      req: IRequest,
+      res: IResponse,
+      next: INextFunc,
     ) => {
       const collectionName = model.collection.collectionName
       const doc = await model.findByIdAndUpdate(req.params.id, req.body, {
@@ -63,9 +63,9 @@ export function updateOne<T extends TModels>(model: Model<T>) {
 export function createOne<T extends TModels>(model: Model<T>) {
   return catchAsync(
     async (
-      req: ICustomRequestExpress,
-      res: ICustomResponseExpress,
-      next: ICustomNextFunction,
+      req: IRequest,
+      res: IResponse,
+      next: INextFunc,
     ) => {
       const doc = await model.create(req.body)
       res.status(201).json({
@@ -84,9 +84,9 @@ export function getOne<T extends TModels>(
 ) {
   return catchAsync(
     async (
-      req: ICustomRequestExpress,
-      res: ICustomResponseExpress,
-      next: ICustomNextFunction,
+      req: IRequest,
+      res: IResponse,
+      next: INextFunc,
     ) => {
       const collectionName = model.collection.collectionName
 
@@ -118,7 +118,7 @@ type ForeignQueryParam = {
  */
 const setFilterObjByQueryParam = (
   filterObj: ForeignQueryParam,
-  req: ICustomRequestExpress,
+  req: IRequest,
 ): ForeignQueryParam | {} => {
   const pName = req.params?.[filterObj.paramField]
   return pName ? { [filterObj.foreignField]: pName } : {}
@@ -136,9 +136,9 @@ export function getAll<T extends TModels>(
 ) {
   return catchAsync(
     async (
-      req: ICustomRequestExpress,
-      res: ICustomResponseExpress,
-      next: ICustomNextFunction,
+      req: IRequest,
+      res: IResponse,
+      next: INextFunc,
     ) => {
       let filter: FilterQuery<T> = {}
 

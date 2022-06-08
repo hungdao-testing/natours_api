@@ -2,13 +2,9 @@ import mongoose, { Document, Schema, Query } from 'mongoose'
 import validator from 'validator'
 import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
+import { UserRoles } from '@app_type'
 
-export enum UserRoles {
-  ADMIN = 'admin',
-  GUIDE = 'guide',
-  LEAD_GUIDE = 'lead-guide',
-  USER = 'user',
-}
+
 interface IUserDocument extends Document {
   name: string
   email: string

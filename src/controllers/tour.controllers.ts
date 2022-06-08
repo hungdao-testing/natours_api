@@ -1,7 +1,7 @@
 import {
-  ICustomRequestExpress,
-  ICustomResponseExpress,
-  ICustomNextFunction,
+  IRequest,
+  IResponse,
+  INextFunc,
 } from '../typing/app.type'
 import { TourModel as model, TourModel } from '@models/tour.model'
 import { catchAsync } from '@utils/catchAsync'
@@ -33,9 +33,9 @@ export const uploadTourImages = upload.fields([
 
 export const resizeTourImages = catchAsync(
   async (
-    req: ICustomRequestExpress,
-    res: ICustomResponseExpress,
-    next: ICustomNextFunction,
+    req: IRequest,
+    res: IResponse,
+    next: INextFunc,
   ) => {
     let files = req.files as { [fieldname: string]: Express.Multer.File[] }
 
@@ -80,9 +80,9 @@ export const resizeTourImages = catchAsync(
 )
 
 export const aliasTopTour = async (
-  req: ICustomRequestExpress,
-  res: ICustomResponseExpress,
-  next: ICustomNextFunction,
+  req: IRequest,
+  res: IResponse,
+  next: INextFunc,
 ) => {
   req.query.limit = '5'
   req.query.sort = '-ratingsAverage,price'
@@ -102,9 +102,9 @@ export const deleteTour = factory.deleteOne(model)
 
 export const getTourStats = catchAsync(
   async (
-    req: ICustomRequestExpress,
-    res: ICustomResponseExpress,
-    next: ICustomNextFunction,
+    req: IRequest,
+    res: IResponse,
+    next: INextFunc,
   ) => {
     const stats = await model.aggregate([
       {
@@ -134,9 +134,9 @@ export const getTourStats = catchAsync(
 
 export const getMonthlyPlan = catchAsync(
   async (
-    req: ICustomRequestExpress,
-    res: ICustomResponseExpress,
-    next: ICustomNextFunction,
+    req: IRequest,
+    res: IResponse,
+    next: INextFunc,
   ) => {
     const year = req.params.year ? parseInt(req.params.year) : 1
     const plan = await model.aggregate([
@@ -183,9 +183,9 @@ export const getMonthlyPlan = catchAsync(
 
 export const getToursWithin = catchAsync(
   async (
-    req: ICustomRequestExpress,
-    res: ICustomResponseExpress,
-    next: ICustomNextFunction,
+    req: IRequest,
+    res: IResponse,
+    next: INextFunc,
   ) => {
     const { distance, latlng, unit } = req.params
     const [lat, lng] = latlng.split(',')
@@ -223,9 +223,9 @@ export const getToursWithin = catchAsync(
 
 export const getDistances = catchAsync(
   async (
-    req: ICustomRequestExpress,
-    res: ICustomResponseExpress,
-    next: ICustomNextFunction,
+    req: IRequest,
+    res: IResponse,
+    next: INextFunc,
   ) => {
     const { latlng, unit } = req.params
     const [lat, lng] = latlng.split(',')

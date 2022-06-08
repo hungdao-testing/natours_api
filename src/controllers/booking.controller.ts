@@ -3,9 +3,9 @@ import { BookingModel } from '@models/booking.model'
 import { catchAsync } from '@utils/catchAsync'
 import Stripe from 'stripe'
 import {
-  ICustomRequestExpress,
-  ICustomResponseExpress,
-  ICustomNextFunction,
+  IRequest,
+  IResponse,
+  INextFunc,
 } from '../typing/app.type'
 import * as factory from './handlerFactory.controller'
 import { UserModel } from '@models/user.model'
@@ -16,9 +16,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export const getCheckoutSession = catchAsync(
   async (
-    req: ICustomRequestExpress,
-    res: ICustomResponseExpress,
-    next: ICustomNextFunction,
+    req: IRequest,
+    res: IResponse,
+    next: INextFunc,
   ) => {
     // 1) Get the currently booked tour
     const tour = await TourModel.findById(req.params.tourId)
@@ -36,8 +36,7 @@ export const getCheckoutSession = catchAsync(
           name: `${tour!.name} Tour`,
           description: `${tour!.summary}`,
           images: [
-            `${req.protocol}://${req.get('host')}/img/tours/${
-              tour!.imageCover
+            `${req.protocol}://${req.get('host')}/img/tours/${tour!.imageCover
             }`,
           ],
           amount: tour!.price * 100,
@@ -54,18 +53,18 @@ export const getCheckoutSession = catchAsync(
   },
 )
 
-export const createBookingCheckout =  async (session: Stripe.Checkout.Session) => {
+export const createBookingCheckout = async (session: Stripe.Checkout.Session) => {
   const tour = session.client_reference_id;
-  const user = (await UserModel.findOne({email: session.customer_email}))?._id;
+  const user = (await UserModel.findOne({ email: session.customer_email }))?._id;
   const price = session.amount_total! / 100
-  await BookingModel.create({tour, user, price })
+  await BookingModel.create({ tour, user, price })
 }
 
 export const webhokCheckout = catchAsync(
   async (
-    req: ICustomRequestExpress,
-    res: ICustomResponseExpress,
-    next: ICustomNextFunction,
+    req: IRequest,
+    res: IResponse,
+    next: INextFunc,
   ) => {
     const signature = req.headers['stripe-signature']
     let event: Stripe.Event;
@@ -79,11 +78,11 @@ export const webhokCheckout = catchAsync(
       return res.status(400).send(`Webhook error: ${(error as Error).message}`)
     }
 
-    if(event.type === 'checkout.session.completed'){
+    if (event.type === 'checkout.session.completed') {
       createBookingCheckout(event.data.object as Stripe.Checkout.Session)
     }
 
-    res.status(200).json({received: true})
+    res.status(200).json({ received: true })
   },
 )
 

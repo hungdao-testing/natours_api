@@ -8,7 +8,7 @@ import bookingRouter from '@routes/booking.routes'
 import { default as globalErrorHandler } from '@controllers/error.controller'
 import { webhokCheckout } from '@controllers/booking.controller';
 import testRouter from './dev-data/fixture'
-import { ICustomRequestExpress } from './typing/app.type'
+import { INextFunc, IRequest, IResponse } from '@app_type'
 import AppError from '@utils/appError'
 import { rateLimit } from 'express-rate-limit'
 import helmet from 'helmet'
@@ -17,9 +17,9 @@ import path from 'path'
 import cookieParser from 'cookie-parser'
 import compression from 'compression'
 import cors from 'cors'
+import hpp from 'hpp';
+import  xss  from 'xss-clean'
 
-const hpp = require('hpp')
-const xss = require('xss-clean')
 
 const app = express()
 
@@ -149,9 +149,9 @@ app.use(compression())
 
 app.use(
   (
-    req: ICustomRequestExpress,
-    res: express.Response,
-    next: express.NextFunction,
+    req: IRequest,
+    res: IResponse,
+    next: INextFunc,
   ) => {
     req.requestTime = new Date().toISOString()
     next()
@@ -169,7 +169,7 @@ app.use('/api/v1/test-data', testRouter)
 
 app.all(
   '*',
-  (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  (req: IRequest, res: IResponse, next: INextFunc) => {
     const err = new AppError(
       `Could not find ${req.originalUrl} on this server !`,
       404,
