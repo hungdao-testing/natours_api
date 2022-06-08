@@ -1,6 +1,6 @@
 import express from 'express'
-import * as viewsController from '../controllers/view.controller'
-import * as authController from '../controllers/auth.controller'
+import * as viewsController from '@controllers/view.controller'
+import * as authController from '@controllers/auth.controller'
 
 
 const router = express.Router()

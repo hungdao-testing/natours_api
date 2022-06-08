@@ -2,11 +2,11 @@ import {
   ICustomRequestExpress,
   ICustomResponseExpress,
   ICustomNextFunction,
-} from '../../typing/app.type'
-import { TourModel as model, TourModel } from '../models/tour.model'
-import { catchAsync } from '../utils/catchAsync'
+} from '../typing/app.type'
+import { TourModel as model, TourModel } from '@models/tour.model'
+import { catchAsync } from '@utils/catchAsync'
 import * as factory from './handlerFactory.controller'
-import AppError from '../utils/appError'
+import AppError from '@utils/appError'
 import multer from 'multer'
 import path from 'path'
 import sharp from 'sharp'

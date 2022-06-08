@@ -3,12 +3,12 @@ import {
   ICustomNextFunction,
   ICustomRequestExpress,
   ICustomResponseExpress,
-} from '../../typing/app.type'
-import { BookingModel } from '../models/booking.model'
-import { TourModel } from '../models/tour.model'
-import { UserModel } from '../models/user.model'
-import AppError from '../utils/appError'
-import { catchAsync } from '../utils/catchAsync'
+} from '../typing/app.type'
+import { BookingModel } from '@models/booking.model'
+import { TourModel } from '@models/tour.model'
+import { UserModel } from '@models/user.model'
+import AppError from '@utils/appError'
+import { catchAsync } from '@utils/catchAsync'
 
 export const getOverview = catchAsync(async (req: Request, res: Response) => {
   // 1) Get tour data from collection

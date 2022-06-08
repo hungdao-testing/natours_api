@@ -3,7 +3,13 @@
     /* Language and Environment */
     "target": "es5",
     "lib": ["ES2015", "DOM"],
-
+    "paths": {
+      "@models/*": ["./src/models/*"],
+      "@controllers/*": ["./src/controllers/*"],
+      "@routes/*": ["./src/routes/*"],
+      "@views/*": ["./src/views/*"],
+      "@utils/*": ["./src/utils/*"]
+    },
     /* Modules */
     "module": "commonjs",
     "baseUrl": "./",

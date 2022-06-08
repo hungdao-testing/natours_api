@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
-import { IBooking } from '../main/models/booking.model'
-import { IReview } from '../main/models/review.model'
-import { ITour } from '../main/models/tour.model'
-import { IUser } from '../main/models/user.model'
+import { IBooking } from '@models/booking.model'
+import { IReview } from '@models/review.model'
+import { ITour } from '@models/tour.model'
+import { IUser } from '@models/user.model'
 
 export interface ICustomRequestExpress extends Request {
   requestTime?: string | undefined
@@ -15,4 +15,4 @@ export interface ICustomNextFunction extends NextFunction {}
 
 export type TModels = ITour | IReview | IUser | IBooking
 
-export { UserRoles } from '../main/models/user.model'
+export { UserRoles } from '@models/user.model'

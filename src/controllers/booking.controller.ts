@@ -1,14 +1,14 @@
-import { TourModel } from '../models/tour.model'
-import { BookingModel } from '../models/booking.model'
-import { catchAsync } from '../utils/catchAsync'
+import { TourModel } from '@models/tour.model'
+import { BookingModel } from '@models/booking.model'
+import { catchAsync } from '@utils/catchAsync'
 import Stripe from 'stripe'
 import {
   ICustomRequestExpress,
   ICustomResponseExpress,
   ICustomNextFunction,
-} from '../../typing/app.type'
+} from '../typing/app.type'
 import * as factory from './handlerFactory.controller'
-import { UserModel } from '../models/user.model'
+import { UserModel } from '@models/user.model'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2020-08-27',

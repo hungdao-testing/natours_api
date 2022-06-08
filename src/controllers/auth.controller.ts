@@ -1,17 +1,17 @@
 import { CookieOptions, NextFunction, Request, Response } from 'express'
-import { IUser, UserModel } from '../models/user.model'
-import { catchAsync } from '../utils/catchAsync'
+import { IUser, UserModel } from '@models/user.model'
+import { catchAsync } from '@utils/catchAsync'
+import AppError from '@utils/appError'
 import jwt, { JwtPayload, Secret, VerifyOptions } from 'jsonwebtoken'
-import AppError from '../utils/appError'
-import Email from '../utils/email'
+import Email from '@utils/email'
 import {
   ICustomRequestExpress,
   ICustomResponseExpress,
   UserRoles,
-} from '../../typing/app.type'
+} from '../typing/app.type'
 import crypto from 'crypto'
 import util from 'util'
-import { request } from 'http'
+
 
 const verifyToken = (token: string, secret: string): Promise<JwtPayload> => {
   return new Promise((resolve, reject) => {

@@ -1,11 +1,11 @@
-import { UserModel as model } from '../models/user.model'
+import { UserModel as model } from '@models/user.model'
 import {
   ICustomRequestExpress,
   ICustomResponseExpress,
   ICustomNextFunction,
-} from '../../typing/app.type'
-import AppError from '../utils/appError'
-import { catchAsync } from '../utils/catchAsync'
+} from '../typing/app.type'
+import AppError from '@utils/appError'
+import { catchAsync } from '@utils/catchAsync'
 import * as factory from './handlerFactory.controller'
 import multer from 'multer'
 import path from 'path'

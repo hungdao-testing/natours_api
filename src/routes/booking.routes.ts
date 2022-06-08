@@ -1,6 +1,6 @@
 import express from 'express'
-import * as authController from '../controllers/auth.controller'
-import * as bookingController from '../controllers/booking.controller'
+import * as authController from '@controllers/auth.controller'
+import * as bookingController from '@controllers/booking.controller'
 
 const router = express.Router()
 router.use(authController.protect)
