@@ -17,7 +17,7 @@
     },
     /* Modules */
     "module": "commonjs",
-    "baseUrl": "./",
+    "baseUrl": ".",
     "esModuleInterop": true,
     "noEmitOnError": true,
     "resolveJsonModule": true,
