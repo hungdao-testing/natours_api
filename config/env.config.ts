@@ -1,14 +1,28 @@
 import path from 'path'
+import dotenv, { DotenvParseOutput } from 'dotenv'
 
-const configFolder = path.resolve(`${__dirname}`)
+type Environment = {
+    NODE_ENV: 'development' | 'production' | 'local'
+    PORT: number
+    DB_CONN_STRING: string
+    DB_PASSWORD: string
+    JWT_SECRET: string
+    JWT_EXPIRES_IN: string
+    JWT_COOKIE_EXPIRES_IN: string
 
-export const appConfig: { local_env: string; dev_env: string, prod_env: string } = {
-    local_env: path.join(configFolder, 'local.env'),
-    dev_env: path.join(configFolder, 'dev.env'),
-    prod_env: path.join(configFolder, 'prod.env'),
-}
+    EMAIL_USERNAME: string
+    EMAIL_PASSWORD: string
+    EMAIL_HOST: string
+    EMAIL_PORT: string
+    EMAIL_FROM: string
+    MAILJET_APIKEY: string
+    MAILJET_SECRETKEY: string
 
-export const appPath = {
-    allureReporter: path.join(configFolder, "../reporters/allure")
-}
+    STRIPE_SECRET_KEY: string
+    STRIPE_PUBLIC_KEY: string
+    STRIPE_WEBHOOK_SECRET: string
+} & DotenvParseOutput
 
+export const environment = dotenv.config({
+    path: path.join(__dirname, `${process.env.NODE_ENV}.env`),
+}).parsed as Environment

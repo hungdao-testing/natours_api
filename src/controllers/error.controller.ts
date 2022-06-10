@@ -13,9 +13,7 @@ function handleDuplicaFieldsDB(error: mongoose.Error.ValidationError) {
     return new AppError(error.message, 400)
   }
   const errorField = Object.getPrototypeOf(error).keyValue
-  const message = `The key '${Object.keys(
-    errorField,
-  )}' has duplicate value of: "${Object.values(
+  const message = `The key '${Object.keys(errorField)}' has duplicate value of: "${Object.values(
     errorField,
   )}". Please use another value.`
   return new AppError(message, 400)
@@ -108,10 +106,7 @@ export default function errorController(
   error.statusCode = error.statusCode || 500
   error.status = error.status || 'error'
 
-  if (
-    process.env.NODE_ENV === 'development' ||
-    process.env.NODE_ENV === 'local'
-  ) {
+  if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'local') {
     sendErrorDev(error, req, res)
   } else if (process.env.NODE_ENV === 'production') {
     let err = { ...error }
@@ -119,11 +114,9 @@ export default function errorController(
 
     if (err instanceof mongoose.Error.CastError) err = handleCastErrorDB(err)
 
-    if (Object.getPrototypeOf(err).code === 11000)
-      err = handleDuplicaFieldsDB(err)
+    if (Object.getPrototypeOf(err).code === 11000) err = handleDuplicaFieldsDB(err)
 
-    if (err instanceof mongoose.Error.ValidationError)
-      err = handleValidationErrorDB(err)
+    if (err instanceof mongoose.Error.ValidationError) err = handleValidationErrorDB(err)
 
     if (err.name == 'JsonWebTokenError') err = handleJWTError(err)
     if (err.name == 'TokenExpiredError') err = handleJWTExpiredError(err)

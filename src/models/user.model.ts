@@ -1,27 +1,8 @@
-import mongoose, { Document, Schema, Query } from 'mongoose'
+import mongoose, { Schema, Query } from 'mongoose'
 import validator from 'validator'
 import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
-import { UserRoles } from 'typing/app.type'
-
-interface IUserDocument extends Document {
-  name: string
-  email: string
-  photo?: string
-  password: string
-  passwordConfirm: string | undefined
-  passwordChangedAt: Date
-  role: string
-  passwordResetToken: string | undefined
-  passwordResetExpires: Date | undefined
-  active: boolean
-}
-
-export interface IUser extends IUserDocument {
-  correctPassword: (password1: string, password2: string) => Promise<boolean>
-  changePasswordAfter: (JWTTimestamp: string) => boolean
-  createPasswordResetToken: () => string
-}
+import {  IUser, IUserDocument, UserRoles } from '@app_type'
 
 const userSchema = new Schema<IUser>({
   name: { type: String, required: [true, 'Please tell us your name'] },
@@ -36,12 +17,7 @@ const userSchema = new Schema<IUser>({
   role: {
     type: String,
     enum: {
-      values: [
-        UserRoles.ADMIN,
-        UserRoles.GUIDE,
-        UserRoles.LEAD_GUIDE,
-        UserRoles.USER,
-      ],
+      values: [UserRoles.ADMIN, UserRoles.GUIDE, UserRoles.LEAD_GUIDE, UserRoles.USER],
       message: 'The input role is not matched to supported list',
     },
     default: 'user',
@@ -105,10 +81,7 @@ userSchema.methods.correctPassword = async function (
   return await bcrypt.compare(candidatePassword, userPassword)
 }
 
-userSchema.methods.changePasswordAfter = function (
-  this: IUser,
-  JWTTimestamp: number,
-) {
+userSchema.methods.changePasswordAfter = function (this: IUser, JWTTimestamp: number) {
   if (this.passwordChangedAt) {
     const changedTimestamp = this.passwordChangedAt.getTime() / 1000
     return JWTTimestamp < changedTimestamp
@@ -121,10 +94,7 @@ userSchema.methods.changePasswordAfter = function (
 userSchema.methods.createPasswordResetToken = function (this: IUser) {
   const resetToken = crypto.randomBytes(32).toString('hex') // generate random bytes and convert to hex
 
-  this.passwordResetToken = crypto
-    .createHash('sha256')
-    .update(resetToken)
-    .digest('hex')
+  this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex')
   this.passwordResetExpires = new Date(Date.now() + 10 * 60 * 1000) //expire on 10 mins;
 
   return resetToken

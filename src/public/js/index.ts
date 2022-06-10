@@ -24,8 +24,7 @@ if (loginForm)
   loginForm.addEventListener('submit', (e) => {
     e.preventDefault()
     const email = (document.getElementById('email') as HTMLInputElement).value
-    const password = (document.getElementById('password') as HTMLInputElement)
-      .value
+    const password = (document.getElementById('password') as HTMLInputElement).value
     login(email, password)
   })
 
@@ -35,18 +34,9 @@ if (userDataForm)
   userDataForm.addEventListener('submit', (e) => {
     e.preventDefault()
     const form = new FormData()
-    form.append(
-      'name',
-      (document.getElementById('name') as HTMLInputElement).value,
-    )
-    form.append(
-      'email',
-      (document.getElementById('email') as HTMLInputElement).value,
-    )
-    form.append(
-      'photo',
-      (document.getElementById('photo') as unknown as FileList)[0],
-    )
+    form.append('name', (document.getElementById('name') as HTMLInputElement).value)
+    form.append('email', (document.getElementById('email') as HTMLInputElement).value)
+    form.append('photo', (document.getElementById('photo') as unknown as FileList)[0])
     // console.log(form)
 
     updateSettings(form, 'data')
@@ -55,29 +45,21 @@ if (userDataForm)
 if (userPasswordForm)
   userPasswordForm.addEventListener('submit', async (e) => {
     e.preventDefault()
-    ;(
-      document.querySelector('.btn--save-password') as HTMLTextAreaElement
-    ).textContent = 'Updating...'
+    ;(document.querySelector('.btn--save-password') as HTMLTextAreaElement).textContent =
+      'Updating...'
 
-    const passwordCurrent = (
-      document.getElementById('password-current') as HTMLInputElement
-    ).value
-    const password = (document.getElementById('password') as HTMLInputElement)
-      .value
-    const passwordConfirm = (
-      document.getElementById('password-confirm') as HTMLInputElement
-    ).value
+    const passwordCurrent = (document.getElementById('password-current') as HTMLInputElement).value
+    const password = (document.getElementById('password') as HTMLInputElement).value
+    const passwordConfirm = (document.getElementById('password-confirm') as HTMLInputElement).value
     await updateSettings(
       { passwordCurrent, password, passwordConfirm } as unknown as FormData,
       'password',
     )
 
     document.querySelector('.btn--save-password')!.textContent = 'Save password'
-    ;(document.getElementById('password-current') as HTMLInputElement).value =
-      ''
+    ;(document.getElementById('password-current') as HTMLInputElement).value = ''
     ;(document.getElementById('password') as HTMLInputElement).value = ''
-    ;(document.getElementById('password-confirm') as HTMLInputElement).value =
-      ''
+    ;(document.getElementById('password-confirm') as HTMLInputElement).value = ''
   })
 
 if (bookBtn) {

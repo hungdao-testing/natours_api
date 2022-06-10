@@ -1,5 +1,5 @@
 import { FilterQuery, Model, PopulateOptions, Query } from 'mongoose'
-import { IRequest, IResponse, INextFunc, TModels } from '../../typing/app.type'
+import { IRequest, IResponse, INextFunc, TModels } from '@app_type'
 import APIFeatures from '@utils/apiFeatures'
 import AppError from '@utils/appError'
 import { catchAsync } from '@utils/catchAsync'
@@ -9,12 +9,7 @@ export function deleteOne<T extends TModels>(model: Model<T>) {
     const doc = await model.findByIdAndDelete(req.params.id)
 
     if (!doc) {
-      return next(
-        new AppError(
-          `No ${model.collection.collectionName} found with that ID`,
-          404,
-        ),
-      )
+      return next(new AppError(`No ${model.collection.collectionName} found with that ID`, 404))
     }
 
     res.status(204).json({
@@ -32,9 +27,7 @@ export function updateOne<T extends TModels>(model: Model<T>) {
       runValidators: true,
     })
     if (!doc) {
-      return next(
-        new AppError(`No ${collectionName} found with the passing ID`, 404),
-      )
+      return next(new AppError(`No ${collectionName} found with the passing ID`, 404))
     }
     res.status(200).json({
       status: 'success',
@@ -55,10 +48,7 @@ export function createOne<T extends TModels>(model: Model<T>) {
   })
 }
 
-export function getOne<T extends TModels>(
-  model: Model<T>,
-  populateOpts?: PopulateOptions,
-) {
+export function getOne<T extends TModels>(model: Model<T>, populateOpts?: PopulateOptions) {
   return catchAsync(async (req: IRequest, res: IResponse, next: INextFunc) => {
     const collectionName = model.collection.collectionName
 
@@ -67,9 +57,7 @@ export function getOne<T extends TModels>(
 
     const doc = await query
     if (!doc) {
-      return next(
-        new AppError(`No ${collectionName} found with the passing ID`, 404),
-      )
+      return next(new AppError(`No ${collectionName} found with the passing ID`, 404))
     }
 
     res.status(200).json({
@@ -108,14 +96,8 @@ export function getAll<T extends TModels>(
   return catchAsync(async (req: IRequest, res: IResponse, next: INextFunc) => {
     let filter: FilterQuery<T> = {}
 
-    if (
-      filterObjWithQueryParam &&
-      Object.keys(filterObjWithQueryParam).length > 0
-    ) {
-      filter = setFilterObjByQueryParam(
-        filterObjWithQueryParam,
-        req,
-      ) as FilterQuery<T>
+    if (filterObjWithQueryParam && Object.keys(filterObjWithQueryParam).length > 0) {
+      filter = setFilterObjByQueryParam(filterObjWithQueryParam, req) as FilterQuery<T>
     }
 
     const features = new APIFeatures<T>(model.find(filter), req.query)

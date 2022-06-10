@@ -1,12 +1,8 @@
 import { ReviewModel as model } from '@models/review.model'
-import { IRequest, IResponse, INextFunc } from '../../typing/app.type'
+import { IRequest, IResponse, INextFunc } from '@app_type'
 import * as factory from './handlerFactory.controller'
 
-export const setTourUserIds = (
-  req: IRequest,
-  res: IResponse,
-  next: INextFunc,
-) => {
+export const setTourUserIds = (req: IRequest, res: IResponse, next: INextFunc) => {
   if (!req.body.tour) req.body.tour = req.params.tourId
   if (!req.body.user) req.body.user = req.user!.id
   next()

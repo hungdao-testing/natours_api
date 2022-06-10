@@ -1,22 +1,8 @@
-import dotenv from 'dotenv'
 import mongoose from 'mongoose'
-import { appConfig } from '../config/env.config'
+import { environment } from '@config/env.config'
 
 const parseURI = () => {
-  if (process.env.NODE_ENV === 'development') {
-    dotenv.config({ path: appConfig.dev_env })
-  } else if (process.env.NODE_ENV === 'local') {
-    dotenv.config({ path: appConfig.local_env })
-  } else if (process.env.NODE_ENV === 'production') {
-    dotenv.config({ path: appConfig.prod_env })
-  } else {
-    dotenv.config({ path: appConfig.dev_env })
-  }
-
-  const DB_URI = process.env.DB_CONN_STRING!.replace(
-    '<PASSWORD>',
-    process.env.DB_PASSWORD!,
-  )
+  const DB_URI = environment.DB_CONN_STRING!.replace('<PASSWORD>', environment.DB_PASSWORD!)
 
   return DB_URI
 }

@@ -51,3 +51,6 @@ yarn.lockm
 reporters/allure/allure-results
 reporters/allure/allure-report
 allure-results
+/test-results/
+/playwright-report/
+/playwright/.cache/

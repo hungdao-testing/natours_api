@@ -44,12 +44,8 @@ export default class APIFeatures<T extends TModels> {
   }
 
   paginate() {
-    const page = this.queryString.page
-      ? parseInt(this.queryString.page.toString())
-      : 1
-    const limit = this.queryString.limit
-      ? parseInt(this.queryString.limit.toString())
-      : 100
+    const page = this.queryString.page ? parseInt(this.queryString.page.toString()) : 1
+    const limit = this.queryString.limit ? parseInt(this.queryString.limit.toString()) : 100
     const skip = (page - 1) * limit
 
     //page=2&limit=10 => 1-10 is page 1, 11-20 is page 2

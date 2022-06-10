@@ -9,10 +9,7 @@ router.get('/checkout-session/:tourId', bookingController.getCheckoutSession)
 
 router.use(authController.restrictTo('ADMIN', 'LEAD_GUIDE'))
 
-router
-  .route('/')
-  .get(bookingController.getAllBookings)
-  .post(bookingController.createBooking)
+router.route('/').get(bookingController.getAllBookings).post(bookingController.createBooking)
 
 router
   .route('/:id')

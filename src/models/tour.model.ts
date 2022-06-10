@@ -1,40 +1,9 @@
 import mongoose, { Model, Query } from 'mongoose'
 import slugify from 'slugify'
-import { IUser } from '@models/user.model'
+import { ITour, ITourModel, IUser } from '@app_type'
 
-type Location = {
-  type: string
-  coordinates: number[]
-  address: string
-  description: string
-}
-//Ref: https://mongoosejs.com/docs/typescript/schemas.html
-interface ITourDocument {
-  id: number
-  name: string
-  slug: string
-  ratings: number
-  ratingsAverage?: number
-  ratingsQuantity?: number
-  price: number
-  duration: number
-  maxGroupSize: number
-  difficulty: string
-  priceDiscount?: number
-  summary: string
-  description?: string
-  imageCover: string
-  images: string[]
-  createdAt: Date
-  startDates: Date[]
-  secretTour: boolean
-  startLocation: Location
-  locations: (Location & { day: number })[]
-  guides: (IUser | null)[]
-}
 
-export interface ITour extends ITourDocument {}
-interface ITourModel extends Model<ITour> {}
+
 
 const tourSchema = new mongoose.Schema<ITour, ITourModel>(
   {

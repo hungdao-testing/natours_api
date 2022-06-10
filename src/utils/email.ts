@@ -48,10 +48,11 @@ export default class Email {
 
   private async _send(template: string, subject: string) {
     // 1) Render HTML base on the pug template
-    const html = pug.renderFile(
-      path.join(__dirname, '..', `views/email/${template}.pug`),
-      { firstName: this.firstName, url: this.url, subject },
-    )
+    const html = pug.renderFile(path.join(__dirname, '..', `views/email/${template}.pug`), {
+      firstName: this.firstName,
+      url: this.url,
+      subject,
+    })
 
     // 2) Define email option
     const mailOptions: Mail.Options = {
@@ -71,9 +72,6 @@ export default class Email {
   }
 
   async sendPasswordReset() {
-    await this._send(
-      'passwordReset',
-      'Your password reset token (valid for only 10 mins)',
-    )
+    await this._send('passwordReset', 'Your password reset token (valid for only 10 mins)')
   }
 }
