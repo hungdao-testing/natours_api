@@ -23,18 +23,12 @@ const signToken = (id: string) => {
   })
 }
 
-export const createSendToken = (
-  user: IUser,
-  statusCode: number,
-  req: Request,
-  res: Response,
-) => {
+export const createSendToken = (user: IUser, statusCode: number, req: Request, res: Response) => {
   const token = signToken(user._id)
 
   const cookieOptions: CookieOptions = {
     expires: new Date(
-      Date.now() +
-        parseInt(process.env.JWT_COOKIE_EXPIRES_IN!) * 24 * 60 * 60 * 1000,
+      Date.now() + parseInt(process.env.JWT_COOKIE_EXPIRES_IN!) * 24 * 60 * 60 * 1000,
     ),
     httpOnly: true,
     secure: req.secure || req.headers['x-forwared-proto'] === 'https',
@@ -61,45 +55,41 @@ export const createSendToken = (
   })
 }
 
-export const signup = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const newUser = await UserModel.create({
-      name: req.body.name,
-      email: req.body.email,
-      password: req.body.password,
-      passwordConfirm: req.body.passwordConfirm,
-      passwordChangedAt: req.body.passwordChangedAt,
-      role: req.body.role,
-    })
-    const url = `${req.protocol}://${req.get('host')}/me`
-    await new Email(url, {
-      email: newUser.email,
-      name: newUser.name,
-    }).sendWelcome()
-    createSendToken(newUser, 201, req, res)
-  },
-)
+export const signup = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const newUser = await UserModel.create({
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+    passwordConfirm: req.body.passwordConfirm,
+    passwordChangedAt: req.body.passwordChangedAt,
+    role: req.body.role,
+  })
+  const url = `${req.protocol}://${req.get('host')}/me`
+  await new Email(url, {
+    email: newUser.email,
+    name: newUser.name,
+  }).sendWelcome()
+  createSendToken(newUser, 201, req, res)
+})
 
-export const login = catchAsync(
-  async (req: IRequest, res: IResponse, next: NextFunction) => {
-    const { email, password } = req.body
+export const login = catchAsync(async (req: IRequest, res: IResponse, next: NextFunction) => {
+  const { email, password } = req.body
 
-    // 1) Check email or password is existed in request body
-    if (!email || !password) {
-      return next(new AppError('Please provide email and password', 400))
-    }
+  // 1) Check email or password is existed in request body
+  if (!email || !password) {
+    return next(new AppError('Please provide email and password', 400))
+  }
 
-    // 2) Check user is existed && password is correct on DB
-    const user = await UserModel.findOne({ email }).select('+password')
+  // 2) Check user is existed && password is correct on DB
+  const user = await UserModel.findOne({ email }).select('+password')
 
-    if (!user || !(await user.correctPassword(password, user.password))) {
-      return next(new AppError('Incorrect email or password', 401))
-    }
+  if (!user || !(await user.correctPassword(password, user.password))) {
+    return next(new AppError('Incorrect email or password', 401))
+  }
 
-    // 3) send token
-    createSendToken(user, 200, req, res)
-  },
-)
+  // 3) send token
+  createSendToken(user, 200, req, res)
+})
 
 export const logout = (req: Request, res: Response) => {
   res.cookie('jwt', 'loggedout', {
@@ -109,69 +99,45 @@ export const logout = (req: Request, res: Response) => {
   res.status(200).json({ status: 'success' })
 }
 
-export const protect = catchAsync(
-  async (req: IRequest, res: IResponse, next: NextFunction) => {
-    // 1. Getting token and check of it's existed
-    let token: string = ''
-    if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith('Bearer')
-    ) {
-      token = req.headers.authorization.split(' ')[1]
-    } else if (req.cookies.jwt) {
-      token = req.cookies.jwt
-    }
+export const protect = catchAsync(async (req: IRequest, res: IResponse, next: NextFunction) => {
+  // 1. Getting token and check of it's existed
+  let token: string = ''
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1]
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt
+  }
 
-    if (!token) {
-      return next(
-        new AppError('You are not logged in! Please login to get access', 401),
-      )
-    }
-    // 2. Verification the token
-    const decoded = await verifyToken(token, process.env.JWT_SECRET!)
+  if (!token) {
+    return next(new AppError('You are not logged in! Please login to get access', 401))
+  }
+  // 2. Verification the token
+  const decoded = await verifyToken(token, process.env.JWT_SECRET!)
 
-    // 3. Check if user still exists (make sure no one changes the user under back-end after system generates token previously)
-    const currentUser = await UserModel.findById(decoded['id'])
-    if (!currentUser) {
-      return next(
-        new AppError(
-          'The user belongs to this token is no longer existed',
-          401,
-        ),
-      )
-    }
+  // 3. Check if user still exists (make sure no one changes the user under back-end after system generates token previously)
+  const currentUser = await UserModel.findById(decoded['id'])
+  if (!currentUser) {
+    return next(new AppError('The user belongs to this token is no longer existed', 401))
+  }
 
-    // 4. Check if user changed password after the token was issued
-    if (currentUser.changePasswordAfter(decoded.iat!.toString())) {
-      return next(
-        new AppError(
-          'User is recently changed password, please login again!',
-          401,
-        ),
-      )
-    }
+  // 4. Check if user changed password after the token was issued
+  if (currentUser.changePasswordAfter(decoded.iat!.toString())) {
+    return next(new AppError('User is recently changed password, please login again!', 401))
+  }
 
-    //Grant access to the next route
-    req.user = currentUser
+  //Grant access to the next route
+  req.user = currentUser
 
-    next()
-  },
-)
+  next()
+})
 
-export const isLoggedIn = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const isLoggedIn = async (req: Request, res: Response, next: NextFunction) => {
   if (req.cookies?.jwt) {
     try {
       // 1) verify token
-      const decoded = await util.promisify<
-        string,
-        Secret,
-        VerifyOptions | {},
-        JwtPayload
-      >(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET!, {})
+      const decoded = await util.promisify<string, Secret, VerifyOptions | {}, JwtPayload>(
+        jwt.verify,
+      )(req.cookies.jwt, process.env.JWT_SECRET!, {})
 
       // 2) Check if user still exists
       const currentUser = await UserModel.findById(decoded.id)
@@ -198,23 +164,16 @@ export const isLoggedIn = async (
 
 type TSpreadUser = keyof typeof UserRoles
 export const restrictTo = (...roles: Array<TSpreadUser>) => {
-  return catchAsync(
-    async (req: IRequest, res: Response, next: NextFunction) => {
-      let reqRole = req.user?.role.toUpperCase()
-      if (reqRole === 'LEAD-GUIDE') {
-        reqRole = 'LEAD_GUIDE'
-      }
-      if (!roles.includes(reqRole as TSpreadUser)) {
-        return next(
-          new AppError(
-            'You do not have permission to perform this action',
-            403,
-          ),
-        )
-      }
-      next()
-    },
-  )
+  return catchAsync(async (req: IRequest, res: Response, next: NextFunction) => {
+    let reqRole = req.user?.role.toUpperCase()
+    if (reqRole === 'LEAD-GUIDE') {
+      reqRole = 'LEAD_GUIDE'
+    }
+    if (!roles.includes(reqRole as TSpreadUser)) {
+      return next(new AppError('You do not have permission to perform this action', 403))
+    }
+    next()
+  })
 }
 
 export const forgotPassword = catchAsync(
@@ -249,9 +208,7 @@ export const forgotPassword = catchAsync(
       user.passwordResetExpires = undefined
       await user.save({ validateBeforeSave: false })
 
-      return next(
-        new AppError('There was an error sending email, try again later', 500),
-      )
+      return next(new AppError('There was an error sending email, try again later', 500))
     }
   },
 )
@@ -260,10 +217,7 @@ export const resetPassword = catchAsync(
   async (req: IRequest, res: Response, next: NextFunction) => {
     // 1. Get user based token: get token (sent via email in plain text), then encrypted => compare to the saved one on DB
 
-    const hasedToken = crypto
-      .createHash('sha256')
-      .update(req.params.token)
-      .digest('hex')
+    const hasedToken = crypto.createHash('sha256').update(req.params.token).digest('hex')
 
     const user = await UserModel.findOne({
       passwordResetToken: hasedToken,
@@ -302,12 +256,7 @@ export const updatePassword = catchAsync(
       currentUser = user
     }
 
-    if (
-      !(await currentUser.correctPassword(
-        req.body.passwordCurrent,
-        currentUser.password,
-      ))
-    ) {
+    if (!(await currentUser.correctPassword(req.body.passwordCurrent, currentUser.password))) {
       return next(new AppError('Your current password is wrong.', 401))
     }
 

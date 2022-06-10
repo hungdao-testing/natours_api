@@ -2,10 +2,7 @@ import mongoose from 'mongoose'
 import { environment } from '@config/env.config'
 
 const parseURI = () => {
-  const DB_URI = environment.DB_CONN_STRING!.replace(
-    '<PASSWORD>',
-    environment.DB_PASSWORD!,
-  )
+  const DB_URI = environment.DB_CONN_STRING!.replace('<PASSWORD>', environment.DB_PASSWORD!)
 
   return DB_URI
 }

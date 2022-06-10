@@ -7,6 +7,7 @@ const config: PlaywrightTestConfig = {
     use: {
         baseURL: `localhost:${environment.PORT}`
     },
+    globalSetup: require.resolve('./tests/hook/globalSetup.hook.ts'),
     testDir: 'tests',
     testIgnore: '**/test-assets',
     testMatch: '.*(spec)\.ts',

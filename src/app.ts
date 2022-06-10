@@ -5,9 +5,9 @@ import userRouter from '@routes/user.routes'
 import reviewRouter from '@routes/review.routes'
 import viewRouter from '@routes/view.routes'
 import bookingRouter from '@routes/booking.routes'
+import testRouter from '@routes/test.routes'
 import { default as globalErrorHandler } from '@controllers/error.controller'
 import { webhokCheckout } from '@controllers/booking.controller'
-import testRouter from './dev-data/fixture'
 import { INextFunc, IRequest, IResponse } from 'typing/app.type'
 import AppError from '@utils/appError'
 import { rateLimit } from 'express-rate-limit'
@@ -19,6 +19,7 @@ import compression from 'compression'
 import cors from 'cors'
 import hpp from 'hpp'
 import xss from 'xss-clean'
+import { environment } from '@config/env.config'
 
 const app = express()
 
@@ -49,13 +50,7 @@ app.use(
           'https://js.stripe.com',
           'https://bundle.js:*',
         ],
-        workerSrc: [
-          "'self'",
-          'data:',
-          'blob:',
-          'https://*.mapbox.com',
-          'https://bundle.js:*',
-        ],
+        workerSrc: ["'self'", 'data:', 'blob:', 'https://*.mapbox.com', 'https://bundle.js:*'],
         childSrc: ["'self'", 'blob:'],
         imgSrc: [
           "'self'",
@@ -115,11 +110,7 @@ app.use('/api', limiter) // apply rate-limit to routes starts-with '/api'
 // the body of stripe checkout could not work on non-raw format.
 // so we don't place this route after the `json()` middleware nor on a specific route file
 // and it must be in raw format => express.raw()
-app.post(
-  '/webhook-checkout',
-  express.raw({ type: 'application/json' }),
-  webhokCheckout,
-)
+app.post('/webhook-checkout', express.raw({ type: 'application/json' }), webhokCheckout)
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' })) // not allow data > 10kb to be passed into body
@@ -161,13 +152,12 @@ app.use('/api/v1/users', userRouter)
 app.use('/api/v1/reviews', reviewRouter)
 app.use('/api/v1/bookings', bookingRouter)
 
-app.use('/api/v1/test-data', testRouter)
+if (environment.NODE_ENV !== 'production') {
+  app.use('/api/v1/test-data', testRouter)
+}
 
 app.all('*', (req: IRequest, res: IResponse, next: INextFunc) => {
-  const err = new AppError(
-    `Could not find ${req.originalUrl} on this server !`,
-    404,
-  )
+  const err = new AppError(`Could not find ${req.originalUrl} on this server !`, 404)
   next(err)
 })
 

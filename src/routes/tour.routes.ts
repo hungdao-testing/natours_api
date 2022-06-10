@@ -10,9 +10,7 @@ router.use('/:tourId/reviews', reviewRouter)
 // router.param('id', tourController.checkID);
 
 // modify the request query on `aliasTopTour` (role as middleware) then pass into `getAllTours`
-router
-  .route('/top-5-cheap')
-  .get(tourController.aliasTopTour, tourController.getAllTours)
+router.route('/top-5-cheap').get(tourController.aliasTopTour, tourController.getAllTours)
 
 router.route('/tour-stats').get(tourController.getTourStats)
 
@@ -24,9 +22,7 @@ router
     tourController.getMonthlyPlan,
   )
 
-router
-  .route('/tours-within/:distance/center/:latlng/unit/:unit')
-  .get(tourController.getToursWithin)
+router.route('/tours-within/:distance/center/:latlng/unit/:unit').get(tourController.getToursWithin)
 
 router.route('/distances/:latlng/unit/:unit').get(tourController.getDistances)
 

@@ -36,12 +36,7 @@ const userSchema = new Schema<IUser>({
   role: {
     type: String,
     enum: {
-      values: [
-        UserRoles.ADMIN,
-        UserRoles.GUIDE,
-        UserRoles.LEAD_GUIDE,
-        UserRoles.USER,
-      ],
+      values: [UserRoles.ADMIN, UserRoles.GUIDE, UserRoles.LEAD_GUIDE, UserRoles.USER],
       message: 'The input role is not matched to supported list',
     },
     default: 'user',
@@ -105,10 +100,7 @@ userSchema.methods.correctPassword = async function (
   return await bcrypt.compare(candidatePassword, userPassword)
 }
 
-userSchema.methods.changePasswordAfter = function (
-  this: IUser,
-  JWTTimestamp: number,
-) {
+userSchema.methods.changePasswordAfter = function (this: IUser, JWTTimestamp: number) {
   if (this.passwordChangedAt) {
     const changedTimestamp = this.passwordChangedAt.getTime() / 1000
     return JWTTimestamp < changedTimestamp
@@ -121,10 +113,7 @@ userSchema.methods.changePasswordAfter = function (
 userSchema.methods.createPasswordResetToken = function (this: IUser) {
   const resetToken = crypto.randomBytes(32).toString('hex') // generate random bytes and convert to hex
 
-  this.passwordResetToken = crypto
-    .createHash('sha256')
-    .update(resetToken)
-    .digest('hex')
+  this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex')
   this.passwordResetExpires = new Date(Date.now() + 10 * 60 * 1000) //expire on 10 mins;
 
   return resetToken

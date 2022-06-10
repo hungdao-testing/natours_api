@@ -6,10 +6,7 @@ import { showAlert } from './alerts'
 // const port = getPort()
 export const updateSettings = async (data: FormData, type: string) => {
   try {
-    const url =
-      type === 'password'
-        ? `/api/v1/users/updateMyPassword`
-        : `/api/v1/users/updateMe`
+    const url = type === 'password' ? `/api/v1/users/updateMyPassword` : `/api/v1/users/updateMe`
 
     const res = await axios({
       method: 'PATCH',

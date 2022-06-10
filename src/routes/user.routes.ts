@@ -41,10 +41,7 @@ router.delete('/deleteMe', userController.deleteMe)
 
 router.use(authController.restrictTo('ADMIN'))
 
-router
-  .route('/')
-  .get(userController.getAllUsers)
-  .post(userController.createUser)
+router.route('/').get(userController.getAllUsers).post(userController.createUser)
 
 router
   .route('/:id')
