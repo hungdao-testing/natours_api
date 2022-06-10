@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { INextFunc, IRequest, IResponse } from '../../typing/app.type'
+import { INextFunc, IRequest, IResponse } from '@app_type'
 import { BookingModel } from '@models/booking.model'
 import { TourModel } from '@models/tour.model'
 import { UserModel } from '@models/user.model'

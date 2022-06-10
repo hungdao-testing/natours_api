@@ -1,0 +1,64 @@
+{
+  "startLocation": {
+    "description": "California, USA",
+    "type": "Point",
+    "coordinates": [-118.803461, 34.006072],
+    "address": "29130 Cliffside Dr, Malibu, CA 90265, USA"
+  },
+  "ratingsAverage": 3.9,
+  "ratingsQuantity": 7,
+  "imageCover": "tour-8-cover.jpg",
+  "startDates": [
+    "2021-07-19T09:00:00.000Z",
+    "2021-09-06T09:00:00.000Z",
+    "2022-03-18T10:00:00.000Z"
+  ],
+
+  "name": "Test Tour",
+  "duration": 14,
+  "maxGroupSize": 8,
+  "difficulty": "difficult",
+  "guides": ["5c8a21f22f8fb814b56fa18a", "5c8a1f292f8fb814b56fa184", "5c8a1f4e2f8fb814b56fa185"],
+  "price": 2997,
+  "priceDiscount": 2000,
+  "summary": "Surfing, skating, parajumping, rock climbing and more, all in one tour",
+  "description": "Nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\nVoluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur!",
+
+  "locations": [
+    {
+      "_id": "5c88fa8cf4afda39709c296b",
+      "description": "Point Dume Beach",
+      "type": "Point",
+      "coordinates": [-118.809361, 34.003098],
+      "day": 1
+    },
+    {
+      "_id": "5c88fa8cf4afda39709c296a",
+      "description": "Venice Skate Park",
+      "type": "Point",
+      "coordinates": [-118.47549, 33.987367],
+      "day": 4
+    },
+    {
+      "_id": "5c88fa8cf4afda39709c2969",
+      "description": "San Diego Skydive",
+      "type": "Point",
+      "coordinates": [-116.830104, 33.022843],
+      "day": 6
+    },
+    {
+      "_id": "5c88fa8cf4afda39709c2968",
+      "description": "Kern River Rafting",
+      "type": "Point",
+      "coordinates": [-118.4547, 35.710359],
+      "day": 7
+    },
+    {
+      "_id": "5c88fa8cf4afda39709c2967",
+      "description": "Yosemite National Park",
+      "type": "Point",
+      "coordinates": [-119.600492, 37.742371],
+      "day": 10
+    }
+  ]
+}

@@ -1,27 +1,8 @@
-import mongoose, { Document, Schema, Query } from 'mongoose'
+import mongoose, { Schema, Query } from 'mongoose'
 import validator from 'validator'
 import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
-import { UserRoles } from 'typing/app.type'
-
-interface IUserDocument extends Document {
-  name: string
-  email: string
-  photo?: string
-  password: string
-  passwordConfirm: string | undefined
-  passwordChangedAt: Date
-  role: string
-  passwordResetToken: string | undefined
-  passwordResetExpires: Date | undefined
-  active: boolean
-}
-
-export interface IUser extends IUserDocument {
-  correctPassword: (password1: string, password2: string) => Promise<boolean>
-  changePasswordAfter: (JWTTimestamp: string) => boolean
-  createPasswordResetToken: () => string
-}
+import {  IUser, IUserDocument, UserRoles } from '@app_type'
 
 const userSchema = new Schema<IUser>({
   name: { type: String, required: [true, 'Please tell us your name'] },

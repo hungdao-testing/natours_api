@@ -14,7 +14,8 @@
     "start:api:prod": "npx cross-env NODE_ENV=production nodemon",
     "watch:js:local": "npx cross-env NODE_ENV=local parcel watch --no-hmr --target default --public-url ./",
     "watch:js:dev": "npx cross-env NODE_ENV=development parcel watch --no-hmr --target default --public-url ./",
-    "build:js": "npx cross-env NODE_ENV=production parcel build --target prod --public-url ./"
+    "build:js": "npx cross-env NODE_ENV=production parcel build --target prod --public-url ./",
+    "test:api:dev": "npx cross-env NODE_ENV=development playwright test --project=rest_api"
   },
   "keywords": [],
   "author": "",

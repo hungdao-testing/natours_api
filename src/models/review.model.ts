@@ -1,20 +1,7 @@
-import mongoose, { Model, Schema } from 'mongoose'
+import mongoose, {  Schema } from 'mongoose'
 import { TourModel } from '@models/tour.model'
-import { IUser } from '@models/user.model'
+import { IReview, IReviewModel} from '@app_type'
 
-interface IReviewDocument {
-  review: String
-  rating: number
-  createdAt: Date
-  tour: String
-  user: IUser
-}
-
-export interface IReview extends IReviewDocument {}
-
-interface IReviewModel extends Model<IReview> {
-  calcAverageRatings: (tour: String) => void
-}
 
 const reviewSchema = new mongoose.Schema<IReview, IReviewModel>(
   {

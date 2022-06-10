@@ -2,7 +2,7 @@ import { TourModel } from '@models/tour.model'
 import { BookingModel } from '@models/booking.model'
 import { catchAsync } from '@utils/catchAsync'
 import Stripe from 'stripe'
-import { IRequest, IResponse, INextFunc } from '../../typing/app.type'
+import { IRequest, IResponse, INextFunc } from '@app_type'
 import * as factory from './handlerFactory.controller'
 import { UserModel } from '@models/user.model'
 

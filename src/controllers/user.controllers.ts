@@ -1,5 +1,5 @@
 import { UserModel as model } from '@models/user.model'
-import { IRequest, IResponse, INextFunc } from '../../typing/app.type'
+import { IRequest, IResponse, INextFunc } from '@app_type'
 import AppError from '@utils/appError'
 import { catchAsync } from '@utils/catchAsync'
 import * as factory from './handlerFactory.controller'

@@ -1,5 +1,5 @@
-import { ITour } from '@models/tour.model'
-import { IUser } from '@models/user.model'
+import { ITour, IUser, UserRoles } from '@app_type'
+
 import fs from 'fs'
 import path from 'path'
 
@@ -12,3 +12,7 @@ export const parseUsers: IUser[] = JSON.parse(
 // export const parseReviews: IReview[] = JSON.parse(
 //   fs.readFileSync(path.join(__dirname, 'reviews.json'), 'utf-8'),
 // )
+
+export function getUserByRole(role: UserRoles) {
+  return parseUsers.find(user => user.role === role)!;
+}

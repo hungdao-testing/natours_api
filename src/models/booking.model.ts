@@ -1,16 +1,7 @@
-import mongoose, { Model, Schema, Types } from 'mongoose'
+import { IBooking, IBookingModel } from '@app_type'
+import mongoose, { Schema } from 'mongoose'
 
-interface IBookingDocument {
-  tour: Types.ObjectId
-  user: Types.ObjectId
-  price: number
-  createdAt: Date
-  paid: true
-}
 
-export interface IBooking extends IBookingDocument {}
-
-interface IBookingModel extends Model<IBooking> {}
 
 const bookingSchema = new Schema<IBooking, IBookingModel>({
   tour: {

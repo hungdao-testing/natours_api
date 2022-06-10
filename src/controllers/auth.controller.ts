@@ -1,10 +1,10 @@
 import { CookieOptions, NextFunction, Request, Response } from 'express'
-import { IUser, UserModel } from '@models/user.model'
+import { UserModel } from '@models/user.model'
 import { catchAsync } from '@utils/catchAsync'
 import AppError from '@utils/appError'
 import jwt, { JwtPayload, Secret, VerifyOptions } from 'jsonwebtoken'
 import Email from '@utils/email'
-import { IRequest, IResponse, UserRoles } from '../../typing/app.type'
+import { IRequest, IResponse, IUser, UserRoles } from '@app_type'
 import crypto from 'crypto'
 import util from 'util'
 

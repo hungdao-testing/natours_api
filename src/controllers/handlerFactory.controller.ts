@@ -1,5 +1,5 @@
 import { FilterQuery, Model, PopulateOptions, Query } from 'mongoose'
-import { IRequest, IResponse, INextFunc, TModels } from '../../typing/app.type'
+import { IRequest, IResponse, INextFunc, TModels } from '@app_type'
 import APIFeatures from '@utils/apiFeatures'
 import AppError from '@utils/appError'
 import { catchAsync } from '@utils/catchAsync'
