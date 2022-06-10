@@ -51,7 +51,7 @@ type Location = {
   description: string
 }
 //Ref: https://mongoosejs.com/docs/typescript/schemas.html
-export interface ITourDocument {
+export interface ITourDocument extends Document {
   id: number
   name: string
   slug: string

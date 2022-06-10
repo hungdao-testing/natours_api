@@ -15,7 +15,8 @@
       "@utils/*": ["src/utils/*"],
       "@app_type": ["typing/app.type.ts"],
       "@config/*": ["config/*"],
-      "@fixture_data/*": ["src/dev-data/*"]
+      "@fixture_data/*": ["src/dev-data/*"],
+      "@tests/*":["tests/*"]
 
     },
     /* Modules */

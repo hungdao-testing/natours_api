@@ -1,34 +1,33 @@
-import { UserRoles } from '@app_type'
-import { getUserByRole } from '@fixture_data/fixtureData'
-import { test, expect } from '@playwright/test'
-import * as payload from "./tourPayload.json";
+import { ITour, UserRoles } from '@app_type'
+import { getTestAsset } from '@tests/utils/fileManagement'
+import { tourPW, expect } from './tourHelper'
 
-test.describe.skip('Create a tour', () => {
-  test('As an admin, I could create a tour', async ({ request }) => {
-    const adminUser = getUserByRole(UserRoles.ADMIN);
+const sampleTourPayload = getTestAsset('tourPayload.json') as ITour
 
-    const loginAsReq = await request.post('/api/v1/users/login', {
-      data: {
-        "email": adminUser.email,
-        "password": "test1234"
-      }
-    })
+tourPW.describe.parallel('Create a tour', () => {
+  tourPW(
+    `As an admin, I could create a tour with full essential information`,
+    async ({ createTour, tourRestriction, deleteTour }) => {
+      sampleTourPayload['name'] = '[TEST-ADMIN] Amazing Tour'
+      const authToken = await tourRestriction(UserRoles.ADMIN)
 
-    const loginAsRes = await loginAsReq.json();
+      const createdTour = await createTour(authToken, sampleTourPayload)
+      expect(createdTour.data.name).toBe('[TEST-ADMIN] Amazing Tour')
 
-    const createTourReq = await request.post(`/api/v1/tours`, {
-      data: payload,
-      headers: {
-        'Authorization': `Bearer ${loginAsRes.token}`
-      }
-    })
+      await deleteTour(authToken, createdTour.data._id)
+    },
+  )
 
-    const createTourRes = await createTourReq.json();
+  tourPW(
+    `As a lead-guide, I could create a tour with full essential information`,
+    async ({ createTour, tourRestriction, deleteTour }) => {
+      sampleTourPayload['name'] = '[TEST-LEAD_GUIDE] Amazing Tour'
+      const authToken = await tourRestriction(UserRoles.LEAD_GUIDE)
 
-    expect(createTourReq.status()).toBe([200, 201])
+      const createdTour = await createTour(authToken, sampleTourPayload)
+      expect(createdTour.data.name).toBe('[TEST-LEAD_GUIDE] Amazing Tour')
 
-
-  })
-
-  test('As a tour-lead, I could create a tour', () => { })
+      await deleteTour(authToken, createdTour.data._id)
+    },
+  )
 })

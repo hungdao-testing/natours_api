@@ -13,6 +13,6 @@ export const parseUsers: IUser[] = JSON.parse(
 //   fs.readFileSync(path.join(__dirname, 'reviews.json'), 'utf-8'),
 // )
 
-export function getUserByRole(role: UserRoles) {
+export function getTestUserByRole(role: UserRoles) {
   return parseUsers.find(user => user.role === role)!;
 }
