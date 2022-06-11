@@ -30,4 +30,28 @@ tourPW.describe.parallel('Create a tour', () => {
       await deleteTour(authToken, createdTour.data._id)
     },
   )
+
+  tourPW(
+    `As an admin, I could create a tour without optional info`,
+    async ({ createTour, tourRestriction, deleteTour }) => {
+      const {
+        ratings,
+        ratingsAverage,
+        priceDiscount,
+        description,
+        images,
+        startDates,
+        guides,
+        ...requiredFieldPayload
+      } = sampleTourPayload
+      requiredFieldPayload['name'] = '[TEST-OPTIONAL] Amazing Tour';
+
+      const authToken = await tourRestriction(UserRoles.LEAD_GUIDE)
+
+      const createdTour = await createTour(authToken, requiredFieldPayload)
+      expect(createdTour.data.name).toBe('[TEST-OPTIONAL] Amazing Tour')
+
+      await deleteTour(authToken, createdTour.data._id)
+    },
+  )
 })
