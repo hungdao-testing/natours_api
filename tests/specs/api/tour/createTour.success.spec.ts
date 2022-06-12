@@ -4,36 +4,36 @@ import { tourPW, expect } from './tourHelper'
 
 const sampleTourPayload = getTestAsset('tourPayload.json') as ITour
 
-tourPW.describe.parallel('Create a tour', () => {
+tourPW.describe('Create a tour', () => {
   tourPW(
     `As an admin, I could create a tour with full essential information`,
-    async ({ createTour, tourRestriction, deleteTour }) => {
+    async ({ createTourPWFixture, tourRestriction, deleteTourPWFixture }) => {
       sampleTourPayload['name'] = '[TEST-ADMIN] Amazing Tour'
       const authToken = await tourRestriction(UserRoles.ADMIN)
 
-      const createdTour = await createTour(authToken, sampleTourPayload)
+      const createdTour = await createTourPWFixture(authToken, sampleTourPayload)
       expect(createdTour.data.name).toBe('[TEST-ADMIN] Amazing Tour')
 
-      await deleteTour(authToken, createdTour.data._id)
+      await deleteTourPWFixture(authToken, createdTour.data._id)
     },
   )
 
   tourPW(
     `As a lead-guide, I could create a tour with full essential information`,
-    async ({ createTour, tourRestriction, deleteTour }) => {
+    async ({ createTourPWFixture, tourRestriction, deleteTourPWFixture }) => {
       sampleTourPayload['name'] = '[TEST-LEAD_GUIDE] Amazing Tour'
       const authToken = await tourRestriction(UserRoles.LEAD_GUIDE)
 
-      const createdTour = await createTour(authToken, sampleTourPayload)
+      const createdTour = await createTourPWFixture(authToken, sampleTourPayload)
       expect(createdTour.data.name).toBe('[TEST-LEAD_GUIDE] Amazing Tour')
 
-      await deleteTour(authToken, createdTour.data._id)
+      await deleteTourPWFixture(authToken, createdTour.data._id)
     },
   )
 
   tourPW(
     `As an admin, I could create a tour without optional info`,
-    async ({ createTour, tourRestriction, deleteTour }) => {
+    async ({ createTourPWFixture, tourRestriction, deleteTourPWFixture }) => {
       const {
         ratings,
         ratingsAverage,
@@ -44,14 +44,14 @@ tourPW.describe.parallel('Create a tour', () => {
         guides,
         ...requiredFieldPayload
       } = sampleTourPayload
-      requiredFieldPayload['name'] = '[TEST-OPTIONAL] Amazing Tour';
+      requiredFieldPayload['name'] = '[TEST-OPTIONAL] Amazing Tour'
 
       const authToken = await tourRestriction(UserRoles.LEAD_GUIDE)
 
-      const createdTour = await createTour(authToken, requiredFieldPayload)
+      const createdTour = await createTourPWFixture(authToken, requiredFieldPayload)
       expect(createdTour.data.name).toBe('[TEST-OPTIONAL] Amazing Tour')
 
-      await deleteTour(authToken, createdTour.data._id)
+      await deleteTourPWFixture(authToken, createdTour.data._id)
     },
   )
 })

@@ -16,8 +16,7 @@
       "@app_type": ["typing/app.type.ts"],
       "@config/*": ["config/*"],
       "@fixture_data/*": ["src/dev-data/*"],
-      "@tests/*":["tests/*"]
-
+      "@tests/*": ["tests/*"]
     },
     /* Modules */
     "module": "commonjs",

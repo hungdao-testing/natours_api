@@ -14,5 +14,5 @@ export const parseUsers: IUser[] = JSON.parse(
 // )
 
 export function getTestUserByRole(role: UserRoles) {
-  return parseUsers.find(user => user.role === role)!;
+  return parseUsers.find((user) => user.role === role)!
 }

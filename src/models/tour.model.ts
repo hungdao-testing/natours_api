@@ -2,9 +2,6 @@ import mongoose, { Model, Query } from 'mongoose'
 import slugify from 'slugify'
 import { ITour, ITourModel, IUser } from '@app_type'
 
-
-
-
 const tourSchema = new mongoose.Schema<ITour, ITourModel>(
   {
     id: Number,

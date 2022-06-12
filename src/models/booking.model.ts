@@ -1,8 +1,6 @@
 import { IBooking, IBookingModel } from '@app_type'
 import mongoose, { Schema } from 'mongoose'
 
-
-
 const bookingSchema = new Schema<IBooking, IBookingModel>({
   tour: {
     type: Schema.Types.ObjectId,
