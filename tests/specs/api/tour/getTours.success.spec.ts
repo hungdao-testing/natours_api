@@ -1,9 +1,9 @@
 import { ITour } from '@app_type'
 import { getTestTourBy } from '@fixture_data/fixtureData'
-import { getTourService, getToursService } from '@tests/adapter/tour.service'
+import { getTopFiveCheapestTours as getTopFiveTours, getTourService, getToursService } from '@tests/adapter/tour.service'
 import { testPW, expect } from '@tests/helpers/testHelper'
 
-testPW.describe.parallel('Get tours', () => {
+testPW.describe('Get tours', () => {
   testPW.describe('Get tours without query params', () => {
     const userRoles = ['ADMIN', 'LEAD-GUIDE', 'GUIDE'] as const
     for (const role of userRoles) {
@@ -136,5 +136,23 @@ testPW.describe.parallel('Get tours', () => {
         )
       }
     })
+  })
+
+  testPW('Get top five cheapest tours', async ({ request, authenBy }) => {
+    const token = await authenBy('ADMIN')
+    const top5CheapestTours = getTestTourBy(() => true).sort((tourOne, tourTwo) => {
+      if (tourOne.ratingsAverage! < tourTwo.ratingsAverage!) return 1
+      if (tourOne.price < tourTwo.price) return -1
+      return -1
+    }).splice(0, 5)
+
+    const tours = await getTopFiveTours(request, token)
+
+    expect(tours.statusCode).toBe(200)
+    expect(tours.body.status).toBe('success')
+    for (let i = 0; i < tours.body.tours.length; i++) {
+      expect(tours.body.tours[i].name).toBe(top5CheapestTours[i].name)
+    }
+
   })
 })

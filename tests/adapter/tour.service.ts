@@ -85,3 +85,23 @@ export async function getTourService(
     body,
   }
 }
+
+export async function getTopFiveCheapestTours(
+  request: APIRequestContext,
+  token: string
+) {
+  let url = `/api/v1/tours/top-5-cheap`
+
+  const getToursRequest = await request.get(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  const body = await getToursRequest.json()
+  const status = getToursRequest.status()
+
+  return {
+    statusCode: status,
+    body,
+  }
+}
