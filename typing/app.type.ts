@@ -16,7 +16,7 @@ export interface INextFunc extends NextFunction { }
 export enum UserRoles {
   ADMIN = 'admin',
   GUIDE = 'guide',
-  LEAD_GUIDE = 'lead-guide',
+  "LEAD-GUIDE" = 'lead-guide',
   USER = 'user',
 }
 

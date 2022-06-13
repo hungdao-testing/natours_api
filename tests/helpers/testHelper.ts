@@ -4,8 +4,8 @@ import { expect, test as base } from '@playwright/test'
 import { loginAs } from '@tests/adapter/authen.service'
 import { createTourService, deleteTourService } from '@tests/adapter/tour.service'
 
-interface ITourTestFixture {
-  tourRestriction: (role: UserRoles) => Promise<string>
+interface ITestPWFixture {
+  authenBy: (role: keyof typeof UserRoles) => Promise<string>
   createTourPWFixture: (
     token: string,
     payload: unknown,
@@ -13,9 +13,9 @@ interface ITourTestFixture {
   deleteTourPWFixture: (token: string, tourId: string) => Promise<void>
 }
 
-export const tourPW = base.extend<ITourTestFixture>({
-  tourRestriction: async ({ request }, use) => {
-    await use(async (role: UserRoles) => {
+export const testPW = base.extend<ITestPWFixture>({
+  authenBy: async ({ request }, use) => {
+    await use(async (role: keyof typeof UserRoles) => {
       const user = getTestUserByRole(role)
       const token = await loginAs(
         {

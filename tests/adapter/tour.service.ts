@@ -38,3 +38,50 @@ export async function deleteTourService(
     body,
   }
 }
+
+export async function getToursService(
+  request: APIRequestContext,
+  token: string,
+  queryParam?: string,
+) {
+  let url = '/api/v1/tours'
+  if (queryParam) {
+    url = url + '?' + queryParam
+  }
+  const getToursRequest = await request.get(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  const body = await getToursRequest.json()
+  const status = getToursRequest.status()
+
+  return {
+    statusCode: status,
+    body,
+  }
+}
+
+export async function getTourService(
+  request: APIRequestContext,
+  token: string,
+  tourId: string,
+  queryParam?: string,
+) {
+  let url = `/api/v1/tours/${tourId}`
+  if (queryParam) {
+    url = url + '?' + queryParam
+  }
+  const getToursRequest = await request.get(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  const body = await getToursRequest.json()
+  const status = getToursRequest.status()
+
+  return {
+    statusCode: status,
+    body,
+  }
+}

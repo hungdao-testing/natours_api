@@ -7,7 +7,7 @@ router.use(authController.protect)
 
 router.get('/checkout-session/:tourId', bookingController.getCheckoutSession)
 
-router.use(authController.restrictTo('ADMIN', 'LEAD_GUIDE'))
+router.use(authController.restrictTo('ADMIN', 'LEAD-GUIDE'))
 
 router.route('/').get(bookingController.getAllBookings).post(bookingController.createBooking)
 

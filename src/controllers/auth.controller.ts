@@ -166,9 +166,7 @@ type TSpreadUser = keyof typeof UserRoles
 export const restrictTo = (...roles: Array<TSpreadUser>) => {
   return catchAsync(async (req: IRequest, res: Response, next: NextFunction) => {
     let reqRole = req.user?.role.toUpperCase()
-    if (reqRole === 'LEAD-GUIDE') {
-      reqRole = 'LEAD_GUIDE'
-    }
+
     if (!roles.includes(reqRole as TSpreadUser)) {
       return next(new AppError('You do not have permission to perform this action', 403))
     }
