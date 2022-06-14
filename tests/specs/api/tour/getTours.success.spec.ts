@@ -1,5 +1,5 @@
 import { ITour } from '@app_type'
-import { getTestTourBy } from '@fixture_data/fixtureData'
+import { getTestTourBy } from '@fixture'
 import { getTopFiveCheapestTours as getTopFiveTours, getTourService, getToursService } from '@tests/adapter/tour.service'
 import { testPW, expect } from '@tests/helpers/testHelper'
 

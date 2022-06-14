@@ -1,5 +1,5 @@
 import { ITour, UserRoles } from '@app_type'
-import { getTestUserByRole } from '@fixture_data/fixtureData'
+import { getTestUserByRole } from '@fixture'
 import { expect, test as base } from '@playwright/test'
 import { loginAs } from '@tests/adapter/authen.service'
 import { createTourService, deleteTourService } from '@tests/adapter/tour.service'
