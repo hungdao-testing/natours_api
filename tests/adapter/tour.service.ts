@@ -39,20 +39,12 @@ export async function deleteTourService(
   }
 }
 
-export async function getToursService(
-  request: APIRequestContext,
-  token: string,
-  queryParam?: string,
-) {
+export async function getToursService(request: APIRequestContext, queryParam?: string) {
   let url = '/api/v1/tours'
   if (queryParam) {
     url = url + '?' + queryParam
   }
-  const getToursRequest = await request.get(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
+  const getToursRequest = await request.get(url)
   const body = await getToursRequest.json()
   const status = getToursRequest.status()
 
@@ -64,7 +56,6 @@ export async function getToursService(
 
 export async function getTourService(
   request: APIRequestContext,
-  token: string,
   tourId: string,
   queryParam?: string,
 ) {
@@ -72,11 +63,7 @@ export async function getTourService(
   if (queryParam) {
     url = url + '?' + queryParam
   }
-  const getToursRequest = await request.get(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
+  const getToursRequest = await request.get(url)
   const body = await getToursRequest.json()
   const status = getToursRequest.status()
 

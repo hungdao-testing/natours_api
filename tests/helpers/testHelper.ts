@@ -1,6 +1,6 @@
 import { ITour, UserRoles } from '@app_type'
 import { getTestUserByRole } from '@fixture'
-import { expect, test as base } from '@playwright/test'
+import { expect, test as testBase } from '@playwright/test'
 import { loginAs } from '@tests/adapter/authen.service'
 import { createTourService, deleteTourService } from '@tests/adapter/tour.service'
 
@@ -13,7 +13,7 @@ interface ITestPWFixture {
   deleteTourPWFixture: (token: string, tourId: string) => Promise<void>
 }
 
-export const testPW = base.extend<ITestPWFixture>({
+export const testPW = testBase.extend<ITestPWFixture>({
   authenBy: async ({ request }, use) => {
     await use(async (role: keyof typeof UserRoles) => {
       const user = getTestUserByRole(role)

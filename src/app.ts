@@ -84,13 +84,13 @@ app.use(
 )
 
 // Development logging
-if (process.env.NODE_ENV === 'development') {
+if (environment.NODE_ENV === 'development') {
   app.use(morgan('dev'))
 }
 
 // Limit request from same API
 let limiter
-if (process.env.NODE_ENV === 'local') {
+if (environment.NODE_ENV !== 'production') {
   limiter = rateLimit({
     // 1IP is allowed to do max 100000 reqs in 1 hour
     max: 100000,

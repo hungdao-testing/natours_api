@@ -9,35 +9,6 @@ import {
 import { testPW, expect } from '@tests/helpers/testHelper'
 
 testPW.describe.parallel('Get tours @smoke', () => {
-  testPW.describe('Tour Restriction', () => {
-    testPW(`As an ADMIN, I could get all tours`, async ({ request, authenBy }) => {
-      const token = await authenBy('ADMIN')
-
-      const tours = await getToursService(request, token)
-      expect(tours.statusCode).toBe(200)
-      expect(tours.body.status).toBe('success')
-      expect(tours.body.results).toBe(tours.body.tours.length)
-    })
-
-    testPW(`As a LEAD-GUIDE, I could get all tours`, async ({ request, authenBy }) => {
-      const token = await authenBy('LEAD-GUIDE')
-
-      const tours = await getToursService(request, token)
-      expect(tours.statusCode).toBe(200)
-      expect(tours.body.status).toBe('success')
-      expect(tours.body.results).toBe(tours.body.tours.length)
-    })
-
-    testPW(`As a GUIDE, I could get all tours`, async ({ request, authenBy }) => {
-      const token = await authenBy('GUIDE')
-
-      const tours = await getToursService(request, token)
-      expect(tours.statusCode).toBe(200)
-      expect(tours.body.status).toBe('success')
-      expect(tours.body.results).toBe(tours.body.tours.length)
-    })
-  })
-
   testPW.describe('Filter tours', () => {
     let token: string
 
@@ -49,7 +20,7 @@ testPW.describe.parallel('Get tours @smoke', () => {
       const priceGreaterThan500 = (tour: ITour) => tour.price > 500
       const testDataTour = getTestTourBy(priceGreaterThan500)
 
-      const tours = await getToursService(request, token, 'price[gt]=500')
+      const tours = await getToursService(request, 'price[gt]=500')
       expect(tours.statusCode).toBe(200)
       expect(tours.body.status).toBe('success')
       const actualTourData = tours.body.tours as ITour[]
@@ -64,7 +35,7 @@ testPW.describe.parallel('Get tours @smoke', () => {
       const ratingAverageLessThan5 = (tour: ITour) => tour.ratingsAverage! < 5
       const testDataTour = getTestTourBy(ratingAverageLessThan5)
 
-      const tours = await getToursService(request, token, 'ratingsAverage[lt]=5')
+      const tours = await getToursService(request, 'ratingsAverage[lt]=5')
       expect(tours.statusCode).toBe(200)
       expect(tours.body.status).toBe('success')
       const actualTourData = tours.body.tours as ITour[]
@@ -77,7 +48,7 @@ testPW.describe.parallel('Get tours @smoke', () => {
 
     testPW('Limit fields to be displayed', async ({ request }) => {
       const fieldsNotBeDisplayed = '-name,-price'
-      const tours = await getToursService(request, token, `fields=${fieldsNotBeDisplayed}`)
+      const tours = await getToursService(request, `fields=${fieldsNotBeDisplayed}`)
       expect(tours.statusCode).toBe(200)
       expect(tours.body.status).toBe('success')
       expect(tours.body.tours[0]).not.toHaveProperty('name')
@@ -86,17 +57,11 @@ testPW.describe.parallel('Get tours @smoke', () => {
   })
 
   testPW.describe('Pagination', () => {
-    let token: string
-
-    testPW.beforeAll(async ({ authenBy }) => {
-      token = await authenBy('LEAD-GUIDE')
-    })
-
     testPW('The number tour per page is less than total tours', async ({ request }) => {
       const toursPerPage = 2
       const testDataTour = getTestTourBy(() => true)
 
-      const toursOnFirstPage = await getToursService(request, token, `limit=${toursPerPage}&page=1`)
+      const toursOnFirstPage = await getToursService(request, `limit=${toursPerPage}&page=1`)
       let expectedTourPerPage =
         testDataTour.length <= toursPerPage === true ? testDataTour.length : toursPerPage
       expect(toursOnFirstPage.statusCode).toBe(200)
@@ -105,7 +70,7 @@ testPW.describe.parallel('Get tours @smoke', () => {
 
       const toursOnSecondPage = await getToursService(
         request,
-        token,
+
         `limit=${toursPerPage}&page=2`,
       )
       expectedTourPerPage = testDataTour.length - expectedTourPerPage
@@ -117,18 +82,14 @@ testPW.describe.parallel('Get tours @smoke', () => {
       const toursPerPage = 4
       const testDataTour = getTestTourBy(() => true)
 
-      const toursOnFirstPage = await getToursService(request, token, `limit=${toursPerPage}&page=1`)
+      const toursOnFirstPage = await getToursService(request, `limit=${toursPerPage}&page=1`)
       let expectedTourPerPage =
         testDataTour.length <= toursPerPage === true ? testDataTour.length : toursPerPage
       expect(toursOnFirstPage.statusCode).toBe(200)
       expect(toursOnFirstPage.body.status).toBe('success')
       expect(toursOnFirstPage.body.tours.length).toBeLessThanOrEqual(expectedTourPerPage)
 
-      const toursOnSecondPage = await getToursService(
-        request,
-        token,
-        `limit=${toursPerPage}&page=2`,
-      )
+      const toursOnSecondPage = await getToursService(request, `limit=${toursPerPage}&page=2`)
       expectedTourPerPage = testDataTour.length - expectedTourPerPage
       expect(toursOnSecondPage.statusCode).toBe(200)
       expect(toursOnSecondPage.body.status).toBe('success')
@@ -138,28 +99,20 @@ testPW.describe.parallel('Get tours @smoke', () => {
 
   testPW.describe('Get specific tour', () => {
     const tourData = getTestTourBy(() => true)[0]
-    testPW.describe('Get tour without query params', () => {
-      const userRoles = ['ADMIN', 'LEAD-GUIDE', 'GUIDE'] as const
-
-      for (const role of userRoles) {
-        testPW(
-          `As an ${role.toString()}, I could get detail for a tour ${tourData.name}`,
-          async ({ request, authenBy }) => {
-            const token = await authenBy(role)
-
-            const tours = await getTourService(request, token, tourData._id)
-            expect(tours.statusCode).toBe(200)
-            expect(tours.body.status).toBe('success')
-            expect(tours.body.tours.name).toBe(tourData.name)
-            expect(tours.body.tours.price).toBe(tourData.price)
-          },
-        )
-      }
-    })
+    testPW(
+      `As a 'GUIDE', I could get detail for a tour ${tourData.name}`,
+      async ({ request, authenBy }) => {
+        const tours = await getTourService(request, tourData._id)
+        expect(tours.statusCode).toBe(200)
+        expect(tours.body.status).toBe('success')
+        expect(tours.body.tours.name).toBe(tourData.name)
+        expect(tours.body.tours.price).toBe(tourData.price)
+      },
+    )
   })
 
   testPW('Get top five cheapest tours', async ({ request, authenBy }) => {
-    const token = await authenBy('ADMIN')
+    const token = await authenBy('USER')
     const top5CheapestTours = getTestTourBy(() => true)
       .sort((tourOne, tourTwo) => {
         if (tourOne.ratingsAverage! < tourTwo.ratingsAverage!) return 1
@@ -196,7 +149,6 @@ testPW.describe.parallel('Get tours @smoke', () => {
         .map((tour) => tour.name)
         .sort()
     }
-
     testPW('Data for existing year', async ({ request }) => {
       expectedTours = filterTestToursByYear(exsitingYear)
       const tours = await getMonthlyPlanByYear(request, token, exsitingYear)
@@ -236,5 +188,5 @@ testPW.describe.parallel('Get tours @smoke', () => {
     })
   })
 
-  testPW.describe('Get distance', () => {})
+  testPW.describe.skip('Get distance', () => {})
 })
