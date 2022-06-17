@@ -1,21 +1,41 @@
 import { ITour } from '@app_type'
-import { getTestTourBy } from '@fixture'
-import { getTopFiveCheapestTours as getTopFiveTours, getTourService, getToursService } from '@tests/adapter/tour.service'
+import { filterTestToursByYear, getTestTourBy } from '@fixture'
+import {
+  getMonthlyPlanByYear,
+  getTopFiveCheapestTours as getTopFiveTours,
+  getTourService,
+  getToursService,
+} from '@tests/adapter/tour.service'
 import { testPW, expect } from '@tests/helpers/testHelper'
 
-testPW.describe('Get tours', () => {
-  testPW.describe('Get tours without query params', () => {
-    const userRoles = ['ADMIN', 'LEAD-GUIDE', 'GUIDE'] as const
-    for (const role of userRoles) {
-      testPW(`As an ${role.toString()}, I could get all tours`, async ({ request, authenBy }) => {
-        const token = await authenBy(role)
+testPW.describe.parallel('Get tours @smoke', () => {
+  testPW.describe('Tour Restriction', () => {
+    testPW(`As an ADMIN, I could get all tours`, async ({ request, authenBy }) => {
+      const token = await authenBy('ADMIN')
 
-        const tours = await getToursService(request, token)
-        expect(tours.statusCode).toBe(200)
-        expect(tours.body.status).toBe('success')
-        expect(tours.body.results).toBe(tours.body.tours.length)
-      })
-    }
+      const tours = await getToursService(request, token)
+      expect(tours.statusCode).toBe(200)
+      expect(tours.body.status).toBe('success')
+      expect(tours.body.results).toBe(tours.body.tours.length)
+    })
+
+    testPW(`As a LEAD-GUIDE, I could get all tours`, async ({ request, authenBy }) => {
+      const token = await authenBy('LEAD-GUIDE')
+
+      const tours = await getToursService(request, token)
+      expect(tours.statusCode).toBe(200)
+      expect(tours.body.status).toBe('success')
+      expect(tours.body.results).toBe(tours.body.tours.length)
+    })
+
+    testPW(`As a GUIDE, I could get all tours`, async ({ request, authenBy }) => {
+      const token = await authenBy('GUIDE')
+
+      const tours = await getToursService(request, token)
+      expect(tours.statusCode).toBe(200)
+      expect(tours.body.status).toBe('success')
+      expect(tours.body.results).toBe(tours.body.tours.length)
+    })
   })
 
   testPW.describe('Filter tours', () => {
@@ -140,11 +160,13 @@ testPW.describe('Get tours', () => {
 
   testPW('Get top five cheapest tours', async ({ request, authenBy }) => {
     const token = await authenBy('ADMIN')
-    const top5CheapestTours = getTestTourBy(() => true).sort((tourOne, tourTwo) => {
-      if (tourOne.ratingsAverage! < tourTwo.ratingsAverage!) return 1
-      if (tourOne.price < tourTwo.price) return -1
-      return -1
-    }).splice(0, 5)
+    const top5CheapestTours = getTestTourBy(() => true)
+      .sort((tourOne, tourTwo) => {
+        if (tourOne.ratingsAverage! < tourTwo.ratingsAverage!) return 1
+        if (tourOne.price < tourTwo.price) return -1
+        return -1
+      })
+      .splice(0, 5)
 
     const tours = await getTopFiveTours(request, token)
 
@@ -153,6 +175,66 @@ testPW.describe('Get tours', () => {
     for (let i = 0; i < tours.body.tours.length; i++) {
       expect(tours.body.tours[i].name).toBe(top5CheapestTours[i].name)
     }
-
   })
+
+  testPW.describe('Monthly plan', () => {
+    const exsitingYear = 2022
+    const nonExistingYear = 1999
+    let token: string
+    let expectedTours: ReturnType<typeof filterTestToursByYear>
+
+    testPW.beforeAll(async ({ authenBy }) => {
+      token = await authenBy('ADMIN')
+    })
+
+    function mapTestTourByMonth(tours: ReturnType<typeof filterTestToursByYear>, month: number) {
+      return tours
+        .filter((expTour) => {
+          const { months } = expTour
+          if (months.includes(month)) return expTour.name
+        })
+        .map((tour) => tour.name)
+        .sort()
+    }
+
+    testPW('Data for existing year', async ({ request }) => {
+      expectedTours = filterTestToursByYear(exsitingYear)
+      const tours = await getMonthlyPlanByYear(request, token, exsitingYear)
+
+      const actualTourData = tours.body.data as {
+        numToursStart: number
+        tours: string[]
+        month: number
+      }[]
+      expect(tours.statusCode).toBe(200)
+      expect(tours.body.status).toBe('success')
+
+      actualTourData.forEach((actualData) => {
+        const { tours: tourNames, month } = actualData
+        const expTourNames = mapTestTourByMonth(expectedTours, month)
+        expect(tourNames.sort().toString().includes(expTourNames.toString())).toBeTruthy()
+      })
+    })
+
+    testPW('Data for non-existing year', async ({ request }) => {
+      expectedTours = filterTestToursByYear(nonExistingYear)
+      const tours = await getMonthlyPlanByYear(request, token, nonExistingYear)
+
+      const actualTourData = tours.body.data as {
+        numToursStart: number
+        tours: string[]
+        month: number
+      }[]
+      expect(tours.statusCode).toBe(200)
+      expect(tours.body.status).toBe('success')
+
+      actualTourData.forEach((actualData) => {
+        const { tours: tourNames, month } = actualData
+        const expTourNames = mapTestTourByMonth(expectedTours, month)
+        expect(tourNames.sort().toString().includes(expTourNames.toString())).toBeTruthy()
+      })
+    })
+  })
+
+  testPW.describe('Get distance', () => {})
 })
