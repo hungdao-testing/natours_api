@@ -25,7 +25,7 @@ export const uploadTourImages = upload.fields([
 
 export const resizeTourImages = catchAsync(
   async (req: IRequest, res: IResponse, next: INextFunc) => {
-    let files;
+    let files
 
     if (req.files) {
       files = req.files as { [fieldname: string]: Express.Multer.File[] }

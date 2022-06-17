@@ -21,9 +21,9 @@ export async function createTourService(
 
 export async function updateTourService(
   request: APIRequestContext,
-  data: { token: string; payload: unknown },
+  data: { tourId: string; token: string; payload: unknown },
 ) {
-  const updateTourRequest = await request.patch(`/api/v1/tours`, {
+  const updateTourRequest = await request.patch(`/api/v1/tours/${data.tourId}`, {
     headers: {
       Authorization: `Bearer ${data.token}`,
     },
@@ -37,7 +37,6 @@ export async function updateTourService(
     body,
   }
 }
-
 
 export async function deleteTourService(
   request: APIRequestContext,
