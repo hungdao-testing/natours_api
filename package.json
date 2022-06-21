@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "clean": "npx rimraf ./dist/",
-    "delete:folder": "npx rimraf ./src/ && npx rimraf ./dist/tests",
+    "delete:folder": "npx rimraf ./src/ && npx rimraf ./tests/ && npx rimraf ./dist/tests",
     "prebuild": "npm run clean",
     "build": "npx tsc -p . && npm run build:js",
     "postbuild": "npx ts-node ./build_script.ts && npm run delete:folder",
@@ -108,6 +108,6 @@
     }
   },
   "engines": {
-    "node": ">= 14.0.0"
+    "node": ">= 14.0.0 <= 18.0.0"
   }
 }
