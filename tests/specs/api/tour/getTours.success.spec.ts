@@ -16,32 +16,26 @@ testPW.describe.parallel('Get tours @smoke', () => {
       token = await authenBy('ADMIN')
     })
 
-    testPW('Filter tours by price > 500', async ({ request }) => {
-      const priceGreaterThan500 = (tour: ITour) => tour.price > 500
-      const testDataTour = getTestTourBy(priceGreaterThan500)
-
+    testPW('Filter tours by price ', async ({ request }) => {
       const tours = await getToursService(request, 'price[gt]=500')
+      const actualTourData = tours.body.tours.sort() as ITour[]
+
       expect(tours.statusCode).toBe(200)
       expect(tours.body.status).toBe('success')
-      const actualTourData = tours.body.tours as ITour[]
+
       for (let i = 0; i < actualTourData.length; i++) {
-        expect(actualTourData[i].name).toBe(testDataTour[i].name)
-        expect(actualTourData[i].price).toBe(testDataTour[i].price)
         expect(actualTourData[i].price).toBeGreaterThan(500)
       }
     })
 
-    testPW('Filter tours by rating average < 5', async ({ request }) => {
-      const ratingAverageLessThan5 = (tour: ITour) => tour.ratingsAverage! < 5
-      const testDataTour = getTestTourBy(ratingAverageLessThan5)
-
+    testPW('Filter tours by rating average', async ({ request }) => {
       const tours = await getToursService(request, 'ratingsAverage[lt]=5')
+      const actualTourData = tours.body.tours.sort() as ITour[]
+
       expect(tours.statusCode).toBe(200)
       expect(tours.body.status).toBe('success')
-      const actualTourData = tours.body.tours as ITour[]
+
       for (let i = 0; i < actualTourData.length; i++) {
-        expect(actualTourData[i].name).toBe(testDataTour[i].name)
-        expect(actualTourData[i].ratingsAverage).toBe(testDataTour[i].ratingsAverage)
         expect(actualTourData[i].ratingsAverage).toBeLessThan(5)
       }
     })
@@ -59,41 +53,32 @@ testPW.describe.parallel('Get tours @smoke', () => {
   testPW.describe('Pagination', () => {
     testPW('The number tour per page is less than total tours', async ({ request }) => {
       const toursPerPage = 2
-      const testDataTour = getTestTourBy(() => true)
 
       const toursOnFirstPage = await getToursService(request, `limit=${toursPerPage}&page=1`)
-      let expectedTourPerPage =
-        testDataTour.length <= toursPerPage === true ? testDataTour.length : toursPerPage
       expect(toursOnFirstPage.statusCode).toBe(200)
       expect(toursOnFirstPage.body.status).toBe('success')
-      expect(toursOnFirstPage.body.tours.length).toBeLessThanOrEqual(expectedTourPerPage)
-
-      const toursOnSecondPage = await getToursService(
-        request,
-
-        `limit=${toursPerPage}&page=2`,
-      )
-      expectedTourPerPage = testDataTour.length - expectedTourPerPage
-      expect(toursOnSecondPage.statusCode).toBe(200)
-      expect(toursOnSecondPage.body.status).toBe('success')
-      expect(toursOnSecondPage.body.tours.length).toBeLessThanOrEqual(expectedTourPerPage)
-    })
-    testPW('The number tour per page is greater than total tours', async ({ request }) => {
-      const toursPerPage = 4
-      const testDataTour = getTestTourBy(() => true)
-
-      const toursOnFirstPage = await getToursService(request, `limit=${toursPerPage}&page=1`)
-      let expectedTourPerPage =
-        testDataTour.length <= toursPerPage === true ? testDataTour.length : toursPerPage
-      expect(toursOnFirstPage.statusCode).toBe(200)
-      expect(toursOnFirstPage.body.status).toBe('success')
-      expect(toursOnFirstPage.body.tours.length).toBeLessThanOrEqual(expectedTourPerPage)
+      expect(toursOnFirstPage.body.tours.length).toBeLessThanOrEqual(toursPerPage)
 
       const toursOnSecondPage = await getToursService(request, `limit=${toursPerPage}&page=2`)
-      expectedTourPerPage = testDataTour.length - expectedTourPerPage
       expect(toursOnSecondPage.statusCode).toBe(200)
       expect(toursOnSecondPage.body.status).toBe('success')
-      expect(toursOnSecondPage.body.tours.length).toBeLessThanOrEqual(expectedTourPerPage)
+      expect(toursOnSecondPage.body.tours.length).toBeLessThanOrEqual(toursPerPage)
+    })
+
+    testPW('The number tour per page is equal tours', async ({ request }) => {
+      const tours = await getToursService(request)
+      const toursPerPage = tours.body.results
+
+      const toursOnFirstPage = await getToursService(request, `limit=${toursPerPage}&page=1`)
+
+      expect(toursOnFirstPage.statusCode).toBe(200)
+      expect(toursOnFirstPage.body.status).toBe('success')
+      expect(toursOnFirstPage.body.tours.length).toBeLessThanOrEqual(toursPerPage)
+
+      const toursOnSecondPage = await getToursService(request, `limit=${toursPerPage}&page=2`)
+      expect(toursOnSecondPage.statusCode).toBe(200)
+      expect(toursOnSecondPage.body.status).toBe('success')
+      expect(toursOnSecondPage.body.tours.length).toBeLessThanOrEqual(toursPerPage)
     })
   })
 

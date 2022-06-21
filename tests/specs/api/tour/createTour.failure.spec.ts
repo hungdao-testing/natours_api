@@ -1,13 +1,16 @@
 import { createTourService } from '@tests/adapter/tour.service'
-import { getTourPayloadAsset } from '@tests/utils/fileManagement'
-import { testPW, expect } from '@tests/helpers/testHelper'
+import { testPW, expect, tourPayloadBuilder } from '@tests/helpers/testHelper'
 
-const tourPayloadAsset = getTourPayloadAsset()
+testPW.describe('Create a tour', () => {
+  let authToken: string
+  const tourPayloadAsset = tourPayloadBuilder()
 
-testPW.describe.parallel('Create a tour', () => {
-  testPW(`I could not create a tour if missing tour name`, async ({ authenBy, request }) => {
+  testPW.beforeAll(async ({ authenBy }) => {
+    authToken = await authenBy('ADMIN')
+  })
+
+  testPW(`I could not create a tour if missing tour name`, async ({ request }) => {
     const { name, ...missingTourNamePayload } = tourPayloadAsset
-    const authToken = await authenBy('ADMIN')
 
     const createdTour = await createTourService(request, {
       token: authToken,
@@ -19,23 +22,28 @@ testPW.describe.parallel('Create a tour', () => {
   })
 
   testPW(
-    `I could not create a tour with if ratings average is out of range [1.0 - 5.0]`,
-    async ({ authenBy, request }) => {
-      const authToken = await authenBy('ADMIN')
+    `I could not create a tour with if ratings average is less than 1.0`,
+    async ({ request }) => {
       let newPayload = { ...tourPayloadAsset }
       newPayload['ratingsAverage'] = 0.9
 
-      let createdTour = await createTourService(request, {
+      const createdTour = await createTourService(request, {
         token: authToken,
         payload: newPayload,
       })
       expect(createdTour.statusCode).toBe(500)
       expect(createdTour.body.status).toBe('error')
       expect(createdTour.body.message).toContain('rating must be above 1.0')
+    },
+  )
 
+  testPW(
+    `I could not create a tour with if ratings average is greater than 5.0`,
+    async ({ request }) => {
+      let newPayload = { ...tourPayloadAsset }
       newPayload['ratingsAverage'] = 5.1
 
-      createdTour = await createTourService(request, {
+      const createdTour = await createTourService(request, {
         token: authToken,
         payload: newPayload,
       })
@@ -46,9 +54,7 @@ testPW.describe.parallel('Create a tour', () => {
   )
   testPW(
     `I could not create a tour with if discount price is greater than regular price`,
-    async ({ authenBy, request }) => {
-      const authToken = await authenBy('ADMIN')
-
+    async ({ request }) => {
       let newPayload = { ...tourPayloadAsset }
       newPayload['priceDiscount'] = tourPayloadAsset['price'] + 1
 
@@ -66,9 +72,7 @@ testPW.describe.parallel('Create a tour', () => {
 
   testPW(
     `I could not create a tour with if difficult level is not in the supported list`,
-    async ({ authenBy, request }) => {
-      const authToken = await authenBy('ADMIN')
-
+    async ({ request }) => {
       let newPayload = { ...tourPayloadAsset }
       newPayload['difficulty'] = 'hard'
 
@@ -82,9 +86,8 @@ testPW.describe.parallel('Create a tour', () => {
     },
   )
 
-  testPW(`I could not create a tour with if missing image cover`, async ({ authenBy, request }) => {
+  testPW(`I could not create a tour with if missing image cover`, async ({ request }) => {
     const { imageCover, ...missingImageCoverPayload } = tourPayloadAsset
-    const authToken = await authenBy('ADMIN')
 
     const createdTour = await createTourService(request, {
       token: authToken,
@@ -95,9 +98,8 @@ testPW.describe.parallel('Create a tour', () => {
     expect(createdTour.body.message).toContain('A tour must have image cover')
   })
 
-  testPW(`I could not create a tour with if missing summary`, async ({ authenBy, request }) => {
+  testPW(`I could not create a tour with if missing summary`, async ({ request }) => {
     const { summary, ...missingSummaryPayload } = tourPayloadAsset
-    const authToken = await authenBy('ADMIN')
 
     const createdTour = await createTourService(request, {
       token: authToken,
@@ -107,31 +109,4 @@ testPW.describe.parallel('Create a tour', () => {
     expect(createdTour.body.status).toBe('error')
     expect(createdTour.body.message).toContain('A tour must have summary')
   })
-
-  testPW(
-    `I could not create a tour with if my role is regular user`,
-    async ({ authenBy, request }) => {
-      const authToken = await authenBy('USER')
-
-      const createdTour = await createTourService(request, {
-        token: authToken,
-        payload: tourPayloadAsset,
-      })
-      expect(createdTour.statusCode).toBe(403)
-      expect(createdTour.body.status).toBe('fail')
-    },
-  )
-  testPW(
-    `I could not create a tour with if my role is guide user`,
-    async ({ authenBy, request }) => {
-      const authToken = await authenBy('GUIDE')
-
-      const createdTour = await createTourService(request, {
-        token: authToken,
-        payload: tourPayloadAsset,
-      })
-      expect(createdTour.statusCode).toBe(403)
-      expect(createdTour.body.status).toBe('fail')
-    },
-  )
 })

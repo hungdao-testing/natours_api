@@ -108,7 +108,7 @@ export const protect = catchAsync(async (req: IRequest, res: IResponse, next: Ne
     token = req.cookies.jwt
   }
 
-  if (!token) {
+  if (!token || token.trim().length === 0) {
     return next(new AppError('You are not logged in! Please login to get access', 401))
   }
   // 2. Verification the token
