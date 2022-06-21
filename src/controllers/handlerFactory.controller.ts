@@ -25,6 +25,7 @@ export function updateOne<T extends TModels>(model: Model<T>) {
     const doc = await model.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
+      context: 'query',
     })
     if (!doc) {
       return next(new AppError(`No ${collectionName} found with the passing ID`, 404))

@@ -23,6 +23,7 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/polyfill": "^7.12.1",
+    "@faker-js/faker": "^7.3.0",
     "@parcel/config-default": "^2.6.0",
     "@parcel/transformer-pug": "^2.6.0",
     "@parcel/transformer-typescript-tsc": "^2.6.0",

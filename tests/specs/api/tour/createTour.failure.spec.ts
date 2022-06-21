@@ -64,6 +64,24 @@ testPW.describe.parallel('Create a tour', () => {
     },
   )
 
+  testPW(
+    `I could not create a tour with if difficult level is not in the supported list`,
+    async ({ authenBy, request }) => {
+      const authToken = await authenBy('ADMIN')
+
+      let newPayload = { ...tourPayloadAsset }
+      newPayload['difficulty'] = 'hard'
+
+      let createdTour = await createTourService(request, {
+        token: authToken,
+        payload: newPayload,
+      })
+      expect(createdTour.statusCode).toBe(500)
+      expect(createdTour.body.status).toBe('error')
+      expect(createdTour.body.message).toContain(`Difficulty is either easy, medium or difficult`)
+    },
+  )
+
   testPW(`I could not create a tour with if missing image cover`, async ({ authenBy, request }) => {
     const { imageCover, ...missingImageCoverPayload } = tourPayloadAsset
     const authToken = await authenBy('ADMIN')

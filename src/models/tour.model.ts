@@ -1,6 +1,6 @@
-import mongoose, { Model, Query } from 'mongoose'
+import mongoose, { Query, UpdateQuery } from 'mongoose'
 import slugify from 'slugify'
-import { ITour, ITourModel, IUser } from '@app_type'
+import { ITour, ITourModel } from '@app_type'
 
 const tourSchema = new mongoose.Schema<ITour, ITourModel>(
   {
@@ -41,9 +41,9 @@ const tourSchema = new mongoose.Schema<ITour, ITourModel>(
     priceDiscount: {
       type: Number,
       validate: {
-        validator: function (this: ITour, val: number) {
+        validator: function (this: Query<ITour[], ITour>, val: number) {
           // `this` points current doc to NEW document on creation flow
-          return val < this.price
+          return val < this.get('price')
         },
         message: 'discount price ({VALUE}) should be less than regular price',
       },
@@ -101,6 +101,11 @@ const tourSchema = new mongoose.Schema<ITour, ITourModel>(
   },
 )
 
+// tourSchema.path("priceDiscount").validate(function (this: UpdateQuery<ITour>, val: number) {
+
+//   if(this.getO)
+
+// })
 // tourSchema.index({ price: 1 });
 tourSchema.index({ price: 1, ratingsAverage: -1 })
 
