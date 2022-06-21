@@ -1,16 +1,31 @@
 import { ITour, UserRoles } from '@app_type'
+import { faker } from '@faker-js/faker'
 import { getTestUserByRole } from '@fixture'
 import { expect, test as testBase } from '@playwright/test'
 import { loginAs } from '@tests/adapter/authen.service'
 import { createTourService, deleteTourService } from '@tests/adapter/tour.service'
+import { getTourPayloadAsset } from '@tests/utils/fileManagement'
 
 interface ITestPWFixture {
   authenBy: (role: keyof typeof UserRoles) => Promise<string>
   createTourPWFixture: (
     token: string,
-    payload: unknown,
+    payload?: unknown,
   ) => Promise<{ statusCode: number; data: ITour & { _id: string } }>
   deleteTourPWFixture: (token: string, tourId: string) => Promise<void>
+}
+
+export function tourPayloadBuilder() {
+  const tourPayloadAsset = getTourPayloadAsset()
+  const price = parseFloat(faker.finance.account(3))
+  tourPayloadAsset.name = 'TEST-' + faker.name.jobTitle()
+  tourPayloadAsset.price = price
+  tourPayloadAsset.priceDiscount = price - 10
+  tourPayloadAsset.maxGroupSize = parseInt(faker.finance.amount(5, 12))
+  tourPayloadAsset.ratingsAverage = parseFloat(faker.finance.amount(1, 5, 1))
+  tourPayloadAsset.ratings = parseFloat(faker.finance.amount(4, 5, 1))
+
+  return tourPayloadAsset
 }
 
 export const testPW = testBase.extend<ITestPWFixture>({
@@ -29,8 +44,12 @@ export const testPW = testBase.extend<ITestPWFixture>({
   },
 
   createTourPWFixture: async ({ request }, use) => {
-    await use(async (token: string, payload: unknown) => {
-      const { body, statusCode } = await createTourService(request, { token, payload })
+    await use(async (token: string, tourPayload?: unknown) => {
+      let createTourPayload = tourPayload || tourPayloadBuilder()
+      const { body, statusCode } = await createTourService(request, {
+        token,
+        payload: createTourPayload,
+      })
       const createdTour = body.data.tours
 
       expect(statusCode).toBe(201)
