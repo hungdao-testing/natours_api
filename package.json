@@ -106,5 +106,8 @@
       "source": "./src/public/js/index.ts",
       "distDir": "./dist/src/public/js/bundle"
     }
+  },
+  "engines": {
+    "node": "^14"
   }
 }
