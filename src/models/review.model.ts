@@ -1,7 +1,6 @@
-import mongoose, {  Schema } from 'mongoose'
+import mongoose, { Schema } from 'mongoose'
 import { TourModel } from '@models/tour.model'
-import { IReview, IReviewModel} from '@app_type'
-
+import { IReview, IReviewModel } from '@app_type'
 
 const reviewSchema = new mongoose.Schema<IReview, IReviewModel>(
   {

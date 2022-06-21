@@ -1,33 +1,59 @@
-import { ITour, UserRoles } from '@app_type'
-import { getTestAsset } from '@tests/utils/fileManagement'
-import { tourPW, expect } from './tourHelper'
+import { getTourPayloadAsset } from '@tests/utils/fileManagement'
+import { testPW, expect } from '@tests/helpers/testHelper'
 
-const sampleTourPayload = getTestAsset('tourPayload.json') as ITour
+const tourPayloadAsset = getTourPayloadAsset()
 
-tourPW.describe.parallel('Create a tour', () => {
-  tourPW(
+testPW.describe.parallel('Create a tour', () => {
+  testPW(
     `As an admin, I could create a tour with full essential information`,
-    async ({ createTour, tourRestriction, deleteTour }) => {
-      sampleTourPayload['name'] = '[TEST-ADMIN] Amazing Tour'
-      const authToken = await tourRestriction(UserRoles.ADMIN)
+    async ({ createTourPWFixture, authenBy, deleteTourPWFixture }) => {
+      const payload = { ...tourPayloadAsset }
+      payload['name'] = '[TEST-ADMIN] Amazing Tour'
+      const authToken = await authenBy('ADMIN')
 
-      const createdTour = await createTour(authToken, sampleTourPayload)
-      expect(createdTour.data.name).toBe('[TEST-ADMIN] Amazing Tour')
+      const createdTour = await createTourPWFixture(authToken, payload)
+      expect(createdTour.data.name).toBe(payload['name'])
 
-      await deleteTour(authToken, createdTour.data._id)
+      await deleteTourPWFixture(authToken, createdTour.data._id)
     },
   )
 
-  tourPW(
+  testPW(
     `As a lead-guide, I could create a tour with full essential information`,
-    async ({ createTour, tourRestriction, deleteTour }) => {
-      sampleTourPayload['name'] = '[TEST-LEAD_GUIDE] Amazing Tour'
-      const authToken = await tourRestriction(UserRoles.LEAD_GUIDE)
+    async ({ createTourPWFixture, authenBy, deleteTourPWFixture }) => {
+      const payload = { ...tourPayloadAsset }
+      payload['name'] = '[TEST-LEAD_GUIDE] Amazing Tour'
 
-      const createdTour = await createTour(authToken, sampleTourPayload)
-      expect(createdTour.data.name).toBe('[TEST-LEAD_GUIDE] Amazing Tour')
+      const authToken = await authenBy('LEAD-GUIDE')
 
-      await deleteTour(authToken, createdTour.data._id)
+      const createdTour = await createTourPWFixture(authToken, payload)
+      expect(createdTour.data.name).toBe(payload['name'])
+
+      await deleteTourPWFixture(authToken, createdTour.data._id)
+    },
+  )
+
+  testPW(
+    `As an admin, I could create a tour without optional info`,
+    async ({ createTourPWFixture, authenBy, deleteTourPWFixture }) => {
+      const {
+        ratings,
+        ratingsAverage,
+        priceDiscount,
+        description,
+        images,
+        startDates,
+        guides,
+        ...requiredFieldPayload
+      } = tourPayloadAsset
+      requiredFieldPayload['name'] = '[TEST-OPTIONAL] Amazing Tour'
+
+      const authToken = await authenBy('ADMIN')
+
+      const createdTour = await createTourPWFixture(authToken, requiredFieldPayload)
+      expect(createdTour.data.name).toBe('[TEST-OPTIONAL] Amazing Tour')
+
+      await deleteTourPWFixture(authToken, createdTour.data._id)
     },
   )
 })

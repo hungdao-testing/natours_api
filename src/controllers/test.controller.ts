@@ -3,7 +3,7 @@ import { ReviewModel } from '@models/review.model'
 import { TourModel } from '@models/tour.model'
 import { UserModel } from '@models/user.model'
 import { catchAsync } from '@utils/catchAsync'
-import { parseTours, parseUsers } from '@fixture_data/fixtureData'
+import { parseTours, parseUsers } from '@fixture'
 
 export const importTextFixtureData = catchAsync(async function (
   req: IRequest,

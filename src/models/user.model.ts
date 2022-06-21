@@ -2,7 +2,7 @@ import mongoose, { Schema, Query } from 'mongoose'
 import validator from 'validator'
 import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
-import {  IUser, IUserDocument, UserRoles } from '@app_type'
+import { IUser, IUserDocument, UserRoles } from '@app_type'
 
 const userSchema = new Schema<IUser>({
   name: { type: String, required: [true, 'Please tell us your name'] },
@@ -17,7 +17,7 @@ const userSchema = new Schema<IUser>({
   role: {
     type: String,
     enum: {
-      values: [UserRoles.ADMIN, UserRoles.GUIDE, UserRoles.LEAD_GUIDE, UserRoles.USER],
+      values: [UserRoles.ADMIN, UserRoles.GUIDE, UserRoles['LEAD-GUIDE'], UserRoles.USER],
       message: 'The input role is not matched to supported list',
     },
     default: 'user',
