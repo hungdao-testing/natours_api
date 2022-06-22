@@ -1,4 +1,4 @@
-import { cp } from 'shelljs'
+import { cp, rm } from 'shelljs'
 
 
 const folderMapping: { source: string, dest: string }[] = [
@@ -24,6 +24,16 @@ const folderMapping: { source: string, dest: string }[] = [
   }
 ]
 
-folderMapping.forEach(folderMap => {
-  cp('-R', folderMap.source, folderMap.dest)
-})
+function deleteFolder() {
+  ['./tests', './playwright.config.ts', './dist/playwright.*', './dist/tests'].forEach(el => rm('-rf', el))
+}
+
+function main() {
+  folderMapping.forEach(folderMap => {
+    cp('-R', folderMap.source, folderMap.dest)
+  })
+
+  deleteFolder()
+}
+
+main()
