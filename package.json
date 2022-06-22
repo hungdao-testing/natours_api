@@ -4,10 +4,9 @@
   "description": "",
   "scripts": {
     "clean": "npx rimraf ./dist/",
-    "delete:folder": "npx rimraf ./src/ && npx rimraf ./tests/ && npx rimraf ./dist/tests",
     "prebuild": "npm run clean",
     "build": "npx tsc -p . && npm run build:js",
-    "postbuild": "npx ts-node ./build_script.ts && npm run delete:folder",
+    "postbuild": "npx ts-node ./build_script.ts",
     "format": "prettier --write ./src/**/*.ts ./tests/**/*.ts",
     "start": "npx cross-env NODE_ENV=production node -r ts-node/register/transpile-only -r tsconfig-paths/register ./dist/src/server.js",
     "start:api:local": "npx cross-env NODE_ENV=local nodemon ",
@@ -28,6 +27,8 @@
     "@parcel/transformer-pug": "^2.6.0",
     "@parcel/transformer-typescript-tsc": "^2.6.0",
     "@playwright/test": "^1.22.2",
+    "@swc/cli": "^0.1.57",
+    "@swc/core": "^1.2.204",
     "@types/axios": "^0.14.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/compression": "^1.7.2",
@@ -72,7 +73,6 @@
     "typescript": "^4.5.5"
   },
   "dependencies": {
-    "ts-node": "^10.4.0",
     "axios": "^0.26.1",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
@@ -96,6 +96,7 @@
     "sharp": "^0.30.4",
     "slugify": "^1.6.5",
     "stripe": "^8.222.0",
+    "ts-node": "^10.4.0",
     "tsconfig-paths": "^4.0.0",
     "validator": "^13.7.0",
     "xss-clean": "^0.1.1"
