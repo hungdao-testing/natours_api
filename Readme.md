@@ -21,11 +21,7 @@ The code/ideas of the application are following from the [Udemy course `Node.js,
 
 5. Payment gateway: Stripe
 
-6. Testing framework and tool
-
-   a. Integration tool: Postman
-
-   b. E2E framework: Playwright (will deploy later)
+6. Testing framework and tool: [Playwright](https://playwright.dev/)
 
 #### B. Design model: MVC
 
@@ -41,7 +37,26 @@ The code/ideas of the application are following from the [Udemy course `Node.js,
 
 ### Testing
 
-- TBD
+#### Instruction:
+
+Using [Playwright](https://playwright.dev/) as Testing framework to perform integration testing (black-box approach) and UI test.
+
+1. All test specs are placed under `./tests`
+
+2. Playwright configuration is defined on file `playwright.config.ts`
+
+3. To run the test
+
+  - Start the API server for the corresponding environment: ` npm run start:api:dev` 
+  
+  - Run the api test specs: `npm run test:api:dev`
+
+  - Run the UI test specs: TBD 
+
+#### Test Design:
+
+[Playwright test case design approach and how to use it](https://github.com/hungdao-testing/natours_api/wiki/Testing)
+
 
 ### Production app:
 
@@ -50,4 +65,18 @@ The code/ideas of the application are following from the [Udemy course `Node.js,
 
 ### How to use my-app at your site ?
 
-- TBD
+1. Git clone my app
+2. Go to folder `config` and replace the DB information in file `development.env`
+3. To run at local: 
+
+  - Run `npm run start:api:dev` to start api
+  - Run `npm run watch:js:dev` to start bundling js/html/css for dev env.
+  - Go to `localhost:3001` to open web page.
+
+4. Data file is placed under `fixtureData`, use the account on file `users.test.json`
+
+### Issues:
+
+1. Mail function is not working on PROD, you could use `mailtrap` at dev env.
+
+2. Bundling issue `Uncaught ReferenceError: require is not defined` for the PROD env.
