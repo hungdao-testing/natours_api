@@ -1,19 +1,20 @@
 {
   "name": "natours_api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Booking tour api",
   "scripts": {
     "clean": "npx rimraf ./dist/",
     "prebuild": "npm run clean",
-    "build": "npx tsc -p . && npm run build:js",
-    "postbuild": "npx ts-node ./build_script.ts",
+    "setup": "npx tsc -p . && npx ts-node ./scripts/setup.ts ",
+    "build": "npm run setup && npm run build:js",
+    "postbuild": "npx ts-node ./scripts/cleanup.ts",
     "format": "prettier --write ./src/**/*.ts ./tests/**/*.ts",
     "start": "npx cross-env NODE_ENV=production node -r ts-node/register/transpile-only -r tsconfig-paths/register ./dist/src/server.js",
     "start:api:local": "npx cross-env NODE_ENV=local nodemon ",
     "start:api:dev": "npx cross-env NODE_ENV=development nodemon",
     "start:api:prod": "npx cross-env NODE_ENV=production nodemon",
     "watch:js:local": "npx cross-env NODE_ENV=local parcel watch --no-hmr --target default --public-url ./",
-    "watch:js:dev": "npx cross-env NODE_ENV=development parcel watch --no-hmr --target default --public-url ./",
+    "watch:js:dev": "npx cross-env NODE_ENV=development parcel watch --no-hmr --target dev --public-url ./",
     "build:js": "npx cross-env NODE_ENV=production parcel build --target prod --public-url ./",
     "test:api:dev": "npx cross-env NODE_ENV=development playwright test --project=rest_api"
   },
@@ -23,7 +24,9 @@
   "devDependencies": {
     "@babel/polyfill": "^7.12.1",
     "@faker-js/faker": "^7.3.0",
-    "@parcel/config-default": "^2.6.0",
+    "@parcel/compressor-brotli": "^2.6.2",
+    "@parcel/compressor-gzip": "^2.6.2",
+    "@parcel/config-default": "^2.6.2",
     "@parcel/transformer-pug": "^2.6.0",
     "@parcel/transformer-typescript-tsc": "^2.6.0",
     "@playwright/test": "^1.22.2",
@@ -106,6 +109,11 @@
       "includeNodeModules": true,
       "source": "./src/public/js/index.ts",
       "distDir": "./dist/src/public/js/bundle"
+    },
+    "dev": {
+      "includeNodeModules": true,
+      "source": "./src/public/js/index.ts",
+      "distDir": "./src/public/js/bundle"
     }
   },
   "engines": {

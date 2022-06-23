@@ -24,7 +24,8 @@
     "typeRoots": ["typing", "./node_modules/@types"],
     "rootDirs": ["./src", "./config"],
     "outDir": "./dist",
-    "sourceMap": true
+    "sourceMap": true,
+    "isolatedModules": true
   },
-  "exclude": ["node_modules", "build_script.ts"]
+  "exclude": ["node_modules", "./scripts"]
 }

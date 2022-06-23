@@ -70,11 +70,13 @@ app.use(
           'https://*.cloudflare.com/',
           'https://bundle.js:*',
           'ws://localhost:*/',
+          'ws://127.0.0.1:*/',
         ],
         connectSrc: [
           'https://*.mapbox.com',
           'https://bundle.js:*',
           'http://127.0.0.1:*/',
+          'http://localhost:*/',
           'https://*.stripe.com',
           'https://*.herokuapp.com',
         ],

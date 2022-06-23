@@ -5,6 +5,7 @@ import Stripe from 'stripe'
 import { IRequest, IResponse, INextFunc } from '@app_type'
 import * as factory from './handlerFactory.controller'
 import { UserModel } from '@models/user.model'
+import AppError from '@utils/appError'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2020-08-27',
@@ -44,7 +45,15 @@ export const getCheckoutSession = catchAsync(
 
 export const createBookingCheckout = async (session: Stripe.Checkout.Session) => {
   const tour = session.client_reference_id
-  const user = (await UserModel.findOne({ email: session.customer_email }))?._id
+
+  if (!session.customer_email) throw new AppError('No user information found, please check!!!', 500)
+
+  const userInfo = await UserModel.findOne({ email: session.customer_email! })
+
+  if (!userInfo) throw new AppError('User not found', 404)
+
+  const user = userInfo!._id as string
+
   const price = session.amount_total! / 100
   await BookingModel.create({ tour, user, price })
 }
