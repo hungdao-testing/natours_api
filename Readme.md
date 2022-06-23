@@ -73,7 +73,7 @@ Using [Playwright](https://playwright.dev/) as Testing framework to perform inte
   - Run `npm run watch:js:dev` to start bundling js/html/css for dev env.
   - Go to `localhost:3001` to open web page.
 
-4. Data file is placed under `fixtureData`, use the account on file `users.test.json`
+4. Data file is placed under `fixtureData`, run the api `POST localhost:3001/api/v1/test-data/create-fixture` to seed data, then use the account info on file `users.test.json`
 
 ### Issues:
 
