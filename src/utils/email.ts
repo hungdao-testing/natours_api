@@ -3,6 +3,7 @@ import Mail from 'nodemailer/lib/mailer'
 import pug from 'pug'
 import { htmlToText } from 'html-to-text'
 import path from 'path'
+import { environment } from '@config/env.config'
 
 export default class Email {
   private readonly url: string
@@ -12,37 +13,28 @@ export default class Email {
 
   constructor(url: string, user: { email: string; name: string }) {
     this.url = url
-    this.from = `NATOUR CONTACT CENTER <${process.env.EMAIL_FROM}>`
+    this.from = `NATOUR CONTACT CENTER <${environment.EMAIL_FROM}>`
     this.to = user.email
     this.firstName = user.name.split(' ')[0]
   }
 
   newTransport() {
-    if (process.env.NODE_ENV === 'production') {
+    const auth = {
+      user: environment.EMAIL_USERNAME,
+      pass: environment.EMAIL_PASSWORD,
+    }
+
+    if (environment.NODE_ENV === 'production') {
       return nodemailer.createTransport({
-        service: 'Mailjet',
-        port: 587,
-        secure: false,
-        // auth: {
-        //   credentials: {
-        //     user: process.env.MAILJET_APIKEY,
-        //     pass: process.env.MAILJET_SECRETKEY,
-        //   }
-        // }
-        auth: {
-          user: process.env.MAILJET_APIKEY,
-          pass: process.env.MAILJET_SECRETKEY,
-        },
+        service: 'gmail',
+        auth,
       })
     }
 
     return nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
       port: parseInt(process.env.EMAIL_PORT!),
-      auth: {
-        user: process.env.EMAIL_USERNAME,
-        pass: process.env.EMAIL_PASSWORD,
-      },
+      auth,
     })
   }
 
@@ -64,14 +56,16 @@ export default class Email {
     }
 
     // 3) Create transport and send email
-    await (this.newTransport() as Transporter).sendMail(mailOptions)
+    await (this.newTransport() as Transporter).sendMail(mailOptions).catch((e) => console.log(e))
   }
 
   async sendWelcome() {
-    await this._send('welcome', 'Welcome to the Natours Tour')
+    await this._send('welcome', 'Welcome to the Natours Tour').catch((e) => console.log(e))
   }
 
   async sendPasswordReset() {
-    await this._send('passwordReset', 'Your password reset token (valid for only 10 mins)')
+    await this._send('passwordReset', 'Your password reset token (valid for only 10 mins)').catch(
+      (e) => console.log(e),
+    )
   }
 }
