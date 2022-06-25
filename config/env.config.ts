@@ -15,8 +15,6 @@ type Environment = {
     EMAIL_HOST: string
     EMAIL_PORT: string
     EMAIL_FROM: string
-    MAILJET_APIKEY: string
-    MAILJET_SECRETKEY: string
 
     STRIPE_SECRET_KEY: string
     STRIPE_PUBLIC_KEY: string

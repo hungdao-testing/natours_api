@@ -74,6 +74,6 @@ Using [Playwright](https://playwright.dev/) as Testing framework to perform inte
 
 4. Data file is placed under `fixtureData`, run the api `POST localhost:3001/api/v1/test-data/create-fixture` to seed data, then use the account info on file `users.test.json`
 
-### Issues:
+### Limitation:
 
-1. Mail function is not working on PROD, you could use `mailtrap` at dev env.
+1. To reduce the cost, the mail-service is used at Dev environment is `mailtrap`. For the PROD, please use `Gmail` service and following the setup in here `https://stackoverflow.com/a/45479968` to know how to generate password

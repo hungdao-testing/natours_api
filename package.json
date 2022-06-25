@@ -12,7 +12,7 @@
     "start": "npx cross-env NODE_ENV=production node -r ts-node/register/transpile-only -r tsconfig-paths/register ./dist/src/server.js",
     "start:api:dev": "npx cross-env NODE_ENV=development nodemon",
     "start:api:prod": "npx cross-env NODE_ENV=production nodemon",
-    "build:js:dev": "npx cross-env NODE_ENV=development node ./scripts/esbuild.js",
+    "build:js:dev": "npx cross-env NODE_ENV=development node ./scripts/esbuild.dev.js",
     "build:js:prod": "npx cross-env NODE_ENV=production node ./scripts/esbuild.js",
     "test:api:dev": "npx cross-env NODE_ENV=development playwright test --project=rest_api"
   },

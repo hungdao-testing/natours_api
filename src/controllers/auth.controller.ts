@@ -68,7 +68,9 @@ export const signup = catchAsync(async (req: Request, res: Response, next: NextF
   await new Email(url, {
     email: newUser.email,
     name: newUser.name,
-  }).sendWelcome()
+  })
+    .sendWelcome()
+    .catch((e) => console.log(`Could not send welcome email`))
   createSendToken(newUser, 201, req, res)
 })
 
