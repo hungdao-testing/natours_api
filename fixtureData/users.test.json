@@ -24,7 +24,7 @@
     "email": "leo@example.com",
     "role": "guide",
     "active": true,
-    "photo": "user-5.jpg",
+    "photo": "user-3.jpg",
     "password": "test1234"
   },
 
@@ -34,7 +34,7 @@
     "email": "steve@example.com",
     "role": "lead-guide",
     "active": true,
-    "photo": "user-10.jpg",
+    "photo": "user-4.jpg",
     "password": "test1234"
   }
 ]

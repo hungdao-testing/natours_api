@@ -24951,7 +24951,12 @@ if (userDataForm)
     const form = new FormData();
     form.append("name", document.getElementById("name").value);
     form.append("email", document.getElementById("email").value);
-    form.append("photo", document.getElementById("photo")[0]);
+    const files = document.getElementById("photo").files;
+    if (!files || files.length === 0) {
+      return;
+    } else {
+      form.append("photo", files[0]);
+    }
     updateSettings(form, "data");
   });
 if (userPasswordForm)
