@@ -3,7 +3,7 @@ require('esbuild')
     entryPoints: ['./src/public/js/index.ts'],
     outfile: './src/public/js/bundle/index.js',
     bundle: true,
-    minify: false,
+    watch: true,
     platform: 'node',
     loader: { '.ts': 'ts' },
     logLevel: 'info',

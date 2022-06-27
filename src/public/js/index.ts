@@ -36,10 +36,15 @@ if (userDataForm)
     const form = new FormData()
     form.append('name', (document.getElementById('name') as HTMLInputElement).value)
     form.append('email', (document.getElementById('email') as HTMLInputElement).value)
-    form.append('photo', (document.getElementById('photo') as unknown as FileList)[0])
-    // console.log(form)
+    const files = (document.getElementById('photo') as HTMLInputElement).files
+    if (!files || files.length === 0) {
+      return
+    } else {
+      form.append('photo', files[0])
+    }
 
     updateSettings(form, 'data')
+    // document.querySelector('.btn--save-settings')!.textContent = 'Save settings'
   })
 
 if (userPasswordForm)
