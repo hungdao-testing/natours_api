@@ -24,7 +24,7 @@ export default class Email {
       pass: environment.EMAIL_PASSWORD,
     }
 
-    if (environment.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === 'production') {
       return nodemailer.createTransport({
         service: 'gmail',
         auth,

@@ -23,6 +23,8 @@ import { environment } from '@config/env.config'
 
 const app = express()
 
+const envName = environment.NODE_ENV || process.env.NODE_ENV;
+
 app.enable('trust proxy')
 
 app.set('view engine', 'pug')
@@ -86,13 +88,13 @@ app.use(
 )
 
 // Development logging
-if (environment.NODE_ENV === 'development') {
+if (envName === 'development') {
   app.use(morgan('dev'))
 }
 
 // Limit request from same API
 let limiter
-if (environment.NODE_ENV !== 'production') {
+if (envName !== 'production') {
   limiter = rateLimit({
     // 1IP is allowed to do max 100000 reqs in 1 hour
     max: 100000,
@@ -154,7 +156,7 @@ app.use('/api/v1/users', userRouter)
 app.use('/api/v1/reviews', reviewRouter)
 app.use('/api/v1/bookings', bookingRouter)
 
-if (environment.NODE_ENV !== 'production') {
+if (envName !== 'production') {
   app.use('/api/v1/test-data', testRouter)
 }
 

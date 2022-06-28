@@ -1,5 +1,9 @@
 import app from './app'
 import * as db from './db'
+import { environment } from '@config/env.config'
+
+
+const port = environment.PORT || process.env.PORT || 3000;
 
 process.on('uncaughtException', (err: Error) => {
   console.log('Uncaught Exception!!! -- Shuttting down')
@@ -9,7 +13,6 @@ process.on('uncaughtException', (err: Error) => {
 
 db.connect()
 
-const port = process.env.PORT || 3000
 const server = app.listen(port, () => {
   console.log(`App running on port ${port}...`)
 })
