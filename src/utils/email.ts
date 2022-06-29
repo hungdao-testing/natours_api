@@ -21,8 +21,8 @@ export default class Email {
 
   newTransport() {
     const auth = {
-      user: environment.EMAIL_USERNAME,
-      pass: environment.EMAIL_PASSWORD,
+      user: environment.EMAIL_USERNAME || process.env.EMAIL_USERNAME,
+      pass: environment.EMAIL_PASSWORD || process.env.EMAIL_PASSWORD,
     }
 
     if (process.env.NODE_ENV === 'production') {
