@@ -1,33 +1,33 @@
 import app from './app'
 import * as db from './db'
 import { environment } from '@config/env.config'
+import { pinoLogger } from '@utils/logger'
 
-
-const port = environment.PORT || process.env.PORT || 3000;
+const port = environment.PORT || process.env.PORT || 3000
 
 process.on('uncaughtException', (err: Error) => {
-  console.log('Uncaught Exception!!! -- Shuttting down')
-  console.log(err.name, err.message)
+  pinoLogger.info('Uncaught Exception!!! -- Shuttting down')
+  pinoLogger.error(err.name, err.message)
   process.exit(1)
 })
 
 db.connect()
 
 const server = app.listen(port, () => {
-  console.log(`App running on port ${port}...`)
+  pinoLogger.info(`App running on port ${port}...`)
 })
 
 process.on('unhandledRejection', (err: Error) => {
-  console.log('Unhandle Rejection!!! -- Shuttting down')
-  console.log(err.name, err.message)
+  pinoLogger.info('Unhandle Rejection!!! -- Shuttting down')
+  pinoLogger.error(err.name, err.message)
   server.close(() => {
     process.exit(1)
   })
 })
 
 process.on('SIGTERM', () => {
-  console.log('SIGTERM RECEIVED. Shutting down gracefully')
+  pinoLogger.error('SIGTERM RECEIVED. Shutting down gracefully')
   server.close(() => {
-    console.log('Process terminated!')
+    pinoLogger.error('Process terminated!')
   })
 })

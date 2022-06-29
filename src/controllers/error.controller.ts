@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import AppError from '@utils/appError'
 import mongoose from 'mongoose'
 import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken'
+import { pinoLogger } from '@utils/logger'
 
 function handleCastErrorDB(err: mongoose.Error.CastError) {
   const message = `Invalid ${err.path}: ${err.value}.`
@@ -45,7 +46,7 @@ const sendErrorDev = (err: AppError, req: Request, res: Response) => {
   }
 
   // B) RENDERED WEBSITE
-  console.error('ERROR 💥', err)
+  pinoLogger.error('ERROR 💥', err)
   return res.status(err.statusCode).render('error', {
     title: 'Something went wrong!',
     msg: err.message,
@@ -69,7 +70,7 @@ const sendErrorProd = <T extends typeof mongoose.Error & AppError>(
     }
     // B) Programming or other unknown error: don't leak error details
     // 1) Log error
-    console.error('ERROR 💥', err)
+    pinoLogger.error('ERROR 💥', err)
     // 2) Send generic message
     return res.status(500).json({
       status: 'error',
@@ -80,7 +81,7 @@ const sendErrorProd = <T extends typeof mongoose.Error & AppError>(
   // B) RENDERED WEBSITE
   // A) Operational, trusted error: send message to client
   if (err.isOperational) {
-    console.log(err)
+    pinoLogger.error(err)
     return res.status(err.statusCode).render('error', {
       title: 'Something went wrong!',
       msg: err.message,
@@ -88,7 +89,7 @@ const sendErrorProd = <T extends typeof mongoose.Error & AppError>(
   }
   // B) Programming or other unknown error: don't leak error details
   // 1) Log error
-  console.error('ERROR 💥', err)
+  pinoLogger.error('ERROR 💥', err)
   // 2) Send generic message
   return res.status(err.statusCode).render('error', {
     title: 'Something went wrong!',

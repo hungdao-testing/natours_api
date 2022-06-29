@@ -6,6 +6,7 @@ import AppError from '@utils/appError'
 import multer from 'multer'
 import path from 'path'
 import sharp from 'sharp'
+import { pinoLogger } from '@utils/logger'
 
 const multerStorage = multer.memoryStorage()
 
@@ -31,7 +32,7 @@ export const resizeTourImages = catchAsync(
       files = req.files as { [fieldname: string]: Express.Multer.File[] }
       if (!files.images || !files.imageCover) return next()
 
-      console.log('Files inside tourController: ', files)
+      pinoLogger.info('Files inside tourController: ', files)
 
       // 1) Cover image
       req.body.imageCover = `tour-${req.params.id}-${Date.now()}-cover.jpeg`

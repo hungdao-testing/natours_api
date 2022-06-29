@@ -4,6 +4,7 @@ import pug from 'pug'
 import { htmlToText } from 'html-to-text'
 import path from 'path'
 import { environment } from '@config/env.config'
+import { pinoLogger } from './logger'
 
 export default class Email {
   private readonly url: string
@@ -56,16 +57,18 @@ export default class Email {
     }
 
     // 3) Create transport and send email
-    await (this.newTransport() as Transporter).sendMail(mailOptions).catch((e) => console.log(e))
+    await (this.newTransport() as Transporter)
+      .sendMail(mailOptions)
+      .catch((e) => pinoLogger.error(e))
   }
 
   async sendWelcome() {
-    await this._send('welcome', 'Welcome to the Natours Tour').catch((e) => console.log(e))
+    await this._send('welcome', 'Welcome to the Natours Tour').catch((e) => pinoLogger.error(e))
   }
 
   async sendPasswordReset() {
     await this._send('passwordReset', 'Your password reset token (valid for only 10 mins)').catch(
-      (e) => console.log(e),
+      (e) => pinoLogger.error(e),
     )
   }
 }
