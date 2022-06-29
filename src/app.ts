@@ -89,7 +89,7 @@ app.use(
 )
 
 // Development logging
-if (envName === 'development') {
+if (envName !== 'production') {
   app.use(httpLogger)
 }
 

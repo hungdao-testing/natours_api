@@ -1,8 +1,9 @@
 import pino from 'pino'
 import pinoHttp from 'pino-http'
 
-export const pinoLogger = pino({
-  transport: {
+let transport;
+if (process.env.NODE_ENV !== 'production') {
+  transport = {
     target: 'pino-pretty',
     options: {
       colorize: true,
@@ -10,7 +11,10 @@ export const pinoLogger = pino({
       translateTime: true,
     },
     messageFormat: '{levelLabel} - {pid} - url:{req.url}',
-  },
+  }
+}
+export const pinoLogger = pino({
+  transport: transport
 })
 
 export const httpLogger = pinoHttp({
