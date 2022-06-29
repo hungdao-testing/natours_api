@@ -7,6 +7,7 @@ import Email from '@utils/email'
 import { IRequest, IResponse, IUser, UserRoles } from '@app_type'
 import crypto from 'crypto'
 import util from 'util'
+import { pinoLogger } from '@utils/logger'
 
 const verifyToken = (token: string, secret: string): Promise<JwtPayload> => {
   return new Promise((resolve, reject) => {
@@ -70,7 +71,7 @@ export const signup = catchAsync(async (req: Request, res: Response, next: NextF
     name: newUser.name,
   })
     .sendWelcome()
-    .catch((e) => console.log(`Could not send welcome email`))
+    .catch((e) => pinoLogger.error(`Could not send welcome email`))
   createSendToken(newUser, 201, req, res)
 })
 

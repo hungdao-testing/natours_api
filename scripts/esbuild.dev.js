@@ -9,5 +9,5 @@ require('esbuild')
     logLevel: 'info',
     target: 'node14',
   })
-  .then(() => console.log('⚡ Done'))
+  .then(() => console.info('⚡ Done'))
   .catch(() => process.exit(1))

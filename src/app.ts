@@ -20,10 +20,11 @@ import cors from 'cors'
 import hpp from 'hpp'
 import xss from 'xss-clean'
 import { environment } from '@config/env.config'
+import { httpLogger } from '@utils/logger'
 
 const app = express()
 
-const envName = environment.NODE_ENV || process.env.NODE_ENV;
+const envName = environment.NODE_ENV || process.env.NODE_ENV
 
 app.enable('trust proxy')
 
@@ -89,7 +90,7 @@ app.use(
 
 // Development logging
 if (envName === 'development') {
-  app.use(morgan('dev'))
+  app.use(httpLogger)
 }
 
 // Limit request from same API

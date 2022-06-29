@@ -4,6 +4,7 @@ import { TourModel } from '@models/tour.model'
 import { UserModel } from '@models/user.model'
 import { catchAsync } from '@utils/catchAsync'
 import { parseTours, parseUsers } from '@fixture'
+import { pinoLogger } from '@utils/logger'
 
 export const importTextFixtureData = catchAsync(async function (
   req: IRequest,
@@ -20,7 +21,7 @@ export const importTextFixtureData = catchAsync(async function (
       status: 'Fixture is created successfully',
     })
   } catch (error) {
-    console.log('Could not import data because of: ', error)
+    pinoLogger.info('Could not import data because of: ', error)
   }
 })
 
@@ -36,6 +37,6 @@ export const deleteTestFixtureData = catchAsync(async function (
       status: 'Fixture is deleted successfully',
     })
   } catch (error) {
-    console.log('Could not delete data because of: ', error)
+    pinoLogger.info('Could not delete data because of: ', error)
   }
 })
