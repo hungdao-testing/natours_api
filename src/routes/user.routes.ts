@@ -6,6 +6,8 @@ const router = express.Router()
 
 router.post('/signup', authController.signup)
 
+router.get('/active/:confirmationCode', authController.confirmSignup)
+
 router.post('/login', authController.login)
 
 router.get('/logout', authController.logout)

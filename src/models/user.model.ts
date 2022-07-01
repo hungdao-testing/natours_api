@@ -44,8 +44,12 @@ const userSchema = new Schema<IUser>({
   passwordResetExpires: Date,
   active: {
     type: Boolean,
-    default: true,
+    default: false,
     select: false,
+  },
+  confirmationCode: {
+    type: String,
+    unique: true,
   },
 })
 
@@ -68,11 +72,11 @@ userSchema.pre('save', async function (this: IUserDocument, next: Function) {
   next()
 })
 
-userSchema.pre(/^find/, function (this: Query<any, IUser>, next: Function) {
-  //this point to current query
-  this.find({ active: { $ne: false } })
-  next()
-})
+// userSchema.pre(/^find/, function (this: Query<any, IUser>, next: Function) {
+//   //this point to current query
+//   this.find()
+//   next()
+// })
 
 userSchema.methods.correctPassword = async function (
   candidatePassword: string,

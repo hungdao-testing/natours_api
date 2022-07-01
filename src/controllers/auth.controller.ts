@@ -4,10 +4,19 @@ import { catchAsync } from '@utils/catchAsync'
 import AppError from '@utils/appError'
 import jwt, { JwtPayload, Secret, VerifyOptions } from 'jsonwebtoken'
 import Email from '@utils/email'
-import { IRequest, IResponse, IUser, UserRoles } from '@app_type'
+import { INextFunc, IRequest, IResponse, IUser, UserRoles } from '@app_type'
 import crypto from 'crypto'
 import util from 'util'
 import { pinoLogger } from '@utils/logger'
+
+function buildConfirmationToken() {
+  const characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  let token = ''
+  for (let i = 0; i < 12; i++) {
+    token += characters[Math.floor(Math.random() * characters.length)]
+  }
+  return token
+}
 
 const verifyToken = (token: string, secret: string): Promise<JwtPayload> => {
   return new Promise((resolve, reject) => {
@@ -43,6 +52,7 @@ export const createSendToken = (user: IUser, statusCode: number, req: Request, r
     email: user.email,
     role: user.role,
     active: user.active,
+    confirmationCode: user.confirmationCode,
     photo: user.photo,
     id: user._id,
   }
@@ -56,7 +66,9 @@ export const createSendToken = (user: IUser, statusCode: number, req: Request, r
   })
 }
 
-export const signup = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+export const signup = catchAsync(async (req: IRequest, res: IResponse, next: NextFunction) => {
+  const confirmationCode = buildConfirmationToken()
+
   const newUser = await UserModel.create({
     name: req.body.name,
     email: req.body.email,
@@ -64,15 +76,30 @@ export const signup = catchAsync(async (req: Request, res: Response, next: NextF
     passwordConfirm: req.body.passwordConfirm,
     passwordChangedAt: req.body.passwordChangedAt,
     role: req.body.role,
+    confirmationCode,
   })
-  const url = `${req.protocol}://${req.get('host')}/me`
-  await new Email(url, {
+  const tokenUrl = `${req.protocol}://${req.get('host')}/confirm-signup/${confirmationCode}`
+  await new Email(tokenUrl, {
     email: newUser.email,
     name: newUser.name,
   })
     .sendWelcome()
     .catch((e) => pinoLogger.error(`Could not send welcome email`))
+
   createSendToken(newUser, 201, req, res)
+})
+
+export const confirmSignup = catchAsync(async (req: IRequest, res: IResponse, next: INextFunc) => {
+  const user = await UserModel.findOne({ confirmationCode: req.params.confirmationCode })
+  // const user = await UserModel.findOne({ email: "lambo.js14@example.io" });
+
+  if (!user) return next(new AppError('User not found', 404))
+  user.active = true
+  user.confirmationCode = undefined
+  await user.save({ validateBeforeSave: false })
+
+  res.status(200).json({ status: 'success' })
+  next()
 })
 
 export const login = catchAsync(async (req: IRequest, res: IResponse, next: NextFunction) => {
@@ -83,12 +110,15 @@ export const login = catchAsync(async (req: IRequest, res: IResponse, next: Next
     return next(new AppError('Please provide email and password', 400))
   }
 
-  // 2) Check user is existed && password is correct on DB
-  const user = await UserModel.findOne({ email }).select('+password')
+  // 2) Check user is existed && password is correct on DB, then check user is active or not
+  const user = await UserModel.findOne({ email }).select('+password +active')
 
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError('Incorrect email or password', 401))
   }
+
+  if (!user.active)
+    return next(new AppError('Your account is pending, please verify your email', 401))
 
   // 3) send token
   createSendToken(user, 200, req, res)

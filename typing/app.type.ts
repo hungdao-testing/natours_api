@@ -28,12 +28,13 @@ export interface IUserDocument extends Document {
   email: string
   photo?: string
   password: string
-  passwordConfirm: string | undefined
+  passwordConfirm?: string
   passwordChangedAt: Date
   role: string
-  passwordResetToken: string | undefined
-  passwordResetExpires: Date | undefined
-  active: boolean
+  passwordResetToken?: string 
+  passwordResetExpires?: Date
+  active: boolean,
+  confirmationCode?: string
 }
 
 export interface IUser extends IUserDocument {

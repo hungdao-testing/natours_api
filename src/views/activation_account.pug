@@ -1,0 +1,8 @@
+extends base
+
+block content
+    main.main
+            h2 Hi #{firstName},
+                p Welcome to Natours Booking application, we're glad to have you 🎉🙏
+                p Please help click on the button below to activate your account registering with email #{email}            
+                button#confirm-signup(type="button", token=`${token}`) Activate Now!
