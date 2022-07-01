@@ -50,6 +50,15 @@ export const getLoginForm = (req: IRequest, res: IResponse) => {
     title: 'Log into your account',
   })
 }
+export const getConfirmSignUpForm = catchAsync(async (req: IRequest, res: IResponse) => {
+  const user = await UserModel.findOne({ confirmationCode: req.params.confirmationToken })
+  res.status(200).render('activation_account', {
+    title: 'Confirm Signup',
+    firstName: user?.name,
+    email: user?.email,
+    token: req.params.confirmationToken,
+  })
+})
 
 export const getAccount = (req: IRequest, res: IResponse) => {
   res.status(200).render('account', {

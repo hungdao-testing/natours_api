@@ -38,3 +38,24 @@ export const logout = async () => {
     showAlert('error', 'Error logging out! Try again.')
   }
 }
+
+export const confirm = async (confirmToken: string) => {
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: `/api/v1/users/active/${confirmToken}`,
+    })
+
+    if (res.data.status === 'success') {
+      showAlert(
+        'success',
+        'Your account is activated successfully, and hold a few seconds to redirect to Login page!',
+      )
+      window.setTimeout(() => {
+        location.assign('/login')
+      }, 1500)
+    }
+  } catch (err) {
+    showAlert('error', (err as any).response.data.message)
+  }
+}

@@ -1,7 +1,7 @@
 import pino from 'pino'
 import pinoHttp from 'pino-http'
 
-let transport;
+let transport
 if (process.env.NODE_ENV !== 'production') {
   transport = {
     target: 'pino-pretty',
@@ -14,7 +14,7 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 export const pinoLogger = pino({
-  transport: transport
+  transport: transport,
 })
 
 export const httpLogger = pinoHttp({

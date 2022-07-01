@@ -1,6 +1,6 @@
 // import '@babel/polyfill'
 
-import { login, logout } from './login'
+import { login, logout, confirm } from './login'
 import { updateSettings } from './updateSettings'
 import { bookTour } from './stripe'
 import { showAlert } from './alerts'
@@ -13,6 +13,7 @@ const logOutBtn = document.querySelector('.nav__el--logout')
 const userDataForm = document.querySelector('.form-user-data')
 const userPasswordForm = document.querySelector('.form-user-password')
 const bookBtn = document.getElementById('book-tour')
+const confirmSignUpBtn = document.getElementById('confirm-signup')
 
 // DELEGATION
 if (mapBox) {
@@ -72,6 +73,14 @@ if (bookBtn) {
     ;(e.target as HTMLElement).textContent = 'Processing...'
     const { tourId } = (e.target as HTMLElement).dataset
     bookTour(tourId!)
+  })
+}
+
+if (confirmSignUpBtn) {
+  confirmSignUpBtn.addEventListener('click', (e) => {
+    ;(e.target as HTMLElement).textContent = 'Activating Your Account...'
+    const token = confirmSignUpBtn.getAttribute('token')
+    confirm(token!)
   })
 }
 
