@@ -21,13 +21,11 @@ router.use(authController.protect)
 
 router.patch(
   '/updateMyPassword',
-
   authController.updatePassword,
 )
 
 router.get(
   '/me',
-
   userController.getMe,
   userController.getUser,
 )
@@ -44,7 +42,7 @@ router.delete('/deleteMe', userController.deleteMe)
 router.use(authController.restrictTo('ADMIN'))
 
 router.route('/').get(userController.getAllUsers).post(userController.createUser)
-
+router.patch('/promoteUserTo/:userId', userController.promoteUserTo);
 router
   .route('/:id')
   .get(userController.getUser)

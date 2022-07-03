@@ -1,4 +1,4 @@
-import mongoose, { Schema, Query } from 'mongoose'
+import mongoose, { Schema, Query, MongooseError } from 'mongoose'
 import validator from 'validator'
 import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
@@ -77,6 +77,21 @@ userSchema.pre('save', async function (this: IUserDocument, next: Function) {
 //   this.find()
 //   next()
 // })
+userSchema.post('save', async function (error: MongooseError & { code?: number }, doc: IUserDocument, next: Function) {
+  if (error.name === 'MongoServerError' && error?.code === 11000) {
+    next(new Error('There was a duplicate user information'));
+  } else {
+    next();
+  }
+});
+
+userSchema.post('update', function (error: MongooseError & { code?: number }, doc: IUserDocument, next: Function) {
+  if (error.name === 'MongoServerError' && error.code === 11000) {
+    next(new Error('There was a duplicate user information'));
+  } else {
+    next(); // The `update()` call will still error out.
+  }
+});
 
 userSchema.methods.correctPassword = async function (
   candidatePassword: string,

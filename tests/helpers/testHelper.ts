@@ -13,6 +13,10 @@ interface ITestPWFixture {
     payload?: unknown,
   ) => Promise<{ statusCode: number; data: ITour & { _id: string } }>
   deleteTourPWFixture: (token: string, tourId: string) => Promise<void>
+  createUserWithRolePWFixture: (role: keyof typeof UserRoles, payload: {
+    name: string
+    email: string
+  }) => Promise<void>
 }
 
 export function tourPayloadBuilder() {
@@ -26,6 +30,22 @@ export function tourPayloadBuilder() {
   tourPayloadAsset.ratings = parseFloat(faker.finance.amount(4, 5, 1))
 
   return tourPayloadAsset
+}
+
+export function userPayloadBuilder(role?: keyof typeof UserRoles | Omit<string, keyof typeof UserRoles>) {
+  let userRole;
+  if (role) userRole = role
+  const firstName = faker.name.firstName()
+  const lastName = faker.name.lastName()
+  const email = faker.internet.email(firstName, lastName);
+  const name = firstName + lastName
+  return {
+    email,
+    name,
+    role: userRole?.toLowerCase(),
+    password: "test1234",
+    passwordConfirm: "test1234"
+  }
 }
 
 export const testPW = testBase.extend<ITestPWFixture>({
@@ -69,6 +89,20 @@ export const testPW = testBase.extend<ITestPWFixture>({
       expect(statusCode).toBe(204)
     })
   },
+
+  createUserWithRolePWFixture: async ({ request }, use) => {
+    await use(async (role: keyof typeof UserRoles) => {
+      const user = getTestUserByRole(role)
+      const token = await loginAs(
+        {
+          email: user.email,
+          password: user.password,
+        },
+        request,
+      )
+      return token
+    })
+  }
 })
 
 export { expect } from '@playwright/test'

@@ -78,15 +78,13 @@ export const signup = catchAsync(async (req: IRequest, res: IResponse, next: Nex
     role: req.body.role,
     confirmationCode,
   })
+  createSendToken(newUser, 201, req, res)
   const tokenUrl = `${req.protocol}://${req.get('host')}/confirm-signup/${confirmationCode}`
-  await new Email(tokenUrl, {
+  new Email(tokenUrl, {
     email: newUser.email,
     name: newUser.name,
   })
     .sendWelcome()
-    .catch((e) => pinoLogger.error(`Could not send welcome email`))
-
-  createSendToken(newUser, 201, req, res)
 })
 
 export const confirmSignup = catchAsync(async (req: IRequest, res: IResponse, next: INextFunc) => {
