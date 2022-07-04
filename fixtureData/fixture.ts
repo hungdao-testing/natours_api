@@ -9,8 +9,8 @@ export const parseUsers: IUser[] = JSON.parse(
   fs.readFileSync(path.join(__dirname, 'users.test.json'), 'utf-8'),
 )
 
-export function getTestUserByRole(role: keyof typeof UserRoles) {
-  return parseUsers.find((user) => user.role === role.toString().toLowerCase())!
+export function getTestUserByRole(role: keyof typeof UserRoles, isActive: boolean = true) {
+  return parseUsers.find((user) => user.role === role.toString().toLowerCase() && user.active === isActive)!
 }
 
 export function getTestTourBy(condition: (...args: any[]) => boolean) {
