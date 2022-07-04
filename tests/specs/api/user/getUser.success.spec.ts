@@ -10,7 +10,7 @@ function commonAssertion(userRes: { statusCode: number; body: any }) {
     return true
 }
 
-testPW.describe('Get Users', () => {
+testPW.describe.parallel('Get Users', () => {
     testPW('Admin could get all active users', async ({ request, authenBy }) => {
         const token = await authenBy('ADMIN')
         const inactiveUser = getTestUserByRole('USER')

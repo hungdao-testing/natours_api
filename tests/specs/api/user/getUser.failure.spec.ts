@@ -9,7 +9,7 @@ function assertFailedBy(message: string, userRes: { statusCode: number; body: an
     return true
 }
 
-testPW.describe.only('Get Users', () => {
+testPW.describe.parallel('Get Users', () => {
     testPW('is failed because of guide-user permission', async ({ request, authenBy }) => {
         const token = await authenBy('GUIDE')
         const users = await getUsers(request, token)
