@@ -38,7 +38,7 @@ export function userPayloadBuilder(role?: keyof typeof UserRoles | Omit<string, 
   const firstName = faker.name.firstName()
   const lastName = faker.name.lastName()
   const email = faker.internet.email(firstName, lastName);
-  const name = firstName + lastName
+  const name = firstName + " " + lastName
   return {
     email,
     name,
