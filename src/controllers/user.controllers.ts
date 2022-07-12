@@ -101,11 +101,15 @@ export const updateUser = factory.updateOne(model)
 export const deleteUser = factory.deleteOne(model)
 
 export const promoteUserTo = catchAsync(async (req: IRequest, res: IResponse, next: INextFunc) => {
-  const role = req.body.role;
-  const updatedUser = await model.findByIdAndUpdate(req.user!.id, { role: role }, {
-    new: true,
-    runValidators: true,
-  })
+  const role = req.body.role
+  const updatedUser = await model.findByIdAndUpdate(
+    req.user!.id,
+    { role: role },
+    {
+      new: true,
+      runValidators: true,
+    },
+  )
   res.status(200).json({
     status: 'success',
     data: {

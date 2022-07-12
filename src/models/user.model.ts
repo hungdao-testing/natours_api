@@ -77,21 +77,27 @@ userSchema.pre(/^find/, function (this: Query<any, IUser>, next) {
   next()
 })
 
-userSchema.post('save', async function (error: MongooseError & { code?: number }, doc: IUserDocument, next: Function) {
-  if (error.name === 'MongoServerError' && error?.code === 11000) {
-    next(new Error('There was a duplicate user information'));
-  } else {
-    next();
-  }
-});
+userSchema.post(
+  'save',
+  async function (error: MongooseError & { code?: number }, doc: IUserDocument, next: Function) {
+    if (error.name === 'MongoServerError' && error?.code === 11000) {
+      next(new Error('There was a duplicate user information'))
+    } else {
+      next()
+    }
+  },
+)
 
-userSchema.post('update', function (error: MongooseError & { code?: number }, doc: IUserDocument, next: Function) {
-  if (error.name === 'MongoServerError' && error.code === 11000) {
-    next(new Error('There was a duplicate user information'));
-  } else {
-    next(); // The `update()` call will still error out.
-  }
-});
+userSchema.post(
+  'update',
+  function (error: MongooseError & { code?: number }, doc: IUserDocument, next: Function) {
+    if (error.name === 'MongoServerError' && error.code === 11000) {
+      next(new Error('There was a duplicate user information'))
+    } else {
+      next() // The `update()` call will still error out.
+    }
+  },
+)
 
 userSchema.methods.correctPassword = async function (
   candidatePassword: string,

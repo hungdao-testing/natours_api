@@ -83,8 +83,7 @@ export const signup = catchAsync(async (req: IRequest, res: IResponse, next: Nex
   new Email(tokenUrl, {
     email: newUser.email,
     name: newUser.name,
-  })
-    .sendWelcome()
+  }).sendWelcome()
 })
 
 export const confirmSignup = catchAsync(async (req: IRequest, res: IResponse, next: INextFunc) => {
