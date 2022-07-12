@@ -19,18 +19,9 @@ router.patch('/resetPassword/:token', authController.resetPassword) // edit pass
 // all routes below this line will be applied `protect`
 router.use(authController.protect)
 
-router.patch(
-  '/updateMyPassword',
+router.patch('/updateMyPassword', authController.updatePassword)
 
-  authController.updatePassword,
-)
-
-router.get(
-  '/me',
-
-  userController.getMe,
-  userController.getUser,
-)
+router.get('/me', userController.getMe, userController.getUser)
 
 router.patch(
   '/updateMe',
@@ -44,7 +35,7 @@ router.delete('/deleteMe', userController.deleteMe)
 router.use(authController.restrictTo('ADMIN'))
 
 router.route('/').get(userController.getAllUsers).post(userController.createUser)
-
+router.patch('/promoteUserTo/:userId', userController.promoteUserTo)
 router
   .route('/:id')
   .get(userController.getUser)

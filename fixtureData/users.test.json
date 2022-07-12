@@ -17,7 +17,6 @@
     "photo": "user-2.jpg",
     "password": "test1234"
   },
-
   {
     "_id": "5c8a1f292f8fb814b56fa184",
     "name": "Leo Gillespie",
@@ -27,7 +26,6 @@
     "photo": "user-3.jpg",
     "password": "test1234"
   },
-
   {
     "_id": "5c8a21d02f8fb814b56fa189",
     "name": "Steve T. Scaife",
@@ -35,6 +33,15 @@
     "role": "lead-guide",
     "active": true,
     "photo": "user-4.jpg",
+    "password": "test1234"
+  },
+  {
+    "_id": "5c9a21d02f8fb814b56fa190",
+    "name": "Amber Havard",
+    "email": "amberd.havard@io.com",
+    "role": "user",
+    "active": false,
+    "photo": "default.jpg",
     "password": "test1234"
   }
 ]

@@ -1,4 +1,4 @@
-import { UserModel as model } from '@models/user.model'
+import { UserModel as model, UserModel } from '@models/user.model'
 import { IRequest, IResponse, INextFunc } from '@app_type'
 import AppError from '@utils/appError'
 import { catchAsync } from '@utils/catchAsync'
@@ -99,3 +99,21 @@ export const getUser = factory.getOne(model)
 export const updateUser = factory.updateOne(model)
 
 export const deleteUser = factory.deleteOne(model)
+
+export const promoteUserTo = catchAsync(async (req: IRequest, res: IResponse, next: INextFunc) => {
+  const role = req.body.role
+  const updatedUser = await model.findByIdAndUpdate(
+    req.user!.id,
+    { role: role },
+    {
+      new: true,
+      runValidators: true,
+    },
+  )
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user: updatedUser,
+    },
+  })
+})

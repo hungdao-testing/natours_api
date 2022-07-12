@@ -24861,6 +24861,22 @@ var logout = async () => {
     showAlert("error", "Error logging out! Try again.");
   }
 };
+var confirm = async (confirmToken) => {
+  try {
+    const res = await (0, import_axios.default)({
+      method: "GET",
+      url: `/api/v1/users/active/${confirmToken}`
+    });
+    if (res.data.status === "success") {
+      showAlert("success", "Your account is activated successfully, and hold a few seconds to redirect to Login page!");
+      window.setTimeout(() => {
+        location.assign("/login");
+      }, 1500);
+    }
+  } catch (err) {
+    showAlert("error", err.response.data.message);
+  }
+};
 
 // src/public/js/updateSettings.ts
 var import_axios2 = __toESM(require_axios2());
@@ -24932,6 +24948,7 @@ var logOutBtn = document.querySelector(".nav__el--logout");
 var userDataForm = document.querySelector(".form-user-data");
 var userPasswordForm = document.querySelector(".form-user-password");
 var bookBtn = document.getElementById("book-tour");
+var confirmSignUpBtn = document.getElementById("confirm-signup");
 if (mapBox) {
   const locations = JSON.parse(mapBox.dataset.locations);
   displayMap(locations);
@@ -24978,6 +24995,14 @@ if (bookBtn) {
     e.target.textContent = "Processing...";
     const { tourId } = e.target.dataset;
     bookTour(tourId);
+  });
+}
+if (confirmSignUpBtn) {
+  confirmSignUpBtn.addEventListener("click", (e) => {
+    ;
+    e.target.textContent = "Activating Your Account...";
+    const token = confirmSignUpBtn.getAttribute("token");
+    confirm(token);
   });
 }
 var alertMessage = document.querySelector("body").dataset.alert;
